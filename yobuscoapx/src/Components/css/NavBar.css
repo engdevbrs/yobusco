@@ -1,0 +1,40 @@
+div .nav-link{
+    font-family: "Hind Vadodara", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgb(112, 110, 110) !important;
+}
+
+div .nav-link:hover{
+    color: rgb(211, 211, 211) !important;
+}
+
+a{
+    font-family: "Hind Vadodara", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: rgb(33, 33, 33);
+    text-decoration: none;
+}
+
+div .session-in {
+    margin-right: 10px;
+    padding: 5px;
+}
+
+.session-in .btn {
+    color: rgb(255, 255, 255);
+    border-radius: 10px 10px;
+    background-color: rgba(226, 39, 39, 0.753) !important;
+}
+
+div .create {
+    padding: 5px;
+}
+
+.create .btn {
+    color: rgb(255, 255, 255);
+    border-radius: 10px 10px;
+    background-color: rgb(16, 12, 245, 0.753) !important;
+}
