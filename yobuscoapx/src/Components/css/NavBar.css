@@ -1,12 +1,17 @@
+.navbar{
+    background-color: #212529;
+    padding: 0px;
+}
+
 div .nav-link{
     font-family: "Hind Vadodara", sans-serif;
     font-size: 16px;
     font-weight: 400;
-    color: rgb(112, 110, 110) !important;
+    color: rgb(129, 129, 129) !important;
 }
 
 div .nav-link:hover{
-    color: rgb(211, 211, 211) !important;
+    color: rgb(78, 71, 169) !important;
 }
 
 a{
@@ -19,22 +24,27 @@ a{
 }
 
 div .session-in {
-    margin-right: 10px;
+    margin-right: 5px;
     padding: 5px;
 }
 
-.session-in .btn {
+.session-in a {
     color: rgb(255, 255, 255);
-    border-radius: 10px 10px;
-    background-color: rgba(226, 39, 39, 0.753) !important;
+    background-color: rgba(226, 39, 39, 0.753);
 }
 
 div .create {
     padding: 5px;
 }
 
-.create .btn {
+.create a{
     color: rgb(255, 255, 255);
-    border-radius: 10px 10px;
-    background-color: rgb(16, 12, 245, 0.753) !important;
+    background-color: #0D6EFD;
+}
+
+.session-in a, .create a{
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 10px;
 }

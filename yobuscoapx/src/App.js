@@ -1,8 +1,9 @@
 import React from 'react';
 import { BrowserRouter, BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './Components/Home/Home';
-import Navbar from './Components/NavBar/NavBar';
-
+import CreateAccount from './Components/account/create-account';
+import Home from './Components/home/Home';
+import Footer from './Components/layouts/footer';
+import Navbar from './Components/layouts/NavBar';
 
 const App = () => {
     return (
@@ -10,7 +11,9 @@ const App = () => {
             <Navbar />
             <Routes>
                 <Route path="/" element={ <Home/> }/>
+                <Route path="create-account" element={ <CreateAccount/> }/>
             </Routes>
+            <Footer/>
         </BrowserRouter>
     )
 };
