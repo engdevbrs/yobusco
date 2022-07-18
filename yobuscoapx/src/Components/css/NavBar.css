@@ -45,6 +45,6 @@ div .create {
 .session-in a, .create a{
     color: rgb(255, 255, 255);
     text-decoration: none;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 10px;
 }
