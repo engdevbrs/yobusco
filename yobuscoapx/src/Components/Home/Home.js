@@ -55,21 +55,6 @@ const Home = () => {
         </Carousel.Caption>
       </Carousel.Item>
       </Carousel>
-      <Container className="information row row-cols-1 row-cols-md-2 g-4 mt-2 mb-4" fluid>
-        <Col>
-          <Card>
-            <Card.Body>
-              <strong>Yo Busco</strong> es una plataforma que tiene por objetivo crear una comunidad
-              con personas que ofrezcan su oficio o profesión, para que personas de cualquier parte de Chile puedan
-              acceder a su perfil personal, la cuál tendrá una serie de información ( Como su puntuación ), esta será de ayuda
-              para que las personas tengan una idea de con quién está tratando y a quién está solicitando los servicios.
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col className="information-card">
-          <img src={working} alt="..." style={{width: '20rem'}}/>
-        </Col>
-      </Container>
       <Container className="row row-cols-1 row-cols-md-3 g-4 mt-2 mb-4" fluid>
         <Col>
           <Card className="card-features h-100 p-3">
@@ -104,6 +89,21 @@ const Home = () => {
               </Card.Text>
             </Card.Body>
           </Card>
+        </Col>
+      </Container>
+      <Container className="information row row-cols-1 row-cols-md-2 g-4 mt-2 mb-4" fluid>
+        <Col>
+          <Card>
+            <Card.Body>
+              <strong>Yo Busco</strong> es una plataforma que tiene por objetivo crear una comunidad
+              con personas que ofrezcan su oficio o profesión, para que personas de cualquier parte de Chile puedan
+              acceder a su perfil personal, la cuál tendrá una serie de información ( Como su puntuación ), esta será de ayuda
+              para que las personas tengan una idea de con quién está tratando y a quién está solicitando los servicios.
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col className="information-card">
+          <img src={working} alt="..." style={{width: '20rem'}}/>
         </Col>
       </Container>
     </>

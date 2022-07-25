@@ -6,7 +6,7 @@ const Footer = () => {
     return (
       <>
         <footer className="w-100 py-4 flex-shrink-0">
-            <div className="container py-4">
+            <div className="container-fluid py-4">
                 <div className="row gy-4 gx-4">
                     <div className="col-lg-4 col-md-6">
                     <img src={Logo} alt="" style={{ width: '80px' }}/>

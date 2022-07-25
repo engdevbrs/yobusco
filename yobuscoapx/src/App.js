@@ -3,6 +3,8 @@ import { BrowserRouter, BrowserRouter as Router, Route, Routes, Navigate } from 
 import CreateAccount from './Components/account/CreateAccount';
 import Home from './Components/home/Home';
 import Navbar from './Components/layouts/NavBar';
+import Profile from './Components/profile/Profile';
+import Workers from './Components/workers/Workers';
 
 const App = () => {
     return (
@@ -12,6 +14,8 @@ const App = () => {
                 <Route path='' element= { <Navbar/>}>
                     <Route index element= { <Home />} />
                     <Route path='crear-cuenta' element= { <CreateAccount /> } />
+                    <Route path='trabajadores' element= { <Workers /> } />
+                    <Route path='perfil' element= { <Profile /> } />
                     <Route path='*' element={ <Navigate replace to = "/"/> } />
                 </Route>
             </Routes>

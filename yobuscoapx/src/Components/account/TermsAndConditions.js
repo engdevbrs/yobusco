@@ -113,17 +113,19 @@ const TermsConditions = () => {
                                 </ul>
                             </p>
                         </Row>
-                        <Form>
-                            <div key="checkbox" className="mb-3 mt-1">
-                            <Form.Check 
-                                type="checkbox"
-                                id="checkbox"
-                                label={<h5><strong>Acepto los términos y condiciones.</strong></h5>}
-                            />
-                            </div>
-                        </Form>
                     </Card.Body>
                 </Card>
+            </Row>
+            <Row>
+                <Form>
+                    <div key="checkbox" className="mb-3 mt-3">
+                    <Form.Check 
+                        type="checkbox"
+                        id="checkbox"
+                        label={<h6><strong>Acepto los términos y condiciones.</strong></h6>}
+                    />
+                    </div>
+                </Form>
             </Row>
         </Container>
       </>

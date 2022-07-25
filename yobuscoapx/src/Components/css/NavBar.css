@@ -3,17 +3,6 @@
     padding: 0px;
 }
 
-div .nav-link{
-    font-family: "Hind Vadodara", sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    color: rgb(129, 129, 129) !important;
-}
-
-div .nav-link:hover{
-    color: rgb(78, 71, 169) !important;
-}
-
 a{
     font-family: "Hind Vadodara", sans-serif;
     font-size: 14px;
@@ -24,12 +13,11 @@ a{
 }
 
 div .session-in {
-    margin-right: 5px;
     padding: 5px;
 }
 
-.session-in a {
-    color: rgb(255, 255, 255);
+.session-in {
+    color: rgb(255, 255, 255) !important;
     background-color: rgba(226, 39, 39, 0.753);
 }
 
@@ -37,12 +25,13 @@ div .create {
     padding: 5px;
 }
 
-.create a{
-    color: rgb(255, 255, 255);
+.create {
+    color: rgb(255, 255, 255) !important;
     background-color: #0D6EFD;
 }
 
-.session-in a, .create a{
+.session-in , .create {
+    margin-left: 10px;
     color: rgb(255, 255, 255);
     text-decoration: none;
     border-radius: 5px;

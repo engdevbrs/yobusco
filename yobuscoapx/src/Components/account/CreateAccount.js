@@ -59,7 +59,7 @@ const CreateAccount = () => {
         ]}
         previousBtnName = 'Atrás'
         nextBtnName = 'Siguiente'
-        submitBtnName = 'Registrarme'
+        submitBtnName = 'Finalizar registro'
         />
       </>
     )
