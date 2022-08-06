@@ -2,3 +2,14 @@
     height:50vh;
     overflow-y: scroll;
 }
+
+.contenedorTerms{
+    display: flex;
+    justify-content: center;
+    min-width: 250px;
+}
+
+.terms{
+    display: flex;
+    flex-direction: column;
+}

@@ -55,7 +55,8 @@ const Home = () => {
         </Carousel.Caption>
       </Carousel.Item>
       </Carousel>
-      <Container className="row row-cols-1 row-cols-md-3 g-4 mt-2 mb-4" fluid>
+      <Container className="mt-2 mb-4" fluid>
+        <Row className='row row-cols-1 row-cols-md-3 g-4'>
         <Col>
           <Card className="card-features h-100 p-3">
           <Card.Img variant="top" src={ tools } alt="..." style={{width: '64px'}}/>
@@ -90,10 +91,12 @@ const Home = () => {
             </Card.Body>
           </Card>
         </Col>
+        </Row>
       </Container>
-      <Container className="information row row-cols-1 row-cols-md-2 g-4 mt-2 mb-4" fluid>
+      <Container className="mt-2 mb-4" fluid>
+        <Row lg={2} className='information row row-cols-1 row-cols-md-2 g-4'>
         <Col>
-          <Card>
+          <Card className='p-3'>
             <Card.Body>
               <strong>Yo Busco</strong> es una plataforma que tiene por objetivo crear una comunidad
               con personas que ofrezcan su oficio o profesión, para que personas de cualquier parte de Chile puedan
@@ -105,6 +108,7 @@ const Home = () => {
         <Col className="information-card">
           <img src={working} alt="..." style={{width: '20rem'}}/>
         </Col>
+        </Row>
       </Container>
     </>
   );

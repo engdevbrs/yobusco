@@ -5,6 +5,10 @@
     align-items: center;
 }
 
+.personalForm{
+    min-width: 250px;
+}
+
 .form-control{
     background-color: #fff !important;
     border-color: #939393 !important;

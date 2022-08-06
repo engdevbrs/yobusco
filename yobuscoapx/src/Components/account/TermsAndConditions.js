@@ -13,8 +13,9 @@ const TermsConditions = () => {
 
     return (
         <>
-        <Container className='mt-5 mb-5'>
-            <Row>
+        <Container className='contenedorTerms mt-5 mb-5 p-0'>
+            <Row className='terms'>
+            <Col>
                 <Alert show={show} variant="warning" onClose={() => setShow(false)} dismissible>
                     <Alert.Heading>Hola, estamos agradecidos de que hayas llegado a este punto.</Alert.Heading>
                     <p>
@@ -27,8 +28,8 @@ const TermsConditions = () => {
                         A continuación, <strong>te recomendamos leer los términos y condiciones.</strong>
                     </p>
                 </Alert>
-            </Row>
-            <Row>
+            </Col>
+            <Col>
                 <Card className='conditions'>
                     <Card.Body>
                         <Row>
@@ -115,8 +116,8 @@ const TermsConditions = () => {
                         </Row>
                     </Card.Body>
                 </Card>
-            </Row>
-            <Row>
+            </Col>
+            <Col>
                 <Form>
                     <div key="checkbox" className="mb-3 mt-3">
                     <Form.Check 
@@ -126,6 +127,7 @@ const TermsConditions = () => {
                     />
                     </div>
                 </Form>
+            </Col>
             </Row>
         </Container>
       </>

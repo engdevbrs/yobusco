@@ -3,6 +3,7 @@ import { BrowserRouter, BrowserRouter as Router, Route, Routes, Navigate } from 
 import CreateAccount from './Components/account/CreateAccount';
 import Home from './Components/home/Home';
 import Navbar from './Components/layouts/NavBar';
+import Login from './Components/login/Login';
 import Profile from './Components/profile/Profile';
 import Workers from './Components/workers/Workers';
 
@@ -16,6 +17,7 @@ const App = () => {
                     <Route path='crear-cuenta' element= { <CreateAccount /> } />
                     <Route path='trabajadores' element= { <Workers /> } />
                     <Route path='perfil' element= { <Profile /> } />
+                    <Route path='login' element= { <Login /> } />
                     <Route path='*' element={ <Navigate replace to = "/"/> } />
                 </Route>
             </Routes>
