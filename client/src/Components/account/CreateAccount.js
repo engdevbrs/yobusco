@@ -40,13 +40,14 @@ function CreateAccount() {
   const handleClick = (direction) => {
     let newStep = currentStep;
 
-    if(direction === "confirmar"){
+    if(direction === "Iniciar sesión"){
       return navigate('/login');
-    }
-    (direction === "next" || direction === "confirmar") ? newStep++ : newStep--;
-    // check if steps are within bounds
-
+    }else if(direction === "stop"){
+      setCurrentStep(newStep);
+    }else{
+      (direction === "next") ? newStep++ : newStep--;
     newStep >= 0 && newStep < steps.length  && setCurrentStep(newStep);
+    }
   };
 
   return (
