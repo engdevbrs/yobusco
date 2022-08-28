@@ -1,0 +1,85 @@
+.flexMain {
+    display:flex;
+    align-items: center;
+
+  }
+  .flex1 { flex:1 }
+  .flex2 { flex:2 }
+  .flex3 { flex:3 }
+   
+  button.siteLink {
+    margin-left:-5px;
+    border:none;
+    padding:20px;
+    display:inline-block;
+    min-width:115px;
+  }
+  .whiteLink {
+    background : #202a34;
+    color: #eaeaea;
+  }
+  .whiteLink:active {
+    color: #fff;
+    background:#202a34
+  }
+  .blackLink {
+    color: #fff;
+    transition: all 300ms linear;
+  }
+   
+  .blackLink:active {
+    color: #000;
+    background:#fff
+  }
+
+
+  #menuDrawer {
+    background:#202a34;
+    position:fixed;
+    height:100vh;
+    overflow:auto;
+    z-index:12312;
+    top:0;
+    left:0;
+    color: #eaeaea;
+    min-width:25%;
+    max-width:320px;
+    width:100%;
+    transform : translateX(-100%);
+    transition : transform 200ms linear;
+  }
+  #mainNavigation {
+    transition : transform 200ms linear;
+    background : #202a34;
+  }
+  .drawMenu > #menuDrawer {
+    transform : translateX(0%);
+  }
+  .fa-times {
+    cursor : pointer
+  }
+  a.nav-menu-item:hover {
+    margin-left:2px;
+    border-left:10px solid #fe6b68;
+    color: #67779e;
+  }
+  a.nav-menu-item{
+    transition:border 200ms linear;
+    text-decoration:none;
+    display:block;
+    padding:18px;
+    padding-left:32px;
+    font-weight:bold;
+    color:#eaeaea;
+  }
+  a.nav-menu-item i{
+    color:#83a7d9;
+  }
+  select.noStyle {
+    border:none;
+    outline:none
+  }
+
+  .counter.counter-lg {
+    top: -24px !important;
+  }

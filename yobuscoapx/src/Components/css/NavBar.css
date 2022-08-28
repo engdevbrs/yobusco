@@ -1,0 +1,39 @@
+.navbar{
+    background-color: #212529;
+    padding: 0px;
+}
+
+a{
+    font-family: "Hind Vadodara", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: rgb(33, 33, 33);
+    text-decoration: none;
+}
+
+div .session-in {
+    padding: 5px;
+}
+
+.session-in {
+    color: rgb(255, 255, 255) !important;
+    background-color: rgba(226, 39, 39, 0.753);
+}
+
+div .create {
+    padding: 5px;
+}
+
+.create {
+    color: rgb(255, 255, 255) !important;
+    background-color: #0D6EFD;
+}
+
+.session-in , .create {
+    margin-left: 10px;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    border-radius: 5px;
+    padding: 10px;
+}
