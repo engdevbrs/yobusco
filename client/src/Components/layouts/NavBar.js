@@ -1,16 +1,12 @@
 import React from "react";
-import { Navbar, Nav, Container, Button, OverlayTrigger, Tooltip} from 'react-bootstrap';
-import { Outlet, Link, useNavigate} from 'react-router-dom';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Outlet } from 'react-router-dom';
 import '../css/NavBar.css'
-import Logo from '../assets/logo.png';
 import Footer from "./Footer";
 
 const Menu = () =>{
 
     const menuToggle = () => {
       let menuHolder = document.getElementById('menuHolder');
-      let siteBrand = document.getElementById('siteBrand');
 
       if(menuHolder.className === "drawMenu") menuHolder.className = ""
       else menuHolder.className = "drawMenu"
@@ -38,15 +34,17 @@ const Menu = () =>{
               <div className="p-4 border-bottom">
                 <div className='row'>
                   <div className="col text-end ">
-                    <i className="fas fa-times" role="btn" onClick={() => menuToggle()}></i>
+                    <i className="fas fa-times" onClick={() => menuToggle()}></i>
                   </div>
                 </div>
               </div>
               <div>
                 <a href="/" className="nav-menu-item"><i className="fas fa-home me-3"></i>Inicio</a>
                 <a href="/trabajadores" className="nav-menu-item"><i className="fas fa-hard-hat me-3"></i>Trabajadores</a>
-                <a href="/crear-cuenta" className="nav-menu-item"><i className="fas fa-user-plus me-3"></i>Crear cuenta</a>
-                <a href="/login" className="nav-menu-item"><i className="fas fa-sign-in me-3"></i>Iniciar sesión</a>
+                <a href="/sobre-nosotros" className="nav-menu-item"><i className="fas fa-exclamation-circle me-3"></i>Sobre Nosotros</a>
+                <a href="/preguntas-frecuentes" className="nav-menu-item"><i className="fas fa-question-circle me-3"></i>Preguntas Frecuentes</a>
+                <a href="/crear-cuenta" className="nav-menu-item"><i className="fas fa-user-plus me-3"></i>Crear Cuenta</a>
+                <a href="/login" className="nav-menu-item"><i className="fas fa-sign-in me-3"></i>Iniciar Sesión</a>
               </div>
             </div>
           </div>

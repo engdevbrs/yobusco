@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import PersonalInformation from "./Personalnformation";
+import React from "react";
 
 const StepperControl = ({ handleClick, currentStep, steps}) =>{
 

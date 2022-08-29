@@ -130,7 +130,7 @@ const PersonalInformation = () => {
                         <div className='form-floating col-md-4 mb-3'>
                             <select id='region' className='form-select' name='region' 
                             value={userData['region'] || ''} onChange={handleRegionChange} required>
-                            <option disabled selected value="">Seleccionar región</option>
+                            <option disabled selected="" value="">Seleccionar región</option>
                             {
                                 localidades.map((locations,key) => {
                                     return(
@@ -149,7 +149,7 @@ const PersonalInformation = () => {
                         <div className='form-floating col-md-4 mb-3'>
                             <select id='city' className='form-select' name='city' 
                             value={userData['city'] || ''} onChange={handleCityChange} required>
-                            <option disabled selected value="">Seleccionar provincia</option>
+                            <option disabled selected="" value="">Seleccionar provincia</option>
                             <Form.Control.Feedback type="invalid">
                             Por favor, seleccione una provincia.
                             </Form.Control.Feedback>
@@ -168,7 +168,7 @@ const PersonalInformation = () => {
                         <div className='form-floating col-md-4 mb-3'>
                             <select id='comunne' className='form-select' name='comunne' 
                             value={userData['comunne'] || ''} onChange={handleChange} required>
-                            <option disabled selected value="">Seleccionar comuna</option>
+                            <option disabled selected="" value="">Seleccionar comuna</option>
                             <Form.Control.Feedback type="invalid">
                                 Por favor, seleccione una comuna.
                             </Form.Control.Feedback>
