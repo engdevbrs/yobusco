@@ -11,22 +11,22 @@ const Footer = () => {
                     <div className="col-lg-4 col-md-6">
                     <img src={Logo} alt="" style={{ width: '80px' }}/>
                         <p className="small text-muted">Una página web creada para los emprendedores/as de Chile.</p>
-                        <p className="small text-muted mb-0">&copy; Todos los derechos reservados. <a className="text-primary" href="#">adioweb.cl</a></p>
+                        <p className="small text-muted mb-0">&copy; Todos los derechos reservados.</p>
                     </div>
                     <div className="col-lg-2 col-md-6">
                         <h5 className="text-white mb-3">Enalces rápidos</h5>
                         <ul className="list-unstyled text-muted">
-                            <li><a href="#">Inicio</a></li>
-                            <li><a href="#">Trabajadores</a></li>
-                            <li><a href="#">Crear cuenta</a></li>
-                            <li><a href="#">Iniciar sesión</a></li>
+                            <li><a href="/">Inicio</a></li>
+                            <li><a href="/trabajadores">Trabajadores</a></li>
+                            <li><a href="/crear-cuenta">Crear cuenta</a></li>
+                            <li><a href="/login">Iniciar sesión</a></li>
                         </ul>
                     </div>
                     <div className="col-lg-2 col-md-6">
                         <h5 className="text-white mb-3">Ayuda</h5>
                         <ul className="list-unstyled text-muted">
-                            <li><a href="#">Preguntas frecuentes</a></li>
-                            <li><a href="#">Como usar</a></li>
+                            <li><a href="/preguntas-frecuentes">Preguntas frecuentes</a></li>
+                            <li><a href="/sobre-nosotros">Sobre nosotros</a></li>
                             <li><a href="#">Términos y condiciones</a></li>
                             <li><a href="#">Comentarios</a></li>
                         </ul>
