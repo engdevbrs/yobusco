@@ -66,13 +66,13 @@ const CreateNewUser = () => {
                             <label htmlFor="pass">Contraseña</label>
                             <p style={{fontWeight:"bold"}}>Todas las marcas de verificación deben volverse verdes, la contraseña debe tener:</p>
                             <p><i style={{color: value1.length >= "8" ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true">
-                                </i> Al menos, 8 carácteres.</p>
+                                </i><Form.Text> Al menos, 8 carácteres.</Form.Text></p>
                             <p><i style={{color: value1.match(/[A-Z]/) ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true">
-                                </i> Al menos, 1 letra mayúscula.</p>
+                                </i><Form.Text> Al menos, 1 letra mayúscula.</Form.Text></p>
                             <p><i style={{color:value1.match(/[a-z]/) ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true">
-                                </i> Al menos, 1 letra minúscula.</p>
+                                </i><Form.Text> Al menos, 1 letra minúscula.</Form.Text></p>
                             <p><i style={{color:value1.match(/[\d`~!@#$%\^&*()+=|;:'",.<>\/?\\\-]/) ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true">
-                                </i> Al menos, 1 número o un carácter especial.</p>
+                                </i><Form.Text>  Al menos, 1 número o un carácter especial.</Form.Text></p>
                         </Col>
                     </Row>
                     <Row>
@@ -80,7 +80,8 @@ const CreateNewUser = () => {
                             <input type="password" className="form-control" id="confirmpass" placeholder="Especialidad"
                             onChange={handleChange2}/>
                             <label htmlFor="confirmpass">Confirmar contraseña</label>
-                            <p className='mt-2'><i style={{color:((value1 === value2) && (value1 !=="")) ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true"></i> Ambas contraseñas son iguales</p>
+                            <p className='mt-2'><i style={{color:((value1 === value2) && (value1 !=="")) ? "green" : "red",fontSize:"20px"}} 
+                            className="fa fa-check-circle" aria-hidden="true"></i><Form.Text>  Ambas contraseñas son iguales?</Form.Text></p>
                         </Col>
                     </Row>
                 </Form>

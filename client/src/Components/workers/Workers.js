@@ -26,9 +26,9 @@ const Workers = () => {
       <Container className='mt-4' fluid>
         <Row lg={1} md={1} sm={1} xs={1} className='worker-view'>                
           <Col className='d-flex justify-content-end'>
-          <a onClick={handleShow} className="me-2" style={{color:'#202a34'}}>
+          <p onClick={handleShow} className="me-2" style={{color:'#202a34'}}>
             <FaFilter cursor={'pointer'} size={26} />
-          </a>
+          </p>
           <Offcanvas show={show} onHide={handleClose} placement="end" name="end">
             <Offcanvas.Header closeButton>
               <Offcanvas.Title></Offcanvas.Title>
@@ -89,7 +89,7 @@ const Workers = () => {
                               <Col className="mb-2">
                                 <p className="mb-2 text-center">@sheisme</p>
                                 <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-2.webp"
-                                alt="Generic placeholder image" className="img-fluid rounded-circle border border-light border-3"
+                                alt="Generic placeholder" className="img-fluid rounded-circle border border-light border-3"
                                 style={{width: '100px'}}/>
                               </Col>
                               <Col className="mt-1 mb-2">
