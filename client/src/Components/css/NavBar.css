@@ -15,12 +15,12 @@
     min-width:115px;
   }
   .whiteLink {
-    background : #202a34;
+    background : #212529;
     color: #eaeaea;
   }
   .whiteLink:active {
     color: #fff;
-    background:#202a34
+    background:#212529
   }
   .blackLink {
     color: #fff;
@@ -50,7 +50,7 @@
   }
   #mainNavigation {
     transition : transform 200ms linear;
-    background : #202a34;
+    background : #212529;
   }
   .drawMenu > #menuDrawer {
     transform : translateX(0%);
@@ -61,7 +61,7 @@
   a.nav-menu-item:hover {
     margin-left:2px;
     border-left:10px solid #fe6b68;
-    color: #67779e;
+    color: #aebbdc;
   }
   a.nav-menu-item{
     transition:border 200ms linear;
@@ -73,7 +73,7 @@
     color:#eaeaea;
   }
   a.nav-menu-item i{
-    color:#83a7d9;
+    color:#5f738f;
   }
   select.noStyle {
     border:none;

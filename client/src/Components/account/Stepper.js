@@ -97,7 +97,7 @@ const Stepper = ({ steps, currentStep }) => {
             )}
           </div>
           <div
-            className={`stepdescript ${
+            className={`stepdescript fw-normal text-muted ${
               step.highlighted ? "text-gray-900" : "text-gray-400"
             }`}
           >

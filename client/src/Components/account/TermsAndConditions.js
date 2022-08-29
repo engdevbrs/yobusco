@@ -1,5 +1,5 @@
-import React, { Component, useEffect, useState } from 'react';
-import { Container, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Container } from 'react-bootstrap';
 import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -7,7 +7,6 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import '../css/TermsAndConditions.css';
 import { useStepperContext } from '../contexts/StepperContext';
-import StepperControl from './StepperControl';
 
 const TermsConditions = () => {
 
@@ -22,6 +21,17 @@ const TermsConditions = () => {
         setDisabledButton(!disabledButton)
         TermsConditions.disabled = disabledButton;
     };
+
+    const handleSubmit = (event) =>{
+        event.preventDefault();
+    }
+
+    useEffect(() => {      
+        document.addEventListener('handleEvent', handleSubmit);
+        return () => {
+            document.removeEventListener('handleEvent', handleSubmit);
+        }
+    },[userData]);
 
     return (
         <>
