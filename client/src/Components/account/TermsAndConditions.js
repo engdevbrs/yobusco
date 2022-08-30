@@ -23,18 +23,11 @@ const TermsConditions = () => {
         TermsConditions.disabled = disabledButton;
     };
 
-    const handleSubmit = async (event) =>{
-        event.preventDefault();
-        if(event.type === "handleEvent"){
-            try {
-                const result = await Axios.post("http://3.92.68.154:3001/api/create-user", userData);
-                if(result.status === 200){
-
-                }
-            } catch (error) {
-                console.log(error.response);
-            } 
-        }
+    const handleSubmit = (event) =>{
+        Object.defineProperty(event, 'continue', {
+            value: true,
+            writable: true
+        });
     }
 
     useEffect(() => {      

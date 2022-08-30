@@ -3,7 +3,6 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mysql = require('mysql');
-const fieldsCreateUse = 'rutUser,nameUser,lastnamesUser,bornDate,cellphone,email,regionUser,cityUser,communeUser,workareaUser,specialityArea,chargeUser,experienceYears,workResume';
 
 const db = mysql.createConnection({
     host: 'db-yobusco.c4j2uwjr1j1z.us-east-1.rds.amazonaws.com',
@@ -17,7 +16,7 @@ db.connect((error) =>{
     if(error){
         console.log(error.message);
     }else{
-        console.log("connected a database");
+        console.log("connected to database");
     }
 })
 

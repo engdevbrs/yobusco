@@ -1,27 +1,77 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
 import '../css/CreateUser.css';
-import finalcheck from '../assets/final-check.png'
+import finalcheck from '../assets/final-check.gif'
+import finalerror from '../assets/final-error.gif'
+import loadingrequestgf from '../assets/loading-request.gif'
 import { useStepperContext } from '../contexts/StepperContext';
 
 const Confirm = () => {
   const { userData, setUserData } = useStepperContext();
+  const [ result, setResult] = useState([]);
+  const [ loadingrequest, setLoadingRequest] = useState(true); 
+
+  const handleCreate =  async () => {
+    Axios.post("http://3.92.68.154:3001/api/create-user", userData)
+      .then((result) => {
+          if(result.status === 200){
+              setResult(result.status);
+              setLoadingRequest(false);
+              clearTimeout();
+          }
+      }).catch(error => {
+          setResult(error.response);
+          setLoadingRequest(false);
+          clearTimeout();
+      });
+  }
+
+  useEffect(() =>{
+    setTimeout(() => {
+      handleCreate();
+    }, 2500);
+  },[]);
+
 
   return (
     <>
-    <div className="container mt-10">
-      <div className="final">
-        <div className="wrapper">
-          <img src={finalcheck} alt="imagen de confirmación"/>
+    <div className="container mt-10 mb-5" hidden={!loadingrequest}>
+        <div className="final">
+            <div className="wrapper text-center">
+              <img src={loadingrequestgf} alt="imagen de confirmación" style={{width: '15rem'}}/>
+            </div>
+            <div className="success-account mb-3">
+              Estamos verificando tus datos...
+            </div>
         </div>
-        <div className="mt-3 congrats">
-          Felicidades!
-        </div>
-        <div className="success-account mb-3">
-          Tu cuenta ha sido creada con éxito.
-        </div>
-      </div>
     </div>
+    {
+      result !== 200 ? <div className="container mt-10" hidden={loadingrequest}>
+                                  <div className="final">
+                                    <div className="wrapper">
+                                      <img src={finalerror} alt="imagen de confirmación" style={{width: '15rem'}}/>
+                                    </div>
+                                    <div className="mt-3 congrats">
+                                      UPS! Tu cuenta no pudo ser creada
+                                    </div>
+                                    <div className="success-account mb-3">
+                                      Verifica tus datos y vuelve a intentar.
+                                    </div>
+                                  </div>
+                                </div> : <div className="container mt-10" hidden={loadingrequest}>
+                                          <div className="final">
+                                            <div className="wrapper">
+                                              <img src={finalcheck} alt="imagen de confirmación" style={{width: '15rem'}}/>
+                                            </div>
+                                            <div className="mt-3 congrats">
+                                              Felicidades!
+                                            </div>
+                                            <div className="success-account mb-3">
+                                              Tu cuenta ha sido creada con éxito.
+                                            </div>
+                                          </div>
+                                        </div>
+    }
     </>
   )
 }
