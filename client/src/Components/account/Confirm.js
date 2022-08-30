@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
 import '../css/CreateUser.css';
-import finalcheck from '../assets/final-check.gif'
-import finalerror from '../assets/final-error.gif'
+import finalcheck from '../assets/final-check.png'
+import finalerror from '../assets/final-error.png'
 import loadingrequestgf from '../assets/loading-request.gif'
 import { useStepperContext } from '../contexts/StepperContext';
 
@@ -35,7 +35,7 @@ const Confirm = () => {
 
   return (
     <>
-    <div className="container mt-10 mb-5" hidden={!loadingrequest}>
+    <div className="container mt-5 mb-5" hidden={!loadingrequest}>
         <div className="final">
             <div className="wrapper text-center">
               <img src={loadingrequestgf} alt="imagen de confirmación" style={{width: '15rem'}}/>
@@ -46,22 +46,22 @@ const Confirm = () => {
         </div>
     </div>
     {
-      result !== 200 ? <div className="container mt-10" hidden={loadingrequest}>
+      result !== 200 ? <div className="container mt-5 mb-5" hidden={loadingrequest}>
                                   <div className="final">
-                                    <div className="wrapper">
-                                      <img src={finalerror} alt="imagen de confirmación" style={{width: '15rem'}}/>
+                                    <div className="wrapper mb-4">
+                                      <img src={finalerror} alt="imagen de confirmación" style={{width: '10rem'}}/>
                                     </div>
                                     <div className="mt-3 congrats">
-                                      UPS! Tu cuenta no pudo ser creada
+                                      UPS! Lo sentimos, su cuenta no pudo ser creada
                                     </div>
                                     <div className="success-account mb-3">
-                                      Verifica tus datos y vuelve a intentar.
+                                      Verifique sus datos y vuelva a intentar.
                                     </div>
                                   </div>
-                                </div> : <div className="container mt-10" hidden={loadingrequest}>
+                                </div> : <div className="container mt-5 mb-5" hidden={loadingrequest}>
                                           <div className="final">
-                                            <div className="wrapper">
-                                              <img src={finalcheck} alt="imagen de confirmación" style={{width: '15rem'}}/>
+                                            <div className="wrapper mb-4">
+                                              <img src={finalcheck} alt="imagen de confirmación" style={{width: '10rem'}}/>
                                             </div>
                                             <div className="mt-3 congrats">
                                               Felicidades!

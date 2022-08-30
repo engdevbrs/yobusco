@@ -36,7 +36,6 @@ const CreateNewUser = () => {
     }
 
     useEffect(() =>{
-        document.getElementById('steps').scrollIntoView();
         if(value1.length >= "8" && value1.match(/[A-Z]/) && 
         value1.match(/[a-z]/) && value1.match(/[\d`~!@#$%\^&*()+=|;:'",.<>\/?\\\-]/)
         && ((value1 === value2) && (value1 !==""))){
