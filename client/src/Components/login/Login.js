@@ -19,7 +19,7 @@ const Login = () =>  {
 
     const submitForm = (e) =>{
         e.preventDefault();
-        Axios.post("http://http://3.92.68.154:3001/api/login", {userName,userPass})
+        Axios.post("http://3.92.68.154:3001/api/login", {userName,userPass})
           .then((result) => {
               if(result.status === 200){
                   sessionStorage.setItem("accessToken", result.data.accessToken);
