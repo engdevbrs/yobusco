@@ -21,7 +21,7 @@ const Profile = () => {
     const [inputs , setInputs ] = useState(false);
 
     const getAccess = (token) =>{
-        Axios.post("http://localhost:3001/api/user-info", {
+        Axios.post("http://3.92.68.154:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
