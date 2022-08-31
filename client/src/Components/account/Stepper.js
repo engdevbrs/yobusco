@@ -114,7 +114,7 @@ const Stepper = ({ steps, currentStep }) => {
   });
 
   return (
-    <div className="steps">
+    <div id="steps" className="steps">
       {stepsDisplay}
     </div>
   );

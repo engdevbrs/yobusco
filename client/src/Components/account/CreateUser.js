@@ -29,6 +29,10 @@ const CreateNewUser = () => {
     }
    
     const handleSubmit = (event) =>{
+        Object.defineProperty(event, 'continue', {
+            value: true,
+            writable: true
+        });
     }
 
     useEffect(() =>{
@@ -64,15 +68,15 @@ const CreateNewUser = () => {
                             <input type="password" className="form-control" id='pass' name='pass' placeholder="Especialidad"
                             value={userData["pass"] || ""} onChange={(e) => {handleChange(e); handleChange1(e)}}/>
                             <label htmlFor="pass">Contraseña</label>
-                            <p style={{fontWeight:"bold"}}>Todas las marcas de verificación deben volverse verdes, la contraseña debe tener:</p>
+                            <p className='mt-1' style={{fontWeight:"bold"}}>Todas las marcas de verificación deben volverse verdes, la contraseña debe tener:</p>
                             <p><i style={{color: value1.length >= "8" ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true">
                                 </i><Form.Text> Al menos, 8 carácteres.</Form.Text></p>
                             <p><i style={{color: value1.match(/[A-Z]/) ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true">
-                                </i><Form.Text> Al menos, 1 letra mayúscula.</Form.Text></p>
-                            <p><i style={{color:value1.match(/[a-z]/) ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true">
-                                </i><Form.Text> Al menos, 1 letra minúscula.</Form.Text></p>
-                            <p><i style={{color:value1.match(/[\d`~!@#$%\^&*()+=|;:'",.<>\/?\\\-]/) ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true">
-                                </i><Form.Text>  Al menos, 1 número o un carácter especial.</Form.Text></p>
+                                </i><Form.Text> Al menos, una letra mayúscula.</Form.Text></p>
+                            <p><i style={{color:value1.match(/[0-9]/) ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true">
+                                </i><Form.Text> Al menos, un número.</Form.Text></p>
+                            <p><i style={{color:value1.match(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/) ? "green" : "red",fontSize:"20px"}} className="fa fa-check-circle" aria-hidden="true">
+                                </i><Form.Text>  Al menos, un carácter especial.</Form.Text></p>
                         </Col>
                     </Row>
                     <Row>
