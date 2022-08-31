@@ -88,6 +88,18 @@ app.get('/api/localidades', (req,res)=>{
     })
 });
 
+app.get('/api/usuarios', (req,res)=>{
+    res.header("Access-Control-Allow-Origin", "*");
+    const sqlGetUsers = "SELECT * FROM user_info"
+    db.query(sqlGetUsers,(err,result) =>{
+        if(err){
+            res.status(500).send(err);
+        }else{
+            res.send(result);
+        }
+    })
+});
+
 app.post('/api/user-info', validateToken, (req,res)=>{
     const userLogged = JSON.parse(Buffer.from(req.body.authorization.split('.')[1], 'base64').toString());;
     const sqlGetUser = "SELECT * FROM user_info u WHERE u.email ="+mysql.escape(userLogged.userName);
@@ -104,7 +116,7 @@ app.post('/api/login', (req,res)=>{
     const user = req.body.userName;
     const pass = req.body.userPass;
     const sqlGetUserCredentials = "SELECT u.userName, u.userPass FROM user_credentials u WHERE u.userName = "+mysql.escape(user)+ "AND u.userPass ="+mysql.escape(pass);
-    db.query(sqlGetUserCredentials,[user,pass],(err,result) =>{
+    db.query(sqlGetUserCredentials,(err,result) =>{
         if(result.length === 0){
             res.status(403).send({ error: 'Error o contraseñas incorrectos' });
         }else{
