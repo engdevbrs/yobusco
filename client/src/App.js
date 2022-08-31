@@ -18,7 +18,7 @@ const App = () => {
                     <Route index element= { <Home />} />
                     <Route path='crear-cuenta' element= { <CreateAccount />  } />
                     <Route path='trabajadores' element= { <Workers /> } />
-                    <Route path='perfil/:perfilName' element= { <Profile /> } />
+                    <Route path='perfil' element= { <Profile /> } />
                     <Route path='login' element= { <Login /> } />
                     <Route path='preguntas-frecuentes' element= { <FAQ /> } />
                     <Route path='sobre-nosotros' element= { <About /> } />

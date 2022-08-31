@@ -4,25 +4,28 @@ import Card from 'react-bootstrap/Card';
 import './Login.css';
 import LoginPic from '../assets/login-pic.jpg';
 import Axios  from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () =>  {
 
-
-
-    const[ warnemail, setwarnemail]=useState(false);
-    const[ warnpass, setwarnpass]=useState(false);
-    const[ danger, setdanger]=useState(true);
+    const[ warnemail, setwarnemail ]=useState(false);
+    const[ warnpass, setwarnpass ]=useState(false);
+    const[ danger, setdanger ]=useState(true);
 
     const[ eye, seteye]=useState(true);
     const[ userPass, setPass]=useState("password");
     const[ userName,setUserName ]=useState("");
 
+    const navigate = useNavigate();
+
     const submitForm = (e) =>{
+        //3.92.68.154 AWS LOCAL
         e.preventDefault();
         Axios.post("http://3.92.68.154:3001/api/login", {userName,userPass})
           .then((result) => {
               if(result.status === 200){
                   sessionStorage.setItem("accessToken", result.data.accessToken);
+                  return navigate('/perfil');
               }
           }).catch(error => {
               console.log(error.response);
@@ -57,7 +60,7 @@ const Login = () =>  {
                             <div className="recovery mt-2">
                                 <p><a href="/crear-cuenta">Recuperar contraseña</a></p>
                             </div>
-                            <div className="btnLogin d-grid gap-2">
+                            <div className="btnLogin d-grid">
                             <Button size="lg" type='submit'>
                                 Iniciar sesión
                             </Button>

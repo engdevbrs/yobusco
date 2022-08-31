@@ -88,14 +88,25 @@ app.get('/api/localidades', (req,res)=>{
     })
 });
 
+app.post('/api/user-info', validateToken, (req,res)=>{
+    const userLogged = JSON.parse(Buffer.from(req.body.authorization.split('.')[1], 'base64').toString());;
+    const sqlGetUser = "SELECT * FROM user_info u WHERE u.email ="+mysql.escape(userLogged.userName);
+    db.query(sqlGetUser,(err,result) =>{
+        if(err){
+            res.status(500).send('Problema buscando información del usuario')
+        }else{
+            res.send(result);
+        }
+    })
+});
+
 app.post('/api/login', (req,res)=>{
-    res.header("Access-Control-Allow-Origin", "*");
     const user = req.body.userName;
     const pass = req.body.userPass;
     const sqlGetUserCredentials = "SELECT u.userName, u.userPass FROM user_credentials u WHERE u.userName = "+mysql.escape(user)+ "AND u.userPass ="+mysql.escape(pass);
     db.query(sqlGetUserCredentials,[user,pass],(err,result) =>{
         if(result.length === 0){
-            res.status(401).send({ error: 'Error o contraseñas incorrectos' });
+            res.status(403).send({ error: 'Error o contraseñas incorrectos' });
         }else{
             const accessToken = generateAccessToken(req.body);
             res.header('authorization', accessToken).json({
@@ -111,11 +122,10 @@ function generateAccessToken(data){
 }
 
 function validateToken(req,res,next){
-    const accessToken = req.headers['authorization'];
+    const accessToken = req.body['authorization'] || req.body['x-access-token'];
     if(!accessToken){
-        res.status(403).send({error: 'Access Denied'});
+        res.status(401).send({error: 'Access Denied'});
     }
-
     jwt.verify(accessToken, process.env.SECRET, (err,response) =>{
         if(err){
             res.send('Access denied, token expired or incorrect')
