@@ -8,8 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () =>  {
 
-    const[ warnemail, setwarnemail ]=useState(false);
-    const[ warnpass, setwarnpass ]=useState(false);
+    const[ warnCredentials, setwarnCredentials ]=useState([]);
     const[ danger, setdanger ]=useState(true);
 
     const[ eye, seteye]=useState(true);
@@ -21,14 +20,15 @@ const Login = () =>  {
     const submitForm = (e) =>{
         //3.92.68.154 AWS LOCAL
         e.preventDefault();
-        Axios.post("http://3.92.68.154:3001/api/login", {userName,userPass})
+        Axios.post("http://localhost:3001/api/login", {userName,userPass})
           .then((result) => {
               if(result.status === 200){
-                  sessionStorage.setItem("accessToken", result.data.accessToken);
+                  localStorage.setItem("accessToken", result.data.accessToken);
+                  setwarnCredentials(false)
                   return navigate('/perfil');
               }
           }).catch(error => {
-              console.log(error.response);
+                setwarnCredentials(true)
           });
     }; 
 
@@ -50,12 +50,15 @@ const Login = () =>  {
                         </div>
                         <Form onSubmit={(e) => submitForm(e)}>
                             <div className="input_text">
-                                <input className={` ${warnemail ? "warning" : "" }`} type="text" placeholder="Ingresa tu email" name="email" onChange={(e) => setUserName(e.target.value)} />
-                                <p className={` ${danger ? "danger" : "" }`}><i className="fa fa-warning"></i>Por favor, ingrese su correo electrónico</p>
+                                <input type="text" placeholder="Ingresa tu email" name="email" onChange={(e) => setUserName(e.target.value)} />
                             </div>
                             <div className="input_text">
-                                <input className={` ${warnpass ? "warning" : "" }`} type={eye !== false ? 'password' : 'text'} placeholder="Igresa tu contraseña" name="password" onChange={(e) => setPass(e.target.value)} />
+                                <input type={eye !== false ? 'password' : 'text'} placeholder="Igresa tu contraseña" name="password" onChange={(e) => setPass(e.target.value)} />
                                 <i onClick={() => seteye(!eye)} className={`fa ${eye ? "fa-eye-slash" : "fa-eye" }`}></i>
+                            </div>
+                            <div>{ 
+                            warnCredentials === true ? <Form.Text style={{color: 'red'}}>Usuario y/o Contraseñas inválidas</Form.Text> : ''
+                            }
                             </div>
                             <div className="recovery mt-2">
                                 <p><a href="/crear-cuenta">Recuperar contraseña</a></p>

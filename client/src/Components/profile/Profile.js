@@ -21,7 +21,7 @@ const Profile = () => {
     const [inputs , setInputs ] = useState(false);
 
     const getAccess = (token) =>{
-        Axios.post("http://3.92.68.154:3001/api/user-info", {
+        Axios.post("http://localhost:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -179,7 +179,7 @@ const Profile = () => {
 
     useEffect(() =>{
         setTimeout(() =>{
-            const getToken = sessionStorage.getItem('accessToken');
+            const getToken = localStorage.getItem('accessToken');
             if(getToken === null){
                 setLoading(false);
                 setResponse(500);
