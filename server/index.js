@@ -1,27 +1,15 @@
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const cors = require('cors');
+const express = require('express')
+const app = express()
+const bodyParser = require('body-parser')
+const cors = require('cors')
+const db = require('./database/connection')
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv');
+dotenv.config({path: './env/.env'})
 const mysql = require('mysql');
 
-const db = mysql.createConnection({
-    host: 'db-yobusco.c4j2uwjr1j1z.us-east-1.rds.amazonaws.com',
-    port: '3306',
-    user: 'admin',
-    password: 'baltoh1502',
-    database: 'yobusco_db'
-})
-
-db.connect((error) =>{
-    if(error){
-        console.log(error.message);
-    }else{
-        console.log("connected to database");
-    }
-})
-
-app.use(cors());
-app.use(express.json());
+app.use(cors())
+app.use(express.json())
 app.use (express.urlencoded ({extended: false}))
 
 app.post('/api/create-user',(req,res)=>{
@@ -41,13 +29,21 @@ app.post('/api/create-user',(req,res)=>{
     const pass = (req.body.pass === undefined || req.body.pass === null) ? req.body.pass = "" : req.body.pass;
     const agreeconditions = req.body.agreeconditions;
 
-    const sqlInsert = "INSERT INTO user_info(rutUser,nameUser,lastnamesUser,bornDate,cellphone,email,regionUser,cityUser,communeUser,workareaUser,chargeUser,experienceYears,workResume,agreeconditions)" + 
+    const sqlInsert1 = "INSERT INTO user_info(rutUser,nameUser,lastnamesUser,bornDate,cellphone,email,regionUser,cityUser,communeUser,workareaUser,chargeUser,experienceYears,workResume,agreeconditions)" + 
     "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    db.query(sqlInsert,[rut,name,lastname,bornDate,phone,email,region,city,comunne,area,role,yearsExperience,resume,agreeconditions],(err,result)=>{
+    const sqlInsert2 = "INSERT INTO user_credentials(userName, userPass)" + 
+    "VALUES(?,?)";
+    db.query(sqlInsert1,[rut,name,lastname,bornDate,phone,email,region,city,comunne,area,role,yearsExperience,resume,agreeconditions],(err,result)=>{
         if(err){
             res.status(500).send({ error: 'Something failed!' });
         }else{
-            res.send(result);
+            db.query(sqlInsert2,[email,pass],(err,result)=>{
+                if(err){
+                    res.status(500).send({ error: 'Something failed!' });
+                }else{
+                    res.send(result);
+                }
+            })
         }
     })
 })
@@ -91,6 +87,43 @@ app.get('/api/localidades', (req,res)=>{
         }
     })
 });
+
+app.post('/api/login', (req,res)=>{
+    res.header("Access-Control-Allow-Origin", "*");
+    const user = req.body.userName;
+    const pass = req.body.userPass;
+    const sqlGetUserCredentials = "SELECT u.userName, u.userPass FROM user_credentials u WHERE u.userName = "+mysql.escape(user)+ "AND u.userPass ="+mysql.escape(pass);
+    db.query(sqlGetUserCredentials,[user,pass],(err,result) =>{
+        if(result.length === 0){
+            res.status(401).send({ error: 'Error o contraseñas incorrectos' });
+        }else{
+            const accessToken = generateAccessToken(req.body);
+            res.header('authorization', accessToken).json({
+                message: 'User authenticated',
+                accessToken: accessToken
+            })
+        }
+    })
+});
+
+function generateAccessToken(data){
+    return jwt.sign(data,process.env.SECRET, {expiresIn: '60m'});
+}
+
+function validateToken(req,res,next){
+    const accessToken = req.headers['authorization'];
+    if(!accessToken){
+        res.status(403).send({error: 'Access Denied'});
+    }
+
+    jwt.verify(accessToken, process.env.SECRET, (err,response) =>{
+        if(err){
+            res.send('Access denied, token expired or incorrect')
+        }else{
+            next();
+        }
+    })
+}
 
 app.listen(3001,()=>{
     console.log("escuchando en el puerto 3001");
