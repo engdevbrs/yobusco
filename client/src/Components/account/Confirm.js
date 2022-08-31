@@ -12,7 +12,7 @@ const Confirm = () => {
   const [ loadingrequest, setLoadingRequest] = useState(true); 
 
   const handleCreate =  async () => {
-    Axios.post("http://http://3.92.68.154:3001/api/create-user", userData)
+    Axios.post("http://3.92.68.154:3001/api/create-user", userData)
       .then((result) => {
           if(result.status === 200){
               setResult(result.status);
