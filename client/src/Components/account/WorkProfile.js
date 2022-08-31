@@ -35,11 +35,18 @@ const WorkProfile = () => {
             validation = area !== "" && experience !== "";
         }
         if(!validation){
-            event.preventDefault();
             setValidated(true);
+            Object.defineProperty(event, 'continue', {
+                value: false,
+                writable: true
+            });
         }
         else{
             setValidated(false);
+            Object.defineProperty(event, 'continue', {
+                value: true,
+                writable: true
+            });
         }
         if(switchCharge === false && userData.role !== undefined){
             delete userData.role;
@@ -47,6 +54,7 @@ const WorkProfile = () => {
     }
 
     useEffect(() => {      
+        document.getElementById('steps').scrollIntoView();
         document.addEventListener('handleEvent', handleSubmit);
         return () => {
             document.removeEventListener('handleEvent', handleSubmit);
@@ -57,7 +65,7 @@ const WorkProfile = () => {
         <>
         <Container className='form mt-5 mb-5'>
             <div className='col-xl-4 col-lg-6 col-md-10 col-sm-10 col-xs-12'>
-                <Form className='formulario shadow p-3 rounded' noValidate validated={validated}>
+                <Form id='formulario' className='formulario shadow p-3 rounded' noValidate validated={validated}>
                     <h3 className='mb-4 mt-1'>Perfil laboral</h3>
                     <Row>
                         <Form.Text className='mb-1'>Algunos campos son obligatorios</Form.Text>

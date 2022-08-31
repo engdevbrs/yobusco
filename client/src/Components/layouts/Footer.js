@@ -14,7 +14,7 @@ const Footer = () => {
                         <p className="small text-muted mb-0">&copy; Todos los derechos reservados.</p>
                     </div>
                     <div className="col-lg-2 col-md-6">
-                        <h5 className="text-white mb-3">Enalces rápidos</h5>
+                        <h5 className="text-white mb-3">Enlaces rápidos</h5>
                         <ul className="list-unstyled text-muted">
                             <li><a href="/">Inicio</a></li>
                             <li><a href="/trabajadores">Trabajadores</a></li>
