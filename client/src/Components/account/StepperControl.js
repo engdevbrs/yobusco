@@ -2,10 +2,9 @@ import React from "react";
 
 const StepperControl = ({ handleClick, currentStep, steps}) =>{
 
-  let handleEvent;
+  let handleEvent = new CustomEvent('handleEvent',{ detail: false,bubbles: true, cancelable: true});
 
   const handleButton = (e) =>{
-    handleEvent = new CustomEvent('handleEvent',{ detail: false,bubbles: false, cancelable: true});
     document.dispatchEvent(handleEvent);
   };
 
@@ -21,7 +20,7 @@ const StepperControl = ({ handleClick, currentStep, steps}) =>{
       <button
         id="nextButton"
         onClick={(e) => {handleButton(e); handleClick(currentStep === steps.length -1 ? "Iniciar sesión" : 
-        handleEvent.defaultPrevented === true ? "stop" : "next" )}}
+        handleEvent.continue !== true ? "stop" : "next" )}}
         className="btn btn-primary">
         {currentStep === steps.length - 1 ? "Iniciar sesión" : "Siguiente"}
       </button>

@@ -3,61 +3,33 @@ import { Button, Col, Form } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import './Login.css';
 import LoginPic from '../assets/login-pic.jpg';
+import Axios  from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () =>  {
 
+    const[ warnCredentials, setwarnCredentials ]=useState([]);
+    const[ danger, setdanger ]=useState(true);
 
-    const[inputs,setinputs]=useState({
-        email:"",
-        password:""
-    });
+    const[ eye, seteye]=useState(true);
+    const[ userPass, setPass]=useState("password");
+    const[ userName,setUserName ]=useState("");
 
-    const[warnemail,setwarnemail]=useState(false);
-    const[warnpass,setwarnpass]=useState(false);
-    const[danger,setdanger]=useState(true);
+    const navigate = useNavigate();
 
-    const[eye,seteye]=useState(true);
-    const[pass,setpass]=useState("password");
-
-
-    const inputEvent=(event)=>{
-    const name=event.target.name;
-    const value=event.target.value;
-
-    if(name === "email"){
-        if(value.length>0){
-            setdanger(true);
-        }
-    }
-    setinputs((lastValue)=>{
-    return{...lastValue, [name]: value }
-        });
-    };
-
-    const submitForm=(e)=>{
+    const submitForm = (e) =>{
+        //3.92.68.154 AWS LOCAL
         e.preventDefault();
-        setwarnemail(false);
-        setwarnpass(false);
-
-        if(inputs.email.length<1){ 
-            setdanger(false); 
-        }if(inputs.email === "" ){ 
-            setwarnemail(true); 
-        }else if(inputs.password === "" ){ 
-            setwarnpass(true); 
-        } else{ 
-            alert("Logged in Successfully"); 
-        } 
-    }; 
-
-    const Eye=()=>{
-        if(pass === "password"){
-            setpass("text");
-            seteye(false);
-        }else{
-            setpass("password");
-            seteye(true);
-        }
+        Axios.post("http://3.92.68.154:3001/api/login", {userName,userPass})
+          .then((result) => {
+              if(result.status === 200){
+                  localStorage.setItem("accessToken", result.data.accessToken);
+                  setwarnCredentials(false)
+                  return navigate('/perfil');
+              }
+          }).catch(error => {
+                setwarnCredentials(true)
+          });
     }; 
 
     return(
@@ -76,20 +48,23 @@ const Login = () =>  {
                             <h2>Hola otra vez!</h2>
                             <h4>Bienvenido de vuelta, te hemos extrañado! </h4>
                         </div>
-                        <Form onSubmit={submitForm}>
+                        <Form onSubmit={(e) => submitForm(e)}>
                             <div className="input_text">
-                                <input className={` ${warnemail ? "warning" : "" }`} type="text" placeholder="Ingresa tu email" name="email" value={inputs.email} onChange={inputEvent} />
-                                <p className={` ${danger ? "danger" : "" }`}><i className="fa fa-warning"></i>Por favor, ingrese su correo electrónico</p>
+                                <input type="text" placeholder="Ingresa tu email" name="email" onChange={(e) => setUserName(e.target.value)} />
                             </div>
                             <div className="input_text">
-                                <input className={` ${warnpass ? "warning" : "" }`} type={pass} placeholder="Igresa tu contraseña" name="password" value={inputs.password} onChange={inputEvent} />
-                                <i onClick={Eye} className={`fa ${eye ? "fa-eye-slash" : "fa-eye" }`}></i>
+                                <input type={eye !== false ? 'password' : 'text'} placeholder="Igresa tu contraseña" name="password" onChange={(e) => setPass(e.target.value)} />
+                                <i onClick={() => seteye(!eye)} className={`fa ${eye ? "fa-eye-slash" : "fa-eye" }`}></i>
+                            </div>
+                            <div>{ 
+                            warnCredentials === true ? <Form.Text style={{color: 'red'}}>Usuario y/o Contraseñas inválidas</Form.Text> : ''
+                            }
                             </div>
                             <div className="recovery mt-2">
                                 <p><a href="/crear-cuenta">Recuperar contraseña</a></p>
                             </div>
-                            <div className="btnLogin d-grid gap-2">
-                            <Button size="lg">
+                            <div className="btnLogin d-grid">
+                            <Button size="lg" type='submit'>
                                 Iniciar sesión
                             </Button>
                             </div>

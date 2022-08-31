@@ -46,15 +46,23 @@ const PersonalInformation = () => {
             arrayValues.push(elements.value);
         });
         if(arrayValues.includes("")){
-            event.preventDefault();
             setValidated(true);
+            Object.defineProperty(event, 'continue', {
+                value: false,
+                writable: true
+            });
         }
         else{
             setValidated(false);
+            Object.defineProperty(event, 'continue', {
+                value: true,
+                writable: true
+            });
         }
     }
-
+    //3.92.68.154 AWS LOCAL
     useEffect(() => {
+        document.getElementById('steps').scrollIntoView();
         Axios.get("http://3.92.68.154:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         });        

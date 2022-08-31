@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Axios from 'axios'
 import { Container } from 'react-bootstrap';
 import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
@@ -23,7 +24,10 @@ const TermsConditions = () => {
     };
 
     const handleSubmit = (event) =>{
-        event.preventDefault();
+        Object.defineProperty(event, 'continue', {
+            value: true,
+            writable: true
+        });
     }
 
     useEffect(() => {      

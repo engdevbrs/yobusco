@@ -1,14 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Card, Col, Container, Form, Nav, Offcanvas, Row } from 'react-bootstrap';
+import Axios from 'axios'
 import { FaUserPlus, FaFilter } from "react-icons/fa";
 import '../css/Workers.css';
 
 const Workers = () => {
 
   const [show, setShow] = useState(false);
-
+  const [usuarios, setUsuarios ] = useState([]);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  //3.92.68.154 AWS LOCAL
+  useEffect(() => {
+      Axios.get("http://3.92.68.154:3001/api/usuarios").then((res)=>{
+        setUsuarios(res.data);
+      });        
+  },[]);
 
   return (
     <>
@@ -67,14 +75,14 @@ const Workers = () => {
           </Col>
           <Col>
             <Row lg={2} md={2} sm={1} xs={1}>
-              {Array.from({ length: 4 }).map((_, idx) => (
+              {usuarios.map((element, idx) => (
                   <Col className='workers mt-3 mb-3'>
                     <Card className='worker-card shadow-lg' >
                       <Card.Body className="text-black">
                         <div>
-                          <h6 className="mb-4">Desarrollador de aplicaciones web</h6>
+                          <h6 className="mb-4">{element.workareaUser}</h6>
                           <div className="d-flex align-items-center justify-content-between mb-3">
-                            <p className="small mb-0"><i className="far fa-clock me-2"></i>1 año</p>
+                            <p className="small mb-0"><i className="far fa-clock me-2"></i>{element.experienceYears === 1 ? element.experienceYears + ' año' : element.experienceYears + ' años'}</p>
                             <Col className="col-2">
                               <Row className='m-1'>
                                 <span style={{color:'#202a34'}}>
@@ -87,7 +95,7 @@ const Workers = () => {
                         <Row lg={2} md={1} sm={1} xs={1} className='info-worker'>
                           <Col className='action-card col-lg-4 col-md-12'>
                               <Col className="mb-2">
-                                <p className="mb-2 text-center">@sheisme</p>
+                                <p className="mb-2 text-center">{element.nameUser}</p>
                                 <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-2.webp"
                                 alt="Generic placeholder" className="img-fluid rounded-circle border border-light border-3"
                                 style={{width: '100px'}}/>
@@ -98,9 +106,7 @@ const Workers = () => {
                           </Col>
                           <Col className='card-info col-lg-8 col-md-12'>
                               <Col>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                                  Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                  when an unknown printer took a galley of type and scrambled it to make a type specimen book</p>
+                                <p>{element.workResume}</p>
                               </Col>
                           </Col>
                         </Row>
