@@ -2,15 +2,29 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const path = require('path')
 const db = require('./database/connection')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv');
 dotenv.config({path: './env/.env'})
 const mysql = require('mysql');
+const multer = require('multer');
 
 app.use(cors())
 app.use(express.json())
-app.use (express.urlencoded ({extended: false}))
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static('./public'));
+
+//! Use of Multer
+const storage = multer.diskStorage({
+    destination: './public/uploads/'
+});
+ 
+// Init Upload
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 1000000 }
+});
 
 app.post('/api/create-user',(req,res)=>{
     const name = req.body.name;
@@ -23,10 +37,10 @@ app.post('/api/create-user',(req,res)=>{
     const city = req.body.city;
     const comunne = req.body.comunne;
     const area = req.body.area;
-    const role = (req.body.role === undefined || req.body.role === null) ? req.body.role = "" : req.body.role;
+    const role = (req.body.role === undefined || req.body.role === null) ? "" : req.body.role;
     const yearsExperience = req.body.yearsExperience;
-    const resume = (req.body.resume === undefined || req.body.resume === null) ? req.body.resume = "" : req.body.resume;
-    const pass = (req.body.pass === undefined || req.body.pass === null) ? req.body.pass = "" : req.body.pass;
+    const resume = (req.body.resume === undefined || req.body.resume === null) ? "" : req.body.resume;
+    const pass = (req.body.pass === undefined || req.body.pass === null) ? "" : req.body.pass;
     const agreeconditions = req.body.agreeconditions;
 
     const sqlInsert1 = "INSERT INTO user_info(rutUser,nameUser,lastnamesUser,bornDate,cellphone,email,regionUser,cityUser,communeUser,workareaUser,chargeUser,experienceYears,workResume,agreeconditions)" + 
@@ -129,6 +143,60 @@ app.post('/api/login', (req,res)=>{
     })
 });
 
+app.put('/api/upload-photo',upload.single('formFile'),validateToken,(req,res)=>{
+
+    req.headers['content-type'] = 'multipart/form-data,application/json'
+
+    const userLogged = JSON.parse(Buffer.from(req.body.authorization.split('.')[1], 'base64').toString());
+    formFile = req.file;
+
+    const sqlInsert1 = "UPDATE user_info SET userPhoto="+mysql.escape(formFile)+"WHERE user_info.email="+mysql.escape(userLogged.userName);
+    db.query(sqlInsert1,(err,result) =>{
+        if(err){
+            res.status(500).send('Problema subiendo Foto')
+        }else{
+            res.send(result);
+        }
+    })
+});
+
+app.put('/api/update-user', validateToken,(req,res)=>{
+
+    const userLogged = JSON.parse(Buffer.from(req.body.authorization.split('.')[1], 'base64').toString());
+
+    const dataToUpdate  = req.body.newArrayValues
+
+    website = (dataToUpdate[0].value === undefined || dataToUpdate[0].value === null) ? "" : dataToUpdate[0].value;
+    instagram = (dataToUpdate[1].value === undefined || dataToUpdate[1].value === null) ? "" : dataToUpdate[1].value;
+    facebook = (dataToUpdate[2].value === undefined || dataToUpdate[2].value === null) ? "" : dataToUpdate[2].value;
+    twitter = (dataToUpdate[3].value === undefined || dataToUpdate[3].value === null) ? "" : dataToUpdate[3].value;
+    whatsapp = (dataToUpdate[4].value === undefined || dataToUpdate[4].value === null) ? "" : dataToUpdate[4].value;
+    email = dataToUpdate[5].value;
+    cell = dataToUpdate[6].value;
+    colorInput = (dataToUpdate[7].value === undefined || dataToUpdate[7].value === null) ? "" : dataToUpdate[7].value;
+
+    const sqlInsert1 = "UPDATE user_info SET cellphone="+mysql.escape(cell)+ ",email="+mysql.escape(email) +",webSite="+mysql.escape(website)
+    +",instagramSite="+mysql.escape(instagram)+",facebookSite="+mysql.escape(facebook)+",twitterSite="+mysql.escape(twitter)+",whatsappSite="+mysql.escape(whatsapp)
+    +",userColor="+mysql.escape(colorInput)+"WHERE user_info.email="+mysql.escape(userLogged.userName);
+
+    const sqlInsert2 = "UPDATE user_credentials SET userName="+mysql.escape(email)+"WHERE user_credentials.userName="+mysql.escape(userLogged.userName);
+
+    db.query(sqlInsert1,(err,result) =>{
+        if(err){
+            res.status(500).send('Problema actualizando datos')
+        }else{
+            db.query(sqlInsert2,(err,result)=>{
+                if(err){
+                    res.status(500).send({ error: 'Falló la actualización' });
+                }else{
+                    res.send(result);
+                }
+            })
+        }
+    })
+});
+
+
 function generateAccessToken(data){
     return jwt.sign(data,process.env.SECRET, {expiresIn: '60m'});
 }
@@ -140,7 +208,7 @@ function validateToken(req,res,next){
     }
     jwt.verify(accessToken, process.env.SECRET, (err,response) =>{
         if(err){
-            res.send('Access denied, token expired or incorrect')
+            res.status(403).send('Access denied, token expired or incorrect')
         }else{
             next();
         }

@@ -13,7 +13,7 @@ const Workers = () => {
 
   //3.92.68.154 AWS LOCAL
   useEffect(() => {
-      Axios.get("http://3.92.68.154:3001/api/usuarios").then((res)=>{
+      Axios.get("http://localhost:3001/api/usuarios").then((res)=>{
         setUsuarios(res.data);
       });        
   },[]);
@@ -77,7 +77,7 @@ const Workers = () => {
             <Row lg={2} md={2} sm={1} xs={1}>
               {usuarios.map((element, idx) => (
                   <Col className='workers mt-3 mb-3'>
-                    <Card className='worker-card shadow-lg' >
+                    <Card className='worker-card shadow-lg' style={element.userColor !== undefined ? { 'background-color': element.userColor} : {'background-color': '#ffffff'}}>
                       <Card.Body className="text-black">
                         <div>
                           <h6 className="mb-4">{element.workareaUser}</h6>
