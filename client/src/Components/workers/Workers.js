@@ -13,7 +13,7 @@ const Workers = () => {
 
   //3.92.68.154 AWS LOCAL
   useEffect(() => {
-      Axios.get("http://localhost:3001/api/usuarios").then((res)=>{
+      Axios.get("http://3.92.68.154:3001/api/usuarios").then((res)=>{
         setUsuarios(res.data);
       });        
   },[]);

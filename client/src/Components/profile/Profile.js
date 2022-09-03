@@ -44,7 +44,7 @@ const Profile = () => {
             confirmButtonText: `Actualizar`,
             denyButtonText: `Cancelar`,
           }).then(() => {
-            Axios.put("http://localhost:3001/api/upload-photo",formData,{'authorization' : `${token}`},'')
+            Axios.put("http://3.92.68.154:3001/api/upload-photo",formData,{'authorization' : `${token}`},'')
             .then((result) => {
                 if(result.status === 200){
                     localStorage.removeItem("accessToken");
@@ -78,7 +78,7 @@ const Profile = () => {
                 confirmButtonText: `Actualizar`,
                 denyButtonText: `Cancelar`,
               }).then(() => {
-                Axios.put("http://localhost:3001/api/update-user", {newArrayValues,'authorization' : `${token}`})
+                Axios.put("http://3.92.68.154:3001/api/update-user", {newArrayValues,'authorization' : `${token}`})
                 .then((result) => {
                     if(result.status === 200){
                         localStorage.removeItem("accessToken");
@@ -120,7 +120,7 @@ const Profile = () => {
     }
 
     const getAccess = (token) =>{
-        Axios.post("http://localhost:3001/api/user-info", {
+        Axios.post("http://3.92.68.154:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
