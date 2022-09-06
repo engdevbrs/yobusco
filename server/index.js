@@ -1,9 +1,13 @@
 const express = require('express')
+const fs = require('fs')
+const util = require('util')
+const unlinkFile = util.promisify(fs.unlink)
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const path = require('path')
 const db = require('./database/connection')
+const { uploadFile, getFileStream, deleteFileStream } = require('./s3')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv');
 dotenv.config({path: './env/.env'})
@@ -12,19 +16,10 @@ const multer = require('multer');
 
 app.use(cors())
 app.use(express.json())
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static('./public'));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
-//! Use of Multer
-const storage = multer.diskStorage({
-    destination: './public/uploads/'
-});
- 
-// Init Upload
-const upload = multer({
-    storage: storage,
-    limits: { fileSize: 1000000 }
-});
+const upload = multer({ dest: '/images' })
 
 app.post('/api/create-user',(req,res)=>{
     const name = req.body.name;
@@ -60,7 +55,7 @@ app.post('/api/create-user',(req,res)=>{
             })
         }
     })
-})
+});
 
 app.get('/api/localidades', (req,res)=>{
     res.header("Access-Control-Allow-Origin", "*");
@@ -143,22 +138,41 @@ app.post('/api/login', (req,res)=>{
     })
 });
 
-app.put('/api/upload-photo',upload.single('formFile'),validateToken,(req,res)=>{
 
-    req.headers['content-type'] = 'multipart/form-data,application/json'
-
-    const userLogged = JSON.parse(Buffer.from(req.body.authorization.split('.')[1], 'base64').toString());
-    formFile = req.file;
-
-    const sqlInsert1 = "UPDATE user_info SET userPhoto="+mysql.escape(formFile)+"WHERE user_info.email="+mysql.escape(userLogged.userName);
+app.put('/api/images',upload.single('formFile'),async (req,res)=>{
+    const userLogged = JSON.parse(Buffer.from(req.headers.authorization.split('.')[1], 'base64').toString());
+    const file = req.file
+    const result = await uploadFile(file)
+    await unlinkFile(file.path)
+    const imgSrc = {imagePath: `/api/images/${result.Key}`}
+    const sqlInsert1 = "UPDATE user_info SET userPhoto="+mysql.escape(result.Key)+"WHERE user_info.email="+mysql.escape(userLogged.userName);
     db.query(sqlInsert1,(err,result) =>{
         if(err){
             res.status(500).send('Problema subiendo Foto')
         }else{
-            res.send(result);
+            res.send(imgSrc);
         }
     })
 });
+
+app.get('/api/images/:key', (req, res) => {
+    console.log(req.params)
+    if(req.params.key !== 'null'){
+        const key = req.params.key
+        const readStream = getFileStream(key)
+        res.writeHead(200, {
+            'Content-Type' : 'image/png'
+          });
+        readStream.pipe(res)
+    }
+})
+
+app.delete('/api/images/delete/:key', async (req, res) => {
+    console.log(req.params)
+    const key = req.params.key
+    const deleteStream = await deleteFileStream(key).promise()
+    res.send('previuos photo deleted successfully')
+})
 
 app.put('/api/update-user', validateToken,(req,res)=>{
 

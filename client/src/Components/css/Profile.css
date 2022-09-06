@@ -8,9 +8,15 @@
     position:absolute;
     top: 50px;
     z-index: 2;
+    transition: transform .4s;
 }
-
-.card-img-top {
+.upload:hover {
+    transform: scale(1.1); 
+    cursor: pointer;/* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+  }
+.userphoto {
+    border: 6px solid rgb(255, 255, 255);
+    border-radius: 150px;
     filter: brightness(50%);
 }
 .profile-container{

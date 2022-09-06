@@ -31,6 +31,8 @@ const Profile = () => {
     const [ cancelButton, setCancelButton ] = useState(false)
     const [ colorCard, setColorCard ] = useState("#ffffff")
     const [ savePhoto, setSavePhoto ] = useState(false)
+    const [ getPhoto, setGetPhoto ] = useState(false)
+    const [ enableSave, setEnableSave ] = useState(false)
     
     const handleChangePhoto = () =>{
         const token = localStorage.getItem('accessToken');
@@ -38,29 +40,48 @@ const Profile = () => {
         const formData = new FormData();
         formData.append('formFile',imagefile.files[0])
         MySwal.fire({
-            title: 'Estás seguro de actualizar tus datos?',
+            title: 'Estás seguro de en cambiar tu foto de perfil?',
             showDenyButton: true,
             showCancelButton: false,
             confirmButtonText: `Actualizar`,
             denyButtonText: `Cancelar`,
-          }).then(() => {
-            Axios.put("http://3.92.68.154:3001/api/upload-photo",formData,{'authorization' : `${token}`},'')
-            .then((result) => {
+            }).then(() => {
+            Axios.put("http://3.92.68.154:3001/api/images",
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data;',
+                    'Authorization': `${token}`
+                    }
+            }).then((result) => {
                 if(result.status === 200){
-                    localStorage.removeItem("accessToken");
-                    Swal.fire('Actualización exitosa!', '', 'success')
-                    setTimeout(() => {
-                        return navigate('/login');
-                    }, 1000);
+                    const token = localStorage.getItem('accessToken');
+                    setCancelButton(false);
+                    deletePrevUserPhoto()
+                    Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
+                    getAccess(token)
                 }
             }).catch(error => {
-                Swal.fire('Los cambios no fueron guardados', '', 'info')
+                Swal.fire('No pudimos cambiar tu foto de perfil', '', 'info')
             });
-          })
+            })
+    }
+    
+
+    const deletePrevUserPhoto = () =>{
+        Axios.delete('http://3.92.68.154:3001/api/images/delete/' + getPhoto)
+          .then((result) => {
+              if(result.status === 200){
+                console.log(result);
+              }
+          }).catch(error => {
+                console.log(error);
+          });
     }
 
     const handleButton = (e) =>{
         setCancelButton(true);
+        setSavePhoto(false);
         if(e.textContent === "Actualizar Datos"){
             const token = localStorage.getItem('accessToken');
             let inputValues = document.querySelectorAll('input');
@@ -96,6 +117,24 @@ const Profile = () => {
         }
     }
 
+    const getAccess = (token) =>{
+        Axios.post("http://3.92.68.154:3001/api/user-info", {
+            'authorization' : `${token}`
+        })
+          .then((result) => {
+              if(result.status === 200){
+                    setResponse(result.status)
+                    setLoading(false)
+                    setDataUser(result.data)
+                    setGetPhoto(result.data[0].userPhoto)
+              }
+          }).catch(error => {
+                setResponse(error.response.status)
+                setLoading(false)
+                clearTimeout()
+          });
+    }
+
     const onchangeEmail = (e) =>{
         const pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
         if (!pattern.test(e.value)) {
@@ -116,25 +155,8 @@ const Profile = () => {
     const open_file = () =>{
         setCancelButton(true);
         setSavePhoto(true)
+        setEnableSave(true)
         document.getElementById("formFile").click();
-    }
-
-    const getAccess = (token) =>{
-        Axios.post("http://3.92.68.154:3001/api/user-info", {
-            'authorization' : `${token}`
-        })
-          .then((result) => {
-              if(result.status === 200){
-                    setResponse(result.status)
-                    setLoading(false)
-                    setDataUser(result.data)
-                    clearTimeout()
-              }
-          }).catch(error => {
-                setResponse(error.response.status)
-                setLoading(false)
-                clearTimeout()
-          });
     }
 
     const deniedAccess = () => {
@@ -171,20 +193,15 @@ const Profile = () => {
             </div>
             {
                 dataUser.map((element) =>{
-                    let imagenUser = null;
-                    const prefix =  `data:image/png;base64,`
-                    if(element.userPhoto !== undefined){
-                        imagenUser = new Buffer.from(element.userPhoto.data).toString('base64')
-                    }
                     return(
                         <>
-                            <Container className='profile-container shadow-lg mt-3 mb-5 p-4' style={element.userColor !== undefined ? { 'backgroundColor': element.userColor} : {'backgroundColor': '#ffffff'}}>
+                            <Container className='profile-container shadow-lg mt-3 mb-5 p-4' style={element.userColor !== undefined ? { 'backgroundColor': element.userColor} : {'backgroundColor': {colorCard}}}>
                                 <Row className='mt-3 mb-3'>
                                     <Col lg={4} >
                                         <Card className='perfil shadow mb-4 text-center'>
-                                        <input class="form-control" type="file" id="formFile" name='formFile' accept="image/jpeg, image/png, image/jpg" hidden/>
+                                        <input class="form-control" type="file" id="formFile" name='formFile' accept="image/jpeg;image/png;image/jpg" onChange={(e) => setEnableSave(!enableSave)} hidden/>
                                         <img id='upload' className='upload mt-2' src={uploadPhoto} style={{ width: '5rem' }} alt="" onClick={open_file}/>
-                                        <Card.Img className='mt-2' variant="top" src={element.userPhoto !== undefined ? perfil/*`${prefix}${imagenUser}`*/ : perfil} style={{ width: '12rem'}}/>
+                                        <img className='userphoto mt-2' variant="top" src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://3.92.68.154:3001/api/images/' + element.userPhoto : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
                                         <Card.Body>
                                             <Card.Title><strong>{element.nameUser + " " + element.lastnamesUser}</strong></Card.Title>
                                             <Card.Text>
@@ -201,14 +218,18 @@ const Profile = () => {
                                                     {
                                                         cancelButton === true ? <Button variant="outline-danger" onClick={(e) => {handleButton(e.target); setInputs(false)}} >Cancelar</Button> : <></>
                                                     }</> : <><Button variant={inputs === true ? 'outline-success' : 'outline-primary'} onClick={() => {handleChangePhoto(); setSavePhoto(false)}} 
-                                                    disabled={(validationEmail || validationCell) !== true ? false : true}>
+                                                    disabled={enableSave}>
                                                         { savePhoto === true ? 'Guardar Foto' : 'Editar Perfil' }
                                                     </Button>
                                                     {
-                                                        cancelButton === true ? <Button variant="outline-danger" onClick={(e) => {handleButton(e.target); setInputs(false)}} >Cancelar</Button> : <></>
-                                                    }</>
+                                                        cancelButton === true ? <Button variant="outline-danger" onClick={(e) => {handleButton(e.target); setInputs(false); setEnableSave(false)}} >Cancelar</Button> : <></>
+                                                    }
+                                                    </> 
                                                 }
                                             </div>
+                                            {
+                                                enableSave === true ? <Form.Text><span style={{color: 'red','font-weight':'bold' }}>Debes seleccionar una imagen para tu perfil</span></Form.Text> : <></>
+                                            }
                                         </Card.Body>
                                         </Card>
                                         <Card className='contactos shadow mb-4 mb-lg-0'>
@@ -305,17 +326,6 @@ const Profile = () => {
                                                 <p className="text-muted mb-0">{element.regionUser + ", " + element.cityUser + ", " + element.communeUser}</p>
                                                 </Col>
                                             </Row>
-                                            {/* {
-                                               inputs === true ? <><hr/>
-                                               <Row class="mb-3">
-                                                    <Col sm={3}>
-                                                        <label for="formFile" class="form-label">Suba una foto a su perfil</label>
-                                                    </Col>
-                                                    <Col sm={9}>
-                                                        <input class="form-control" type="file" id="formFile" name='formFile' accept="image/jpeg, image/png, image/jpg"/>
-                                                    </Col>
-                                               </Row></> : <></>
-                                            } */}
                                             {
                                                inputs === true ? <><hr/>
                                                <Row class="mb-3">
