@@ -14,7 +14,7 @@ const Workers = () => {
 
   //3.92.68.154 AWS LOCAL
   useEffect(() => {
-      Axios.get("http://3.92.68.154:3001/api/usuarios").then((res)=>{
+      Axios.get("http://52.91.196.215:3001/api/usuarios").then((res)=>{
         setUsuarios(res.data);
       });        
   },[]);
@@ -94,7 +94,7 @@ const Workers = () => {
                     <div class="advisor_thumb" style={{'backgroundColor': (element.userColor !== undefined && element.userColor !== null && element.userColor !== "") ? element.userColor : '#3f43fd'}}>
                     <h6>{element.workareaUser}</h6>
                     <p class="designation"><i class="fa fa-clock-o"></i>{" "+element.experienceYears+" años de experiencia"}</p>
-                      <img src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://3.92.68.154:3001/api/images/' + element.userPhoto : perfil} 
+                      <img src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://52.91.196.215:3001/api/images/' + element.userPhoto : perfil} 
                       style={{width: '18rem'}} alt={'imagen de perfil'} />
                       <div class="social-info">
                         <a href={element.facebookSite !== undefined ? element.facebookSite : '#'}><i class="fa fa-facebook"></i></a><a href={element.instagramSite !== undefined ? element.instagramSite : '#'}><i class="fa fa-instagram"></i></a><a href="#"><i class="fa fa-linkedin"></i></a>

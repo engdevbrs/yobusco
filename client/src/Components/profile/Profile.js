@@ -46,7 +46,7 @@ const Profile = () => {
             confirmButtonText: `Actualizar`,
             denyButtonText: `Cancelar`,
             }).then(() => {
-            Axios.put("http://3.92.68.154:3001/api/images",
+            Axios.put("http://52.91.196.215:3001/api/images",
             formData,
             {
                 headers: {
@@ -69,7 +69,7 @@ const Profile = () => {
     
 
     const deletePrevUserPhoto = () =>{
-        Axios.delete('http://3.92.68.154:3001/api/images/delete/' + getPhoto)
+        Axios.delete('http://52.91.196.215:3001/api/images/delete/' + getPhoto)
           .then((result) => {
               if(result.status === 200){
                 console.log(result);
@@ -99,7 +99,7 @@ const Profile = () => {
                 confirmButtonText: `Actualizar`,
                 denyButtonText: `Cancelar`,
               }).then(() => {
-                Axios.put("http://3.92.68.154:3001/api/update-user", {newArrayValues,'authorization' : `${token}`})
+                Axios.put("http://52.91.196.215:3001/api/update-user", {newArrayValues,'authorization' : `${token}`})
                 .then((result) => {
                     if(result.status === 200){
                         localStorage.removeItem("accessToken");
@@ -118,7 +118,7 @@ const Profile = () => {
     }
 
     const getAccess = (token) =>{
-        Axios.post("http://3.92.68.154:3001/api/user-info", {
+        Axios.post("http://52.91.196.215:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -201,7 +201,7 @@ const Profile = () => {
                                         <Card className='perfil shadow mb-4 text-center'>
                                         <input class="form-control" type="file" id="formFile" name='formFile' accept="image/jpeg;image/png;image/jpg" onChange={(e) => setEnableSave(!enableSave)} hidden/>
                                         <img id='upload' className='upload mt-2' src={uploadPhoto} style={{ width: '5rem' }} alt="" onClick={open_file}/>
-                                        <img className='userphoto mt-2' variant="top" src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://3.92.68.154:3001/api/images/' + element.userPhoto : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
+                                        <img className='userphoto mt-2' variant="top" src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://52.91.196.215:3001/api/images/' + element.userPhoto : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
                                         <Card.Body>
                                             <Card.Title><strong>{element.nameUser + " " + element.lastnamesUser}</strong></Card.Title>
                                             <Card.Text>
