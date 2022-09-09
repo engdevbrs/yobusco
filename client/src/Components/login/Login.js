@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Form } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import './Login.css';
 import LoginPic from '../assets/login-pic.jpg';
 import Axios  from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useLoginContext } from '../contexts/AuthContext';
 
 const Login = () =>  {
 
     const[ warnCredentials, setwarnCredentials ]=useState([]);
+    const { userData, setUserData } = useLoginContext();
     const[ danger, setdanger ]=useState(true);
 
     const[ eye, seteye]=useState(true);
@@ -25,8 +27,9 @@ const Login = () =>  {
               if(result.status === 200){
                   localStorage.setItem("accessToken", result.data.accessToken);
                   setwarnCredentials(false)
-                  return navigate('/perfil');
+                  setUserData({...userData, ['token']: result.data.accessToken });
               }
+              return navigate('/perfil');
           }).catch(error => {
                 setwarnCredentials(true)
           });

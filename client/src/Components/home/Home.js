@@ -25,7 +25,7 @@ const Home = () => {
                           <p className="lead fw-normal text-white-50 mb-4">Registro rápido y sencillo, presenta a la comunidad tus servicios de manera gratuita!</p>
                           <div className="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
                               <a className="btn btn-primary btn-lg px-4 me-sm-3" href="/crear-cuenta">Comenzar</a>
-                              <a className="btn btn-outline-light btn-lg px-4" href="/">Aprender Más</a>
+                              <a className="btn btn-outline-light btn-lg px-4" href="/sobre-nosotros">Aprender Más</a>
                           </div>
                       </div>
                   </Col>

@@ -60,6 +60,7 @@ const Profile = () => {
                     deletePrevUserPhoto()
                     Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
                     getAccess(token)
+                    document.getElementById('photoUser').src = "http://52.91.196.215:3001" + result.data.imagePath
                 }
             }).catch(error => {
                 Swal.fire('No pudimos cambiar tu foto de perfil', '', 'info')
@@ -105,7 +106,7 @@ const Profile = () => {
                         localStorage.removeItem("accessToken");
                         Swal.fire('Actualización exitosa!', '', 'success')
                         setTimeout(() => {
-                            return navigate('/login');
+                            return document.location.href="/login";
                         }, 1000);
                     }
                 }).catch(error => {
@@ -160,6 +161,12 @@ const Profile = () => {
     }
 
     const deniedAccess = () => {
+        if(response === 403 || response === 500){
+            setTimeout(() => {
+                localStorage.removeItem("accessToken");
+                return document.location.href="/login"; 
+            }, 5000);
+        }
         return(
         <div className="container mt-5 mb-5" hidden={loading}>
             <div className="denied" style={{height: '60vh'}}>
@@ -201,7 +208,7 @@ const Profile = () => {
                                         <Card className='perfil shadow mb-4 text-center'>
                                         <input class="form-control" type="file" id="formFile" name='formFile' accept="image/jpeg;image/png;image/jpg" onChange={(e) => setEnableSave(!enableSave)} hidden/>
                                         <img id='upload' className='upload mt-2' src={uploadPhoto} style={{ width: '5rem' }} alt="" onClick={open_file}/>
-                                        <img className='userphoto mt-2' variant="top" src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://52.91.196.215:3001/api/images/' + element.userPhoto : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
+                                        <img id='userPhoto' className='userphoto mt-2' variant="top" src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://52.91.196.215:3001/api/images/' + element.userPhoto : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
                                         <Card.Body>
                                             <Card.Title><strong>{element.nameUser + " " + element.lastnamesUser}</strong></Card.Title>
                                             <Card.Text>
@@ -239,7 +246,7 @@ const Profile = () => {
                                                     <input type="text" className='form-control' id='floatingWebsite' defaultValue={element.webSite !== undefined ? element.webSite : ''} name='website' placeholder='floatingWebsite' />
                                                     <label htmlFor='floatingWebsite'>Ingrese su sitio web</label>
                                                 </div></> : 
-                                                <><img src={web} alt=''/><a href={element.webSite !== undefined ? element.webSite : '#'} target="_blank" rel="noopener noreferrer">{element.webSite !== undefined ? element.webSite : 'Sitio Web'}</a>
+                                                <><img src={web} alt=''/><a href={element.webSite !== undefined ? 'http://'+element.webSite : '#'} target="_blank" rel="noopener noreferrer">{element.webSite !== undefined ? element.webSite : 'Sitio Web'}</a>
                                                 </>
                                                 }</ListGroup.Item>
                                                 <ListGroup.Item>{
@@ -380,7 +387,7 @@ const Profile = () => {
     }
 
     useEffect(() =>{
-        document.getElementById('denied').scrollIntoView();
+        document.getElementById('menuHolder').scrollIntoView();
         setTimeout(() =>{
             const getToken = localStorage.getItem('accessToken');
             if(getToken === null){

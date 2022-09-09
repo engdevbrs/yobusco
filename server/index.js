@@ -109,6 +109,19 @@ app.get('/api/usuarios', (req,res)=>{
     })
 });
 
+app.get('/api/user-profile/:key', (req,res)=>{
+    res.header("Access-Control-Allow-Origin", "*");
+    const userRut = req.params.key
+    const sqlGetUsers = "SELECT * FROM user_info WHERE user_info.rutUser="+mysql.escape(userRut)
+    db.query(sqlGetUsers,(err,result) =>{
+        if(err){
+            res.status(500).send(err);
+        }else{
+            res.send(result);
+        }
+    })
+});
+
 app.post('/api/user-info', validateToken, (req,res)=>{
     const userLogged = JSON.parse(Buffer.from(req.body.authorization.split('.')[1], 'base64').toString());;
     const sqlGetUser = "SELECT * FROM user_info u WHERE u.email ="+mysql.escape(userLogged.userName);

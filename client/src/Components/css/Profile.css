@@ -16,8 +16,9 @@
   }
 .userphoto {
     border: 6px solid rgb(255, 255, 255);
-    border-radius: 150px;
+    border-radius: 100px 100px;
     filter: brightness(50%);
+    height: 190px;
 }
 .profile-container{
     border-color: #fff0 !important;

@@ -1,16 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Card, Col, Container, Form, Nav, Offcanvas, Row } from 'react-bootstrap';
+import { Col, Container, Form, Nav, Offcanvas, Row } from 'react-bootstrap';
 import Axios from 'axios'
-import { FaUserPlus, FaFilter } from "react-icons/fa";
+import { FaFilter } from "react-icons/fa";
 import '../css/Workers.css';
 import perfil from '../assets/perfil.png'
+import UserModal from './UserModal';
 
 const Workers = () => {
 
   const [show, setShow] = useState(false);
   const [usuarios, setUsuarios ] = useState([]);
+  const [profileData, setProfileData ] = useState([]);
+  const [modalShow, setModalShow] = React.useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  // const viewProfile = (e) =>{
+  //   Axios.get("http://52.91.196.215:3001/api/user-profile/"+e.currentTarget.value).then((res)=>{
+  //       setProfileData(res.data);
+  //     }).catch((error) =>{
+  //       console.log(error);
+  //     });
+  // }
 
   //3.92.68.154 AWS LOCAL
   useEffect(() => {
@@ -74,36 +85,37 @@ const Workers = () => {
             </Offcanvas.Body>
           </Offcanvas>
           </Col>
-          <div class="container-fluid">
-        <div class="row justify-content-center">
-          <div class="col-12 col-sm-8 col-lg-6">
-            <div class="section_heading text-center wow fadeInUp" data-wow-delay="0.2s" style={{"visibility": "visible", "animation-delay": "0.2s", "animation-name": "fadeInUp"}}>
-              <h3>Nuestra gran <span> Comunidad</span></h3>
-              <p>A continuación le mostraremos a nuestros trabajadores y sus servicios laborales.</p>
-              <div class="line"></div>
+          <div className="container-fluid">
+          <div className="row justify-content-center">
+            <div className="col-12 col-sm-8 col-lg-6">
+              <div className="section_heading text-center wow fadeInUp" data-wow-delay="0.2s" style={{"visibility": "visible", "animationDelay": "0.2s", "animationName": "fadeInUp"}}>
+                <h3>Nuestra gran <span> Comunidad</span></h3>
+                <p>A continuación le mostraremos a nuestros trabajadores y sus servicios laborales.</p>
+                <div className="line"></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row">
+        <div className="row">
         {
           usuarios.map((element,key) =>{
             return(
               <>
-                <div class="col-12 col-sm-6 col-lg-3">
-                  <div class="single_advisor_profile wow fadeInUp" data-wow-delay="0.2s" style={{"visibility": "visible", "animation-delay": "0.2s", "animation-name": "fadeInUp"}}>
-                    <div class="advisor_thumb" style={{'backgroundColor': (element.userColor !== undefined && element.userColor !== null && element.userColor !== "") ? element.userColor : '#3f43fd'}}>
+                <div className="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                  <div className="single_advisor_profile wow fadeInUp" data-wow-delay="0.2s" style={{"visibility": "visible", "animationDelay": "0.2s", "animationName": "fadeInUp"}} key={key}>
+                    <div className="advisor_thumb" style={{'backgroundColor': (element.userColor !== undefined && element.userColor !== null && element.userColor !== "") ? element.userColor : '#3f43fd'}}>
                     <h6>{element.workareaUser}</h6>
-                    <p class="designation"><i class="fa fa-clock-o"></i>{" "+element.experienceYears+" años de experiencia"}</p>
+                    <p className="designation"><i className="fa fa-clock-o"></i>{" "+element.experienceYears+" años de experiencia"}</p>
                       <img src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://52.91.196.215:3001/api/images/' + element.userPhoto : perfil} 
                       style={{width: '18rem'}} alt={'imagen de perfil'} />
-                      <div class="social-info">
-                        <a href={element.facebookSite !== undefined ? element.facebookSite : '#'}><i class="fa fa-facebook"></i></a><a href={element.instagramSite !== undefined ? element.instagramSite : '#'}><i class="fa fa-instagram"></i></a><a href="#"><i class="fa fa-linkedin"></i></a>
+                      <div className="social-info">
+                        <a href={element.facebookSite !== undefined ? element.facebookSite : '#'}><i className="fa fa-facebook"></i></a><a href={element.instagramSite !== undefined ? element.instagramSite : '#'}><i className="fa fa-instagram"></i></a><a href="#"><i className="fa fa-linkedin"></i></a>
                       </div>
                     </div>
-                    <div class="single_advisor_details_info">
+                    <div className="single_advisor_details_info">
                       <h6>{element.nameUser + " " + element.lastnamesUser}</h6>
-                      <p class="designation">{element.workareaUser}</p>
-                      <p class="designation">{element.workResume}</p>
+                      <p className="designation">{element.workareaUser}</p>
+                      <p className="designation">{element.workResume}</p>
+                      <button type="button" className="btn btn-danger mt-2" value={element.rutUser} onClick={(e) =>{setProfileData(e.currentTarget.value); setModalShow(true)}}>Ver Perfil</button>
                     </div>
                   </div>
                 </div>
@@ -111,6 +123,7 @@ const Workers = () => {
             )
           })
         }
+        <UserModal data={usuarios.filter((value) => {return value.rutUser === profileData})} show={modalShow} onHide={() => setModalShow(false)} />
         </div>
         </div>
         </Row>
