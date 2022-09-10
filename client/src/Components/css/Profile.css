@@ -1,3 +1,29 @@
+.card-body .row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#justify-tab-example-tabpane-home .card{
+    border-radius: 0px !important;
+}
+
+.upload{
+    position:absolute;
+    top: 50px;
+    z-index: 2;
+    transition: transform .4s;
+}
+.upload:hover {
+    transform: scale(1.1); 
+    cursor: pointer;/* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+  }
+.userphoto {
+    border: 6px solid rgb(255, 255, 255);
+    border-radius: 100px 100px;
+    filter: brightness(50%);
+    height: 190px;
+}
 .profile-container{
     border-color: #fff0 !important;
     border-radius: 10px !important;
@@ -55,4 +81,15 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.projects {
+    height:50vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.nav-tabs{
+    background-color: #F8F9FA;
+    border-radius: 10px 10px 0px 0px;
 }

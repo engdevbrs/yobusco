@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 import Axios  from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import '../css/Profile.css'
-import { Button, Card, Container, ListGroup, Nav } from 'react-bootstrap'
-import perfil from '../assets/perfil.png'
+import { Button, Card, Container, Form, ListGroup, Nav, Tab, Tabs } from 'react-bootstrap'
 import web from '../assets/web.png'
 import instagram from '../assets/instagram.png'
 import facebook from '../assets/facebook.png'
@@ -12,16 +14,139 @@ import twitter from '../assets/twitter.png'
 import whatsapp from '../assets/whatsapp.png'
 import accesDenied from '../assets/access-denied.png'
 import loadingprofilegf from '../assets/loading-profile.gif'
+import perfil from '../assets/perfil.png'
+import uploadPhoto from '../assets/upload-photo.png'
+import Projects from './Projects'
+import Comments from './Comments'
 
 const Profile = () => {
 
-    const [ dataUser, setDataUser ] = useState([]);
-    const [ response, setResponse ] = useState([]);
-    const [ loading, setLoading] = useState(true);
-    const [inputs , setInputs ] = useState(false);
+    const MySwal = withReactContent(Swal)
+    const navigate = useNavigate()
+    const [ dataUser, setDataUser ] = useState([])
+    const [ response, setResponse ] = useState([])
+    const [ loading, setLoading ] = useState(true)
+    const [ inputs , setInputs ] = useState(false)
+    const [ validationEmail, setValidationEmail ] = useState(false)
+    const [ validationCell, setValidationCell ] = useState(false)
+    const [ cancelButton, setCancelButton ] = useState(false)
+    const [ colorCard, setColorCard ] = useState("#ffffff")
+    const [ savePhoto, setSavePhoto ] = useState(false)
+    const [ getPhoto, setGetPhoto ] = useState(false)
+    const [ enableSave, setEnableSave ] = useState(false)
+    
+    const handleChangePhoto = () =>{
+        const token = localStorage.getItem('accessToken');
+        let imagefile = document.getElementById('formFile');
+        const formData = new FormData();
+        formData.append('formFile',imagefile.files[0])
+        MySwal.fire({
+            title: 'Estás seguro de cambiar tu foto de perfil?',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: `Cambiar`,
+            denyButtonText: `Cancelar`,
+            }).then((result) => {
+                if(result.isConfirmed){
+                    Axios.put("http://52.91.196.215:3001/api/images",
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data;',
+                            'Authorization': `${token}`
+                            }
+                    }).then((result) => {
+                        if(result.status === 200){
+                            const token = localStorage.getItem('accessToken');
+                            setCancelButton(false);
+                            deletePrevUserPhoto()
+                            Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
+                            getAccess(token)
+                            document.getElementById('photoUser').src = "http://52.91.196.215:3001" + result.data.imagePath
+                        }
+                    }).catch(error => {
+                        Swal.fire('No pudimos cambiar tu foto de perfil', '', 'warning')
+                    });
+                }
+            })
+    }
+    
+
+    const deletePrevUserPhoto = () =>{
+        Axios.delete('http://52.91.196.215:3001/api/images/delete/' + getPhoto)
+          .then((result) => {
+              if(result.status === 200){
+                console.log(result);
+              }
+          }).catch(error => {
+                console.log(error);
+          });
+    }
+
+    const handleButton = (e) =>{
+        setCancelButton(true);
+        setSavePhoto(false);
+        if(e.textContent === "Actualizar Datos"){
+            const token = localStorage.getItem('accessToken');
+            let inputValues = document.querySelectorAll('input');
+            let inputsArray =Array.from(inputValues);
+            let newArrayValues = []
+            let msgTitle = ""
+            inputsArray.forEach(elements => { 
+                if(elements.name !== 'formFile'){
+                    newArrayValues.push({name: elements.name, value: elements.value});
+                }
+            });
+            newArrayValues.forEach(element => { 
+                if(element.name === "email"){
+                    if(dataUser[0].email !== element.value){
+                        msgTitle = 'Luego de actualizar tu email, serás redirigido a la página inicio de sesión'
+                    }else{
+                        msgTitle = 'Estás seguro de actualizar tus datos?'
+                    }
+                }
+            })
+            newArrayValues.shift()
+            MySwal.fire({
+                title: msgTitle,
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: `Actualizar`,
+                denyButtonText: `Cancelar`,
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    Axios.put("http://52.91.196.215:3001/api/update-user", {newArrayValues ,'authorization' : `${token}`})
+                    .then((result) => {
+                        if(result.status === 200){
+                            Swal.fire('Actualización exitosa!', '', 'success')
+                            newArrayValues.forEach(element => { 
+                                if(element.name === "email"){
+                                    if(dataUser[0].email !== element.value){
+                                        localStorage.removeItem("accessToken");
+                                        setTimeout(() => {
+                                            return document.location.href="/login";
+                                        }, 1000);
+                                    }else{
+                                        setInputs(false)
+                                        setCancelButton(false);
+                                        getAccess(token)
+                                    }
+                                }
+                            });
+                            
+                        }
+                    }).catch(error => {
+                        Swal.fire('Los cambios no fueron guardados', '', 'danger')
+                    });
+                }
+              })
+        }else if(e.textContent === "Cancelar"){
+            setCancelButton(false)
+        }
+    }
 
     const getAccess = (token) =>{
-        Axios.post("http://3.92.68.154:3001/api/user-info", {
+        Axios.post("http://52.91.196.215:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -29,16 +154,46 @@ const Profile = () => {
                     setResponse(result.status)
                     setLoading(false)
                     setDataUser(result.data)
-                    clearTimeout()
+                    setGetPhoto(result.data[0].userPhoto)
               }
           }).catch(error => {
-                setResponse(error.response)
+                setResponse(error.response.status)
                 setLoading(false)
                 clearTimeout()
           });
     }
 
+    const onchangeEmail = (e) =>{
+        const pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+        if (!pattern.test(e.value)) {
+            setValidationEmail(true);
+        }else{
+            setValidationEmail(false)
+        }
+    }
+
+    const onchangeCell = (e) =>{
+        if (e.value.length === 8) {
+            setValidationCell(false);
+        }else{
+            setValidationCell(true);
+        }
+    }
+
+    const open_file = () =>{
+        setCancelButton(true);
+        setSavePhoto(true)
+        setEnableSave(true)
+        document.getElementById("formFile").click();
+    }
+
     const deniedAccess = () => {
+        if(response === 403 || response === 500){
+            setTimeout(() => {
+                localStorage.removeItem("accessToken");
+                return document.location.href="/login"; 
+            }, 5000);
+        }
         return(
         <div className="container mt-5 mb-5" hidden={loading}>
             <div className="denied" style={{height: '60vh'}}>
@@ -46,7 +201,9 @@ const Profile = () => {
                     <img src={accesDenied} alt="imagen de confirmación" style={{width: '10rem'}}/>
                 </div>
                 <div className="mt-1 congrats">
-                    ACCESO DENEGADO
+                    {
+                        response === 403 ? 'SU SESIÓN HA EXPIRADO' : 'ACCESO DENEGADO'
+                }
                 </div>
                 <div className="d-grid mt-2">
                     <a className="btn btn-danger btn-md" href="/login">Iniciar Sesión</a>
@@ -69,38 +226,88 @@ const Profile = () => {
                 </Col>
             </div>
             {
-                dataUser.map((element) =>{
+                dataUser.map((element,key) =>{
                     return(
                         <>
-                            <Container className='profile-container shadow-lg mt-3 mb-5 p-4'>
+                            <Container className='profile-container shadow-lg mt-3 mb-5 p-4' style={element.userColor !== undefined ? { 'backgroundColor': element.userColor} : {'backgroundColor': {colorCard}}}>
                                 <Row className='mt-3 mb-3'>
                                     <Col lg={4} >
-                                        <Card className='perfil shadow mb-4'>
-                                        <Card.Img className='mt-2' variant="top" src={perfil} style={{ width: '12rem' }}/>
+                                        <Card className='perfil shadow mb-4 text-center' key={key}>
+                                        <input className="form-control" type="file" id="formFile" name='formFile' accept="image/jpeg;image/png;image/jpg" onChange={(e) => setEnableSave(!enableSave)} hidden/>
+                                        <img id='upload' className='upload mt-2' src={uploadPhoto} style={{ width: '5rem' }} alt="" onClick={open_file}/>
+                                        <img id='userPhoto' className='userphoto mt-2' variant="top" src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://52.91.196.215:3001/api/images/' + element.userPhoto : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
                                         <Card.Body>
                                             <Card.Title><strong>{element.nameUser + " " + element.lastnamesUser}</strong></Card.Title>
-                                            <Card.Text>
                                             <h6 style={{color: 'grey'}}>
-                                            {element.workareaUser} <br/>
+                                            {element.workareaUser}
                                             </h6>
-                                            </Card.Text>
-                                            <Button variant="outline-primary" onClick={(e) => setInputs(!inputs)}>{inputs === true ? 'Actualizar Datos' : 'Editar Perfil'}</Button>
+                                            <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                                                {
+                                                    savePhoto !== true ? <><Button variant={inputs === true ? 'success' : 'primary'} onClick={(e) => {handleButton(e.target); setInputs(true)}} 
+                                                    disabled={(validationEmail || validationCell) !== true ? false : true}>
+                                                        { inputs === true ? 'Actualizar Datos' : 'Editar Perfil' }
+                                                    </Button>
+                                                    {
+                                                        cancelButton === true ? <Button variant="danger" onClick={(e) => {handleButton(e.target); setInputs(false)}} >Cancelar</Button> : <></>
+                                                    }</> : <><Button variant={inputs === true ? 'success' : 'primary'} onClick={() => {handleChangePhoto(); setSavePhoto(false)}} 
+                                                    disabled={enableSave}>
+                                                        { savePhoto === true ? 'Guardar Foto' : 'Editar Perfil' }
+                                                    </Button>
+                                                    {
+                                                        cancelButton === true ? <Button variant="danger" onClick={(e) => {handleButton(e.target); setInputs(false); setEnableSave(false)}} >Cancelar</Button> : <></>
+                                                    }
+                                                    </> 
+                                                }
+                                            </div>
+                                            {
+                                                enableSave === true ? <Form.Text><span style={{color: 'red',fontWeight:'bold' }}>Debes seleccionar una imagen para tu perfil</span></Form.Text> : <></>
+                                            }
                                         </Card.Body>
                                         </Card>
                                         <Card className='contactos shadow mb-4 mb-lg-0'>
-                                            <ListGroup className='social-media' variant="flush">
-                                                <ListGroup.Item>{inputs === true ? <><img src={web} alt=''/><input type="text" placeholder="ingrese su sitio web" name="web-site" /></> : <><img src={web} alt=''/><a href="https://mdbootstrap.com" target="_blank" rel="noopener noreferrer">Sitio web</a></>}</ListGroup.Item>
-                                                <ListGroup.Item><img src={instagram} alt=''/><a href="https://mdbootstrap.com" target="_blank" rel="noopener noreferrer">Instagram</a></ListGroup.Item>
-                                                <ListGroup.Item><img src={facebook} alt=''/><a href="https://mdbootstrap.com" target="_blank" rel="noopener noreferrer">Facebook</a></ListGroup.Item>
-                                                <ListGroup.Item><img src={twitter} alt=''/><a href="https://mdbootstrap.com" target="_blank" rel="noopener noreferrer">Twitter</a></ListGroup.Item>
-                                                <ListGroup.Item><img src={whatsapp} alt=''/><p>+569 93158746</p></ListGroup.Item>
+                                            <ListGroup className='social-media p-2' variant="flush">
+                                                <ListGroup.Item>{
+                                                inputs === true ? <><div><img src={web} alt=''/></div><div className='form-floating col-10'>
+                                                    <input type="text" className='form-control' id='floatingWebsite' defaultValue={element.webSite !== undefined ? element.webSite : ''} name='website' placeholder='floatingWebsite' />
+                                                    <label htmlFor='floatingWebsite'>Ingrese su sitio web</label>
+                                                </div></> : 
+                                                <><img src={web} alt=''/><a href={element.webSite !== undefined ? 'http://'+element.webSite : '#'} target="_blank" rel="noopener noreferrer">{element.webSite !== undefined ? element.webSite : 'Sitio Web'}</a>
+                                                </>
+                                                }</ListGroup.Item>
+                                                <ListGroup.Item>{
+                                                inputs === true ? <><img src={instagram} alt=''/><div className='form-floating col-10'>
+                                                    <input type="text" className='form-control' id='floatingInstagram' name='instagram' defaultValue={element.instagramSite !== undefined ? element.instagramSite : '#'} placeholder='floatingInstagram'/>
+                                                    <label htmlFor='floatingInstagram'>Perfil de instagram</label>
+                                                </div></> : 
+                                                <><img src={instagram} alt=''/><a href={element.instagramSite !== undefined ? element.instagramSite : '#'} target="_blank" rel="noopener noreferrer">Instagram</a>
+                                                </>}</ListGroup.Item>
+                                                <ListGroup.Item>{
+                                                inputs === true ? <><img src={facebook} alt=''/><div className='form-floating col-10'>
+                                                    <input type="text" className='form-control' id='floatingFacebook' defaultValue={element.facebookSite !== undefined ? element.facebookSite : '#'} name='facebook' placeholder='floatingFacebook'/>
+                                                    <label htmlFor='floatingFacebook'>Perfil de facebook</label>
+                                                </div></> : 
+                                                <><img src={facebook} alt=''/><a href={element.facebookSite !== undefined ? element.facebookSite : '#'} target="_blank" rel="noopener noreferrer">Facebook</a>
+                                                </>}</ListGroup.Item>
+                                                <ListGroup.Item>{
+                                                inputs === true ? <><img src={twitter} alt=''/><div className='form-floating col-10'>
+                                                    <input type="text" className='form-control' id='floatingTwitter' defaultValue={element.twitterSite !== undefined ? element.twitterSite : '#'} name='twitter' placeholder='floatingTwitter'/>
+                                                    <label htmlFor='floatingTwitter'>Perfil de twitter</label>
+                                                </div></> : 
+                                                <><img src={twitter} alt=''/><a href={element.twitterSite !== undefined ? element.twitterSite : '#'} target="_blank" rel="noopener noreferrer">Twitter</a>
+                                                </>}</ListGroup.Item>
+                                                <ListGroup.Item>{
+                                                inputs === true ? <><img src={whatsapp} alt=''/><div className='form-floating col-10'>
+                                                    <input type="text" className='form-control' id='floatingWhatsapp' defaultValue={element.whatsappSite !== undefined ? element.whatsappSite : ''} placeholder='floatingWhatsapp'/>
+                                                    <label htmlFor='floatingWhatsapp'>WhatsApp Web</label>
+                                                    </div></> : 
+                                                    <><img src={whatsapp} alt=''/><a href={element.whatsappSite !== undefined ? element.whatsappSite : '#'} target="_blank" rel="noopener noreferrer">WhatsApp Web</a></>}</ListGroup.Item>
                                             </ListGroup>
                                         </Card>
                                     </Col>
                                     <Col lg={8} className=''>
                                         <Card className='info mb-4 shadow'>
                                             <Card.Body>
-                                            <Row >
+                                            <Row>
                                                 <Col sm={3}>
                                                 <p className="mb-0">Nombre completo</p>
                                                 </Col>
@@ -114,16 +321,32 @@ const Profile = () => {
                                                 <p className="mb-0">Email</p>
                                                 </Col>
                                                 <Col sm={9}>
-                                                <p className="text-muted mb-0">{element.email}</p>
+                                                {inputs === true ? <div className='form-floating col-12'>
+                                                    <input type='text' className='form-control' defaultValue={element.email} onChange={(e) => onchangeEmail(e.target)} 
+                                                    id='floatingCell' name='email' placeholder='floatingEmail' required/>
+                                                    <label htmlFor='email'>Actualizar Correo</label>
+                                                    {
+                                                        validationEmail !== true ? '' : 
+                                                        <Form.Text style={{color: 'red'}}>Ingrese un email válido</Form.Text>
+                                                    }
+                                                </div> : <p className="text-muted mb-0">{element.email}</p>}
                                                 </Col>
                                             </Row>
                                             <hr/>
                                             <Row >
                                                 <Col sm={3}>
-                                                <p className="mb-0">Celular</p>
+                                                <p className="mb-0">Número de contacto</p>
                                                 </Col>
                                                 <Col sm={9}>
-                                                <p className="text-muted mb-0">{element.cellphone}</p>
+                                                {inputs === true ? <div className='form-floating col-12'>
+                                                    <input type='number' className='form-control' onChange={(e) => onchangeCell(e.target)} id='floatingCell' name='cell' 
+                                                    defaultValue={element.cellphone !== undefined ? element.cellphone : ''} maxLength={9} placeholder='floatingCell' required/>
+                                                    <label htmlFor='cell'>Nuevo celular</label>
+                                                    {
+                                                        validationCell !== true ? '' : 
+                                                        <Form.Text style={{color: 'red'}}>Ingrese sólo 8 números</Form.Text>
+                                                    }
+                                                </div> : <p className="text-muted mb-0">{element.cellphone}</p>}
                                                 </Col>
                                             </Row>
                                             <hr/>
@@ -135,37 +358,58 @@ const Profile = () => {
                                                 <p className="text-muted mb-0">{element.regionUser + ", " + element.cityUser + ", " + element.communeUser}</p>
                                                 </Col>
                                             </Row>
+                                            {
+                                               inputs === true ? <><hr/>
+                                               <Row className="mb-3">
+                                                    <Col sm={3}>
+                                                        <label for="colorInput" className="form-label">Elija el color de su tarjeta</label>
+                                                    </Col>
+                                                    <Col sm={9}>
+                                                        <Form.Text><p style={{color: '#349568'}}>Procure usar tonos claros</p></Form.Text>
+                                                        <input type="color" className="form-control form-control-color" id="colorInput" name='colorInput' onChange={(e) => setColorCard(e.target.value)} defaultValue={element.userColor !== undefined ? element.userColor : colorCard} title="Elija su color favorito"/>
+                                                    </Col>
+                                               </Row></> : <></>
+                                            }
                                             </Card.Body>
                                         </Card>
-                                        <Row>
-                                            <Col md={12}>
-                                            <Card className="skills mb-4 mb-md-0 shadow">
-                                                <Card.Body>
-                                                <p className="mb-4"><span className="text-primary font-italic me-1">Calificaciones</span> Proyectos realizados</p>
-                                                <p className="mb-1" style={{'font-size':'.77rem'}}>Responsabilidad</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'80%'}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" style={{'font-size':'.77rem'}}>Puntualidad</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'72%'}} aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" style={{'font-size':'.77rem'}}>Honestidad</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'89%'}} aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" style={{'font-size':'.77rem'}}>Cuidadoso</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'55%'}} aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" style={{'font-size':'.77rem'}}>Precio justo</p>
-                                                <div className="progress rounded mb-2" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'66%'}} aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                </Card.Body>
-                                            </Card>
+                                        <Tabs defaultActiveKey="home" id="justify-tab-example">
+                                            <Tab eventKey="home" title="Rating">
+                                                <Card>
+                                                    <Card.Body>
+                                                    <p className="mb-1" >Responsabilidad</p>
+                                                    <div className="progress rounded" style={{height: '5px'}}>
+                                                        <div className="progress-bar" role="progressbar" style={{width:'80%'}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <p className="mt-4 mb-1" >Puntualidad</p>
+                                                    <div className="progress rounded" style={{height: '5px'}}>
+                                                        <div className="progress-bar" role="progressbar" style={{width:'72%'}} aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <p className="mt-4 mb-1" >Honestidad</p>
+                                                    <div className="progress rounded" style={{height: '5px'}}>
+                                                        <div className="progress-bar" role="progressbar" style={{width:'89%'}} aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <p className="mt-4 mb-1" >Cuidadoso</p>
+                                                    <div className="progress rounded" style={{height: '5px'}}>
+                                                        <div className="progress-bar" role="progressbar" style={{width:'55%'}} aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <p className="mt-4 mb-1" >Precio justo</p>
+                                                    <div className="progress rounded mb-2" style={{height: '5px'}}>
+                                                        <div className="progress-bar" role="progressbar" style={{width:'66%'}} aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    </Card.Body>
+                                                </Card>
+                                            </Tab>  
+                                            <Tab eventKey="proyects" title="Proyectos">
+                                            <Col className='projects m-0'>
+                                                <Projects />
                                             </Col>
-                                        </Row>
+                                            </Tab>
+                                            <Tab eventKey="comments" title="Comentarios">
+                                            <Col className='projects m-0'>
+                                                <Comments />
+                                            </Col>
+                                            </Tab> 
+                                        </Tabs>
                                     </Col>
                                 </Row>
                             </Container>
@@ -176,8 +420,8 @@ const Profile = () => {
         </>)
     }
 
-
     useEffect(() =>{
+        document.getElementById('menuHolder').scrollIntoView();
         setTimeout(() =>{
             const getToken = localStorage.getItem('accessToken');
             if(getToken === null){
@@ -191,7 +435,7 @@ const Profile = () => {
 
     return (
       <>
-        <div className="container mt-5 mb-5" hidden={!loading}>
+        <div id='denied' className="container mt-5 mb-5" hidden={!loading}>
             <div className="denied" style={{height: '60vh'}}>
                 <div className="wrapper text-center">
                     <img src={loadingprofilegf} alt="imagen de confirmación" style={{width: '15rem'}}/>
