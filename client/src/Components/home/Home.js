@@ -11,6 +11,7 @@ import { Container } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
 
@@ -24,8 +25,8 @@ const Home = () => {
                           <h1 className="display-5 fw-bolder text-white mb-2">Una nueva forma de encontar oportunidades</h1>
                           <p className="lead fw-normal text-white-50 mb-4">Registro rápido y sencillo, presenta a la comunidad tus servicios de manera gratuita!</p>
                           <div className="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
-                              <a className="btn btn-primary btn-lg px-4 me-sm-3" href="/crear-cuenta">Comenzar</a>
-                              <a className="btn btn-outline-light btn-lg px-4" href="/">Aprender Más</a>
+                              <Link to={'/crear-cuenta'} className="btn btn-primary btn-lg px-4 me-sm-3">Comenzar</Link>
+                              <Link to={'/sobre-nosotros'} className="btn btn-outline-light btn-lg px-4">Aprender Más</Link>
                           </div>
                       </div>
                   </Col>

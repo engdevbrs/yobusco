@@ -63,7 +63,7 @@ const PersonalInformation = () => {
     //3.92.68.154 AWS LOCAL
     useEffect(() => {
         document.getElementById('steps').scrollIntoView();
-        Axios.get("http://3.92.68.154:3001/api/localidades").then((res)=>{
+        Axios.get("http://52.91.196.215:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         });        
         document.addEventListener('handleEvent', handleSubmit);
@@ -117,7 +117,7 @@ const PersonalInformation = () => {
                     </Row>
                     <Row>
                         <div className='form-floating col-lg-4 col-md-4 col-md-4 mb-3'>
-                            <input type='tel' className='form-control' id='phone' name='phone' placeholder='+569 12345678'
+                            <input type='number' className='form-control' id='phone' name='phone' placeholder='+569 12345678'
                             value={userData['phone'] || ''} onChange={handleChange} required/>
                             <label htmlFor='phone'>Celular</label>
                             <Form.Control.Feedback type="invalid">
