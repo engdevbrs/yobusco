@@ -1,5 +1,6 @@
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Button, Form } from "react-bootstrap";
 import { Link, Outlet } from 'react-router-dom';
 
 import { useLoginContext } from "../contexts/AuthContext";
@@ -10,6 +11,7 @@ const Menu = () =>{
 
   const { userData, setUserData } = useLoginContext()
   const [ userPhoto, setUserPhoto] = useState([])
+  const [ isLoggenIn, setLoggedIn] = useState(false)
 
   const menuToggle = () => {
     let menuHolder = document.getElementById('menuHolder');
@@ -33,6 +35,7 @@ const Menu = () =>{
         })
           .then((result) => {
               if(result.status === 200){
+                setLoggedIn(true)
                 setUserPhoto(result.data[0].userPhoto)
               }
           }).catch(error => {
@@ -50,18 +53,18 @@ const Menu = () =>{
                 <button className="whiteLink siteLink"  onClick={() => menuToggle()}><i className="fas fa-bars me-2"></i> MENÚ</button>
               </div>
                 {
-                  (userData.token !== undefined || localStorage.getItem('accessToken')) ?  <>
-                  <ul class="navbar-nav d-flex flex-row align-items-center me-3">
-                    <li class="nav-item me-4 me-lg-4 dropdown">
-                    <button type="button" class="btn btn-sm" style={{backgroundColor: '#212529'}}>
-                    <i class='fas fa-comment-dots' style={{'font-size':'24px','color': '#5f738f'}}></i>
-                      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  (userData.token !== undefined || isLoggenIn) ?  <>
+                  <ul className="navbar-nav d-flex flex-row align-items-center me-3">
+                    <li className="nav-item me-3 me-lg-4 dropdown">
+                    <button type="button" className="btn btn-sm" style={{backgroundColor: '#212529'}}>
+                    <i className='fas fa-comment-dots mt-2' style={{fontSize:'24px','color': '#5f738f'}}></i>
+                      <span className="position-absolute start-80 translate-middle badge rounded-pill bg-danger mt-2">
                         99+
-                        <span class="visually-hidden">unread messages</span>
+                        <span className="visually-hidden">unread messages</span>
                       </span>
                     </button>
                     </li>
-                    <li class="nav-item me-3 me-lg-0 dropdown">
+                    <li className="nav-item me-0 me-lg-0 dropdown">
                       <div className="nav-link dropdown-toggle" id="navbarDropdown1" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false" style={{color: 'grey'}}>
                         <img id="photoUser" src={'http://52.91.196.215:3001/api/images/'+ userPhoto} className="rounded-circle" height="35" width="35"
@@ -69,6 +72,7 @@ const Menu = () =>{
                       </div>
                       <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
                         <li><Link to={'/perfil'} className="dropdown-item" >Mi Perfil</Link></li>
+                        <li><Link to={'/mis-projectos'} className="dropdown-item" >Mis projectos</Link></li>
                         <li>
                           <hr className="dropdown-divider"/>
                         </li>
@@ -90,12 +94,19 @@ const Menu = () =>{
                 </div>
               </div>
             </div>
-            <div>
+            <div className="menu-pages">
               <Link to={'/'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-home me-3"></i>Inicio</Link>
               <Link to={'/trabajadores'}  className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-hard-hat me-3"></i>Trabajadores</Link>
               <Link to={'/sobre-nosotros'}  className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-exclamation-circle me-3"></i>Sobre Nosotros</Link>
               <Link to={'/preguntas-frecuentes'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-question-circle me-3"></i>Preguntas Frecuentes</Link>
               <Link to={'/crear-cuenta'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-user-plus me-3"></i>Crear Cuenta</Link>
+            </div>
+            <div className="searcher">
+            <Form.Label>Busca el oficio que necesites</Form.Label>
+              <Form className="d-flex">
+                <Form.Control type="search" placeholder="Ej: carpintero" className="me-2" aria-label="Buscar"/>
+                <Button className="search-button">Buscar</Button>
+            </Form>
             </div>
           </div>
         </div>

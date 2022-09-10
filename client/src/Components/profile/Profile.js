@@ -6,7 +6,7 @@ import Axios  from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import '../css/Profile.css'
-import { Button, Card, Container, Form, ListGroup, Nav } from 'react-bootstrap'
+import { Button, Card, Container, Form, ListGroup, Nav, Tab, Tabs } from 'react-bootstrap'
 import web from '../assets/web.png'
 import instagram from '../assets/instagram.png'
 import facebook from '../assets/facebook.png'
@@ -16,12 +16,13 @@ import accesDenied from '../assets/access-denied.png'
 import loadingprofilegf from '../assets/loading-profile.gif'
 import perfil from '../assets/perfil.png'
 import uploadPhoto from '../assets/upload-photo.png'
+import Projects from './Projects'
+import Comments from './Comments'
 
 const Profile = () => {
 
     const MySwal = withReactContent(Swal)
     const navigate = useNavigate()
-
     const [ dataUser, setDataUser ] = useState([])
     const [ response, setResponse ] = useState([])
     const [ loading, setLoading ] = useState(true)
@@ -40,31 +41,33 @@ const Profile = () => {
         const formData = new FormData();
         formData.append('formFile',imagefile.files[0])
         MySwal.fire({
-            title: 'Estás seguro de en cambiar tu foto de perfil?',
+            title: 'Estás seguro de cambiar tu foto de perfil?',
             showDenyButton: true,
             showCancelButton: false,
-            confirmButtonText: `Actualizar`,
+            confirmButtonText: `Cambiar`,
             denyButtonText: `Cancelar`,
-            }).then(() => {
-            Axios.put("http://52.91.196.215:3001/api/images",
-            formData,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data;',
-                    'Authorization': `${token}`
-                    }
             }).then((result) => {
-                if(result.status === 200){
-                    const token = localStorage.getItem('accessToken');
-                    setCancelButton(false);
-                    deletePrevUserPhoto()
-                    Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
-                    getAccess(token)
-                    document.getElementById('photoUser').src = "http://52.91.196.215:3001" + result.data.imagePath
+                if(result.isConfirmed){
+                    Axios.put("http://52.91.196.215:3001/api/images",
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data;',
+                            'Authorization': `${token}`
+                            }
+                    }).then((result) => {
+                        if(result.status === 200){
+                            const token = localStorage.getItem('accessToken');
+                            setCancelButton(false);
+                            deletePrevUserPhoto()
+                            Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
+                            getAccess(token)
+                            document.getElementById('photoUser').src = "http://52.91.196.215:3001" + result.data.imagePath
+                        }
+                    }).catch(error => {
+                        Swal.fire('No pudimos cambiar tu foto de perfil', '', 'warning')
+                    });
                 }
-            }).catch(error => {
-                Swal.fire('No pudimos cambiar tu foto de perfil', '', 'info')
-            });
             })
     }
     
@@ -88,30 +91,54 @@ const Profile = () => {
             let inputValues = document.querySelectorAll('input');
             let inputsArray =Array.from(inputValues);
             let newArrayValues = []
+            let msgTitle = ""
             inputsArray.forEach(elements => { 
                 if(elements.name !== 'formFile'){
                     newArrayValues.push({name: elements.name, value: elements.value});
                 }
             });
+            newArrayValues.forEach(element => { 
+                if(element.name === "email"){
+                    if(dataUser[0].email !== element.value){
+                        msgTitle = 'Luego de actualizar tu email, serás redirigido a la página inicio de sesión'
+                    }else{
+                        msgTitle = 'Estás seguro de actualizar tus datos?'
+                    }
+                }
+            })
+            newArrayValues.shift()
             MySwal.fire({
-                title: 'Estás seguro de actualizar tus datos?',
+                title: msgTitle,
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Actualizar`,
                 denyButtonText: `Cancelar`,
-              }).then(() => {
-                Axios.put("http://52.91.196.215:3001/api/update-user", {newArrayValues,'authorization' : `${token}`})
-                .then((result) => {
-                    if(result.status === 200){
-                        localStorage.removeItem("accessToken");
-                        Swal.fire('Actualización exitosa!', '', 'success')
-                        setTimeout(() => {
-                            return document.location.href="/login";
-                        }, 1000);
-                    }
-                }).catch(error => {
-                    Swal.fire('Los cambios no fueron guardados', '', 'info')
-                });
+              }).then((result) => {
+                if (result.isConfirmed) {
+                    Axios.put("http://52.91.196.215:3001/api/update-user", {newArrayValues ,'authorization' : `${token}`})
+                    .then((result) => {
+                        if(result.status === 200){
+                            Swal.fire('Actualización exitosa!', '', 'success')
+                            newArrayValues.forEach(element => { 
+                                if(element.name === "email"){
+                                    if(dataUser[0].email !== element.value){
+                                        localStorage.removeItem("accessToken");
+                                        setTimeout(() => {
+                                            return document.location.href="/login";
+                                        }, 1000);
+                                    }else{
+                                        setInputs(false)
+                                        setCancelButton(false);
+                                        getAccess(token)
+                                    }
+                                }
+                            });
+                            
+                        }
+                    }).catch(error => {
+                        Swal.fire('Los cambios no fueron guardados', '', 'danger')
+                    });
+                }
               })
         }else if(e.textContent === "Cancelar"){
             setCancelButton(false)
@@ -199,48 +226,46 @@ const Profile = () => {
                 </Col>
             </div>
             {
-                dataUser.map((element) =>{
+                dataUser.map((element,key) =>{
                     return(
                         <>
                             <Container className='profile-container shadow-lg mt-3 mb-5 p-4' style={element.userColor !== undefined ? { 'backgroundColor': element.userColor} : {'backgroundColor': {colorCard}}}>
                                 <Row className='mt-3 mb-3'>
                                     <Col lg={4} >
-                                        <Card className='perfil shadow mb-4 text-center'>
-                                        <input class="form-control" type="file" id="formFile" name='formFile' accept="image/jpeg;image/png;image/jpg" onChange={(e) => setEnableSave(!enableSave)} hidden/>
+                                        <Card className='perfil shadow mb-4 text-center' key={key}>
+                                        <input className="form-control" type="file" id="formFile" name='formFile' accept="image/jpeg;image/png;image/jpg" onChange={(e) => setEnableSave(!enableSave)} hidden/>
                                         <img id='upload' className='upload mt-2' src={uploadPhoto} style={{ width: '5rem' }} alt="" onClick={open_file}/>
                                         <img id='userPhoto' className='userphoto mt-2' variant="top" src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://52.91.196.215:3001/api/images/' + element.userPhoto : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
                                         <Card.Body>
                                             <Card.Title><strong>{element.nameUser + " " + element.lastnamesUser}</strong></Card.Title>
-                                            <Card.Text>
                                             <h6 style={{color: 'grey'}}>
-                                            {element.workareaUser} <br/>
+                                            {element.workareaUser}
                                             </h6>
-                                            </Card.Text>
                                             <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
                                                 {
-                                                    savePhoto !== true ? <><Button variant={inputs === true ? 'outline-success' : 'outline-primary'} onClick={(e) => {handleButton(e.target); setInputs(true)}} 
+                                                    savePhoto !== true ? <><Button variant={inputs === true ? 'success' : 'primary'} onClick={(e) => {handleButton(e.target); setInputs(true)}} 
                                                     disabled={(validationEmail || validationCell) !== true ? false : true}>
                                                         { inputs === true ? 'Actualizar Datos' : 'Editar Perfil' }
                                                     </Button>
                                                     {
-                                                        cancelButton === true ? <Button variant="outline-danger" onClick={(e) => {handleButton(e.target); setInputs(false)}} >Cancelar</Button> : <></>
-                                                    }</> : <><Button variant={inputs === true ? 'outline-success' : 'outline-primary'} onClick={() => {handleChangePhoto(); setSavePhoto(false)}} 
+                                                        cancelButton === true ? <Button variant="danger" onClick={(e) => {handleButton(e.target); setInputs(false)}} >Cancelar</Button> : <></>
+                                                    }</> : <><Button variant={inputs === true ? 'success' : 'primary'} onClick={() => {handleChangePhoto(); setSavePhoto(false)}} 
                                                     disabled={enableSave}>
                                                         { savePhoto === true ? 'Guardar Foto' : 'Editar Perfil' }
                                                     </Button>
                                                     {
-                                                        cancelButton === true ? <Button variant="outline-danger" onClick={(e) => {handleButton(e.target); setInputs(false); setEnableSave(false)}} >Cancelar</Button> : <></>
+                                                        cancelButton === true ? <Button variant="danger" onClick={(e) => {handleButton(e.target); setInputs(false); setEnableSave(false)}} >Cancelar</Button> : <></>
                                                     }
                                                     </> 
                                                 }
                                             </div>
                                             {
-                                                enableSave === true ? <Form.Text><span style={{color: 'red','font-weight':'bold' }}>Debes seleccionar una imagen para tu perfil</span></Form.Text> : <></>
+                                                enableSave === true ? <Form.Text><span style={{color: 'red',fontWeight:'bold' }}>Debes seleccionar una imagen para tu perfil</span></Form.Text> : <></>
                                             }
                                         </Card.Body>
                                         </Card>
                                         <Card className='contactos shadow mb-4 mb-lg-0'>
-                                            <ListGroup className='social-media' variant="flush">
+                                            <ListGroup className='social-media p-2' variant="flush">
                                                 <ListGroup.Item>{
                                                 inputs === true ? <><div><img src={web} alt=''/></div><div className='form-floating col-10'>
                                                     <input type="text" className='form-control' id='floatingWebsite' defaultValue={element.webSite !== undefined ? element.webSite : ''} name='website' placeholder='floatingWebsite' />
@@ -335,47 +360,56 @@ const Profile = () => {
                                             </Row>
                                             {
                                                inputs === true ? <><hr/>
-                                               <Row class="mb-3">
+                                               <Row className="mb-3">
                                                     <Col sm={3}>
-                                                        <label for="colorInput" class="form-label">Elija el color de su tarjeta</label>
+                                                        <label for="colorInput" className="form-label">Elija el color de su tarjeta</label>
                                                     </Col>
                                                     <Col sm={9}>
                                                         <Form.Text><p style={{color: '#349568'}}>Procure usar tonos claros</p></Form.Text>
-                                                        <input type="color" class="form-control form-control-color" id="colorInput" name='colorInput' onChange={(e) => setColorCard(e.target.value)} defaultValue={element.userColor !== undefined ? element.userColor : colorCard} title="Elija su color favorito"/>
+                                                        <input type="color" className="form-control form-control-color" id="colorInput" name='colorInput' onChange={(e) => setColorCard(e.target.value)} defaultValue={element.userColor !== undefined ? element.userColor : colorCard} title="Elija su color favorito"/>
                                                     </Col>
                                                </Row></> : <></>
                                             }
                                             </Card.Body>
                                         </Card>
-                                        <Row>
-                                            <Col md={12}>
-                                            <Card className="skills mb-4 mb-md-0 shadow">
-                                                <Card.Body>
-                                                <p className="mb-4"><span className="text-primary font-italic me-1">Calificaciones</span> Proyectos realizados</p>
-                                                <p className="mb-1" style={{'font-size':'.77rem'}}>Responsabilidad</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'80%'}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" style={{'font-size':'.77rem'}}>Puntualidad</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'72%'}} aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" style={{'font-size':'.77rem'}}>Honestidad</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'89%'}} aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" style={{'font-size':'.77rem'}}>Cuidadoso</p>
-                                                <div className="progress rounded" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'55%'}} aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                <p className="mt-4 mb-1" style={{'font-size':'.77rem'}}>Precio justo</p>
-                                                <div className="progress rounded mb-2" style={{height: '5px'}}>
-                                                    <div className="progress-bar" role="progressbar" style={{width:'66%'}} aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                                </Card.Body>
-                                            </Card>
+                                        <Tabs defaultActiveKey="home" id="justify-tab-example">
+                                            <Tab eventKey="home" title="Rating">
+                                                <Card>
+                                                    <Card.Body>
+                                                    <p className="mb-1" >Responsabilidad</p>
+                                                    <div className="progress rounded" style={{height: '5px'}}>
+                                                        <div className="progress-bar" role="progressbar" style={{width:'80%'}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <p className="mt-4 mb-1" >Puntualidad</p>
+                                                    <div className="progress rounded" style={{height: '5px'}}>
+                                                        <div className="progress-bar" role="progressbar" style={{width:'72%'}} aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <p className="mt-4 mb-1" >Honestidad</p>
+                                                    <div className="progress rounded" style={{height: '5px'}}>
+                                                        <div className="progress-bar" role="progressbar" style={{width:'89%'}} aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <p className="mt-4 mb-1" >Cuidadoso</p>
+                                                    <div className="progress rounded" style={{height: '5px'}}>
+                                                        <div className="progress-bar" role="progressbar" style={{width:'55%'}} aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <p className="mt-4 mb-1" >Precio justo</p>
+                                                    <div className="progress rounded mb-2" style={{height: '5px'}}>
+                                                        <div className="progress-bar" role="progressbar" style={{width:'66%'}} aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    </Card.Body>
+                                                </Card>
+                                            </Tab>  
+                                            <Tab eventKey="proyects" title="Proyectos">
+                                            <Col className='projects m-0'>
+                                                <Projects />
                                             </Col>
-                                        </Row>
+                                            </Tab>
+                                            <Tab eventKey="comments" title="Comentarios">
+                                            <Col className='projects m-0'>
+                                                <Comments />
+                                            </Col>
+                                            </Tab> 
+                                        </Tabs>
                                     </Col>
                                 </Row>
                             </Container>

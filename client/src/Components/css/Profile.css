@@ -4,6 +4,10 @@
     align-items: center;
 }
 
+#justify-tab-example-tabpane-home .card{
+    border-radius: 0px !important;
+}
+
 .upload{
     position:absolute;
     top: 50px;
@@ -77,4 +81,15 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.projects {
+    height:50vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.nav-tabs{
+    background-color: #F8F9FA;
+    border-radius: 10px 10px 0px 0px;
 }
