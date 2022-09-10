@@ -154,6 +154,7 @@ const Profile = () => {
                     setResponse(result.status)
                     setLoading(false)
                     setDataUser(result.data)
+                    document.getElementById('photoUser').src = "http://52.91.196.215:3001/api/images/" + result.data[0].userPhoto
                     setGetPhoto(result.data[0].userPhoto)
               }
           }).catch(error => {
