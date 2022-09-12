@@ -1,0 +1,27 @@
+.projects-user{
+    border-color: rgba(184, 60, 60, 0) !important;
+    border-radius: 10px !important;
+}
+.info-client{
+    display: flex;
+    flex-direction: column;
+    margin: 0px !important;
+    width: 100%;
+}
+
+
+.buttonproject{
+border: 2px solid #384451 !important;
+background-color: #5f738f !important;
+}
+
+.buttonproject:hover{
+border: 2px solid #5f738f !important;
+background-color: #384451 !important;
+}
+
+.projectsphoto {
+    height:60vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}

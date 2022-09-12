@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Axios  from 'axios'
@@ -154,7 +154,7 @@ const Profile = () => {
                     setResponse(result.status)
                     setLoading(false)
                     setDataUser(result.data)
-                    document.getElementById('photoUser').src = "http://52.91.196.215:3001/api/images/" + result.data[0].userPhoto
+                    localStorage.setItem('userPhoto', "http://52.91.196.215:3001/api/images/" + result.data[0].userPhoto)
                     setGetPhoto(result.data[0].userPhoto)
               }
           }).catch(error => {
@@ -220,8 +220,9 @@ const Profile = () => {
                 <Col>
                     <Nav aria-label="breadcrumb" className="bg-light rounded-3 p-3 mb-4">
                         <ol className="breadcrumb mb-0">
-                            <li className="breadcrumb-item"><a href="/">Inicio</a></li>
+                            <li className="breadcrumb-item"><Link to={'/'} >Inicio</Link></li>
                             <li className="breadcrumb-item active" aria-current="page">Perfil de usuario</li>
+                            <li className="breadcrumb-item"><Link to={'/mis-proyectos'} >Mis Proyectos</Link></li>
                         </ol>
                     </Nav>
                 </Col>
@@ -233,8 +234,8 @@ const Profile = () => {
                             <Container className='profile-container shadow-lg mt-3 mb-5 p-4' style={element.userColor !== undefined ? { 'backgroundColor': element.userColor} : {'backgroundColor': {colorCard}}}>
                                 <Row className='mt-3 mb-3'>
                                     <Col lg={4} >
-                                        <Card className='perfil shadow mb-4 text-center' key={key}>
-                                        <input className="form-control" type="file" id="formFile" name='formFile' accept="image/jpeg;image/png;image/jpg" onChange={(e) => setEnableSave(!enableSave)} hidden/>
+                                        <Card className='perfil shadow mb-4' key={key}>
+                                        <input className="form-control" type="file" id="formFile" name='formFile' accept="image/*" onChange={(e) => setEnableSave(!enableSave)} hidden/>
                                         <img id='upload' className='upload mt-2' src={uploadPhoto} style={{ width: '5rem' }} alt="" onClick={open_file}/>
                                         <img id='userPhoto' className='userphoto mt-2' variant="top" src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://52.91.196.215:3001/api/images/' + element.userPhoto : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
                                         <Card.Body>
@@ -442,7 +443,7 @@ const Profile = () => {
                     <img src={loadingprofilegf} alt="imagen de confirmación" style={{width: '15rem'}}/>
                 </div>
                     <div className="success-account mb-3">
-                    Obteniendo datos...
+                    Obteniendo información de su perfil...
                 </div>
             </div>
         </div>

@@ -26,6 +26,7 @@ const Menu = () =>{
 
   const logOut = () =>{
     localStorage.removeItem('accessToken')
+    setLoggedIn(false)
   }
 
   useEffect(() =>{
@@ -39,7 +40,7 @@ const Menu = () =>{
                 setUserPhoto(result.data[0].userPhoto)
               }
           }).catch(error => {
-
+            setLoggedIn(false)
           });
     }
   },[userData.token])
@@ -53,7 +54,7 @@ const Menu = () =>{
                 <button className="whiteLink siteLink"  onClick={() => menuToggle()}><i className="fas fa-bars me-2"></i> MENÚ</button>
               </div>
                 {
-                  (userData.token !== undefined || isLoggenIn) ?  <>
+                  (localStorage.getItem('accessToken') || isLoggenIn) ?  <>
                   <ul className="navbar-nav d-flex flex-row align-items-center me-3">
                     <li className="nav-item me-3 me-lg-4 dropdown">
                     <button type="button" className="btn btn-sm" style={{backgroundColor: '#212529'}}>
@@ -67,12 +68,12 @@ const Menu = () =>{
                     <li className="nav-item me-0 me-lg-0 dropdown">
                       <div className="nav-link dropdown-toggle" id="navbarDropdown1" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false" style={{color: 'grey'}}>
-                        <img id="photoUser" src={'http://52.91.196.215:3001/api/images/'+ userPhoto} className="rounded-circle" height="35" width="35"
+                        <img id="photoUser" src={localStorage.getItem('userPhoto') === null ? 'http://52.91.196.215:3001/api/images/'+ userPhoto : localStorage.getItem('userPhoto')} className="rounded-circle" height="35" width="35"
                           alt="" loading="lazy" />
                       </div>
                       <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
                         <li><Link to={'/perfil'} className="dropdown-item" >Mi Perfil</Link></li>
-                        <li><Link to={'/mis-projectos'} className="dropdown-item" >Mis projectos</Link></li>
+                        <li><Link to={'/mis-proyectos'} className="dropdown-item" >Mis proyectos</Link></li>
                         <li>
                           <hr className="dropdown-divider"/>
                         </li>

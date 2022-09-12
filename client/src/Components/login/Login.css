@@ -88,7 +88,6 @@ input[type="password"] {
 }
 .input_text p {
   margin-top: 4px;
-  font-size: 13px;
   margin-left: 10px;
   color: red;
 }
@@ -126,14 +125,14 @@ input[type="password"] {
   height: 45px;
   width: 100%;
   border: none;
-  background-color: #fe6b68 !important;
+  background-color: #f1221e !important;
   transition: all 0.5s;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 17px;
   color: #fff;
 }
 .btnLogin button:hover {
-  background-color: #f1221e !important;
+  background-color: #f55552 !important;
 }
 .right-side hr {
   margin-top: 30px;

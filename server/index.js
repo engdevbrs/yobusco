@@ -16,10 +16,22 @@ const multer = require('multer');
 
 app.use(cors())
 app.use(express.json())
+app.use(express.static(path.join(__dirname,'./projects/downloads')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 const upload = multer({ dest: './images' })
+
+const diskstorage = multer.diskStorage({
+    destination: path.join(__dirname, './projects/uploads'),
+    filename: (req, file, cb) =>{
+        cb(null, Date.now() + file.originalname)
+    }
+})
+
+const uploadproject = multer({
+    storage: diskstorage
+})
 
 app.post('/api/create-user',(req,res)=>{
     const name = req.body.name;
@@ -44,14 +56,31 @@ app.post('/api/create-user',(req,res)=>{
     "VALUES(?,?)";
     db.query(sqlInsert1,[rut,name,lastname,bornDate,phone,email,region,city,comunne,area,role,yearsExperience,resume,agreeconditions],(err,result)=>{
         if(err){
-            res.status(500).send({ error: 'Something failed!' });
+            res.status(500).send({ error: 'Algo falló!' });
         }else{
             db.query(sqlInsert2,[email,pass],(err,result)=>{
                 if(err){
-                    res.status(500).send({ error: 'Something failed!' });
+                    res.status(500).send({ error: 'Algo falló!' });
                 }else{
                     res.send(result);
                 }
+            })
+        }
+    })
+});
+
+app.post('/api/login', (req,res)=>{
+    const user = req.body.userName;
+    const pass = req.body.userPass;
+    const sqlGetUserCredentials = "SELECT u.userName, u.userPass FROM user_credentials u WHERE u.userName = "+mysql.escape(user)+ "AND u.userPass ="+mysql.escape(pass);
+    db.query(sqlGetUserCredentials,(err,result) =>{
+        if(result.length === 0){
+            res.status(403).send({ error: 'Error o contraseñas incorrectos' });
+        }else{
+            const accessToken = generateAccessToken(req.body);
+            res.header('authorization', accessToken).json({
+                message: 'User authenticated',
+                accessToken: accessToken
             })
         }
     })
@@ -134,59 +163,6 @@ app.post('/api/user-info', validateToken, (req,res)=>{
     })
 });
 
-app.post('/api/login', (req,res)=>{
-    const user = req.body.userName;
-    const pass = req.body.userPass;
-    const sqlGetUserCredentials = "SELECT u.userName, u.userPass FROM user_credentials u WHERE u.userName = "+mysql.escape(user)+ "AND u.userPass ="+mysql.escape(pass);
-    db.query(sqlGetUserCredentials,(err,result) =>{
-        if(result.length === 0){
-            res.status(403).send({ error: 'Error o contraseñas incorrectos' });
-        }else{
-            const accessToken = generateAccessToken(req.body);
-            res.header('authorization', accessToken).json({
-                message: 'User authenticated',
-                accessToken: accessToken
-            })
-        }
-    })
-});
-
-
-app.put('/api/images',upload.single('formFile'),async (req,res)=>{
-    const userLogged = JSON.parse(Buffer.from(req.headers.authorization.split('.')[1], 'base64').toString());
-    const file = req.file
-    const result = await uploadFile(file)
-    await unlinkFile(file.path)
-    const imgSrc = {imagePath: `/api/images/${result.Key}`}
-    const sqlInsert1 = "UPDATE user_info SET userPhoto="+mysql.escape(result.Key)+"WHERE user_info.email="+mysql.escape(userLogged.userName);
-    db.query(sqlInsert1,(err,result) =>{
-        if(err){
-            res.status(500).send('Problema subiendo Foto')
-        }else{
-            res.send(imgSrc);
-        }
-    })
-});
-
-app.get('/api/images/:key', (req, res) => {
-    console.log(req.params)
-    if(req.params.key !== 'null'){
-        const key = req.params.key
-        const readStream = getFileStream(key)
-        res.writeHead(200, {
-            'Content-Type' : 'image/png'
-          });
-        readStream.pipe(res)
-    }
-})
-
-app.delete('/api/images/delete/:key', async (req, res) => {
-    console.log(req.params)
-    const key = req.params.key
-    const deleteStream = await deleteFileStream(key).promise()
-    res.send('previuos photo deleted successfully')
-})
-
 app.put('/api/update-user', validateToken,(req,res)=>{
 
     const userLogged = JSON.parse(Buffer.from(req.body.authorization.split('.')[1], 'base64').toString());
@@ -223,13 +199,97 @@ app.put('/api/update-user', validateToken,(req,res)=>{
     })
 });
 
+app.put('/api/images',upload.single('formFile'),async (req,res)=>{
+    const userLogged = JSON.parse(Buffer.from(req.headers.authorization.split('.')[1], 'base64').toString());
+    const file = req.file
+    const result = await uploadFile(file)
+    await unlinkFile(file.path)
+    const imgSrc = {imagePath: `/api/images/${result.Key}`}
+    const sqlInsert1 = "UPDATE user_info SET userPhoto="+mysql.escape(result.Key)+"WHERE user_info.email="+mysql.escape(userLogged.userName);
+    db.query(sqlInsert1,(err,result) =>{
+        if(err){
+            res.status(500).send('Problema subiendo Foto')
+        }else{
+            res.send(imgSrc);
+        }
+    })
+});
+
+app.get('/api/images/:key', (req, res) => {
+    console.log(req.params)
+    if(req.params.key !== 'null'){
+        const key = req.params.key
+        const readStream = getFileStream(key)
+        res.writeHead(200, {
+            'Content-Type' : 'image/png'
+          });
+        readStream.pipe(res)
+    }
+})
+
+app.delete('/api/images/delete/:key', async (req, res) => {
+    console.log(req.params)
+    const key = req.params.key
+    const deleteStream = await deleteFileStream(key).promise()
+    res.send('previuos photo deleted successfully')
+})
+
+app.post('/api/image/upload-project',uploadproject.single('photofile'),async (req,res)=>{
+    const body = JSON.parse(req.body.params)
+    const token = req.body.token
+    const userLogged = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+    const file = req.file
+    const name = body.name
+    const workresume = body.workresume
+    const originalname = file.originalname
+    const username = userLogged.userName
+    const workdate = body.date
+    const filetype = file.mimetype
+    const imageClient = fs.readFileSync(path.join(__dirname, './projects/uploads/' + file.filename))
+    await unlinkFile(file.path)
+    const sqlLimit = "SELECT * FROM projects_user WHERE projects_user.userName="+mysql.escape(userLogged.userName)
+    const sqlInsert1 = "INSERT INTO projects_user(clientName,imageName,userName,workDate,imageClient,imageType,workResume) VALUES(?,?,?,?,?,?,?)"
+    db.query(sqlLimit,(err,result) =>{
+        if(err){
+            res.status(500).send('Problema subiendo Foto')
+        }else{
+            if(result.length < 7){
+                db.query(sqlInsert1,[name, originalname, username, workdate, imageClient , filetype, workresume],(err,result) =>{
+                    if(err){
+                        res.status(500).send('Problema subiendo Foto')
+                    }else{
+                        res.send(result);
+                    }
+                })
+            }else{
+                res.status(500).send('Error: El límite son 8 fotos por usuario')
+            }
+
+        }
+    })
+});
+
+app.get('/api/image/user-projects',validateToken, (req, res) => {
+    const userLogged = JSON.parse(Buffer.from(req.headers.authorization.split('.')[1], 'base64').toString());
+    const sqlInsert1 = "SELECT * FROM projects_user WHERE projects_user.userName="+mysql.escape(userLogged.userName);
+    db.query(sqlInsert1,(err,result) =>{
+        if(err){
+            res.status(500).send('Problema obteniendo tus proyectos')
+        }else{
+            result.map(image => {
+                fs.writeFileSync(path.join(__dirname, './projects/downloads/' + image.imageName),image.imageClient)
+            })
+            res.send(result)
+        }
+    })
+})
 
 function generateAccessToken(data){
     return jwt.sign(data,process.env.SECRET, {expiresIn: '60m'});
 }
 
 function validateToken(req,res,next){
-    const accessToken = req.body['authorization'] || req.body['x-access-token'];
+    const accessToken = req.body['authorization'] || req.body['x-access-token'] || req.headers['authorization'];
     if(!accessToken){
         res.status(401).send({error: 'Access Denied'});
     }
