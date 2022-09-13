@@ -41,9 +41,9 @@ const Home = () => {
         <Col>
         <h2 className="our-fundation fw-bolder mt-2">YoBusco.cl</h2>
         <p class="fw-normal text-muted"><strong>E</strong>s una plataforma que tiene por objetivo crear una comunidad
-              con personas que ofrezcan su oficio o profesión, para que personas de cualquier parte de Chile puedan
-              acceder a su perfil personal, la cuál tendrá una serie de información ( Como su puntuación ), esta será de ayuda
-              para que las personas tengan una idea de con quién está tratando y a quién está solicitando los servicios.
+              con personas que ofrezcan sus conocimientos técnicos sobre un oficio en particular, para que usuarios de cualquier parte de Chile puedan
+              acceder a su perfil personal, la cuál tendrá una serie de información útil para el futuro cliente, esta será de ayuda
+              para que las personas tengan una idea de con quién está tratando y a quién le está solicitando los servicios.
                     </p>
         </Col>
         <Col className="information-card">
@@ -58,7 +58,7 @@ const Home = () => {
           <Card.Img variant="top" src={ tools } alt="..." style={{width: '64px'}}/>
             <Card.Body>
             <Card.Title>Variedad de servicios</Card.Title>
-              <Card.Text className='fw-normal text-muted'>Nuestro objetivo es poseer una gran variedad de oficios, la cuál solvente tu necesidad del momento.
+              <Card.Text className='fw-normal text-muted'>Nuestro objetivo es poseer una gran variedad de oficios, la cuál solvente su necesidad del momento.
               </Card.Text>
             </Card.Body>
             <Card.Body >
@@ -82,7 +82,7 @@ const Home = () => {
             <Card.Body>
               <Card.Title>Comunidad</Card.Title>
               <Card.Text className='fw-normal text-muted'>Es ideal generar una comunidad entre nosotros, en la que tanto la persona que necesita de un servicio, 
-              y la que ofrece el servicio, creen un ambiente seguro y de confianza, de tal modo que ésta, pueda servir a distintas personas a elegir bien.
+              y la que ofrece el servicio, creen un ambiente seguro y de confianza, de tal modo, que ésta pueda servir a distintos usuarios a elegir bien.
               </Card.Text>
             </Card.Body>
           </Card>

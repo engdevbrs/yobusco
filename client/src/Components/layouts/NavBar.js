@@ -102,13 +102,6 @@ const Menu = () =>{
               <Link to={'/preguntas-frecuentes'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-question-circle me-3"></i>Preguntas Frecuentes</Link>
               <Link to={'/crear-cuenta'} className="nav-menu-item" onClick={() => menuToggle()}><i className="fas fa-user-plus me-3"></i>Crear Cuenta</Link>
             </div>
-            <div className="searcher">
-            <Form.Label>Busca el oficio que necesites</Form.Label>
-              <Form className="d-flex">
-                <Form.Control type="search" placeholder="Ej: carpintero" className="me-2" aria-label="Buscar"/>
-                <Button className="search-button">Buscar</Button>
-            </Form>
-            </div>
           </div>
         </div>
         <section>

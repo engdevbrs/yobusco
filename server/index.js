@@ -151,6 +151,18 @@ app.get('/api/user-profile/:key', (req,res)=>{
     })
 });
 
+app.get('/api/view/profile/:key', (req,res)=>{
+    const userId = req.params.key
+    const sqlGetUsers = "SELECT * FROM user_info WHERE user_info.id="+mysql.escape(userId)
+    db.query(sqlGetUsers,(err,result) =>{
+        if(err){
+            res.status(500).send(err);
+        }else{
+            res.send(result);
+        }
+    })
+});
+
 app.post('/api/user-info', validateToken, (req,res)=>{
     const userLogged = JSON.parse(Buffer.from(req.body.authorization.split('.')[1], 'base64').toString());;
     const sqlGetUser = "SELECT * FROM user_info u WHERE u.email ="+mysql.escape(userLogged.userName);
@@ -231,7 +243,20 @@ app.delete('/api/images/delete/:key', async (req, res) => {
     console.log(req.params)
     const key = req.params.key
     const deleteStream = await deleteFileStream(key).promise()
-    res.send('previuos photo deleted successfully')
+    res.send('previous photo deleted successfully')
+})
+
+app.delete('/api/image/delete-project:key',(req, res) => {
+    const userLogged = JSON.parse(Buffer.from(req.headers.authorization.split('.')[1], 'base64').toString());
+    const idphoto = req.params.key
+    const sqlDelete = "DELETE FROM projects_user WHERE projects_user.userName="+mysql.escape(userLogged.userName)+"AND projects_user.id_img="+mysql.escape(idphoto);
+    db.query(sqlDelete,(err,result) =>{
+        if(err){
+            res.status(500).send('Problema eliminando Foto')
+        }else{
+            res.send(result)
+        }
+    })
 })
 
 app.post('/api/image/upload-project',uploadproject.single('photofile'),async (req,res)=>{
@@ -273,6 +298,21 @@ app.get('/api/image/user-projects',validateToken, (req, res) => {
     const userLogged = JSON.parse(Buffer.from(req.headers.authorization.split('.')[1], 'base64').toString());
     const sqlInsert1 = "SELECT * FROM projects_user WHERE projects_user.userName="+mysql.escape(userLogged.userName);
     db.query(sqlInsert1,(err,result) =>{
+        if(err){
+            res.status(500).send('Problema obteniendo tus proyectos')
+        }else{
+            result.map(image => {
+                fs.writeFileSync(path.join(__dirname, './projects/downloads/' + image.imageName),image.imageClient)
+            })
+            res.send(result)
+        }
+    })
+})
+
+app.get('/api/image/view-projects/:id', (req, res) => {
+    const userId = req.params.id
+    const sqlClientRequest = "SELECT * FROM user_info ui, projects_user pu WHERE ui.id="+mysql.escape(userId)+" AND ui.email = pu.userName"
+    db.query(sqlClientRequest,(err,result) =>{
         if(err){
             res.status(500).send('Problema obteniendo tus proyectos')
         }else{

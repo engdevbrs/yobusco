@@ -231,7 +231,7 @@ const Profile = () => {
                 dataUser.map((element,key) =>{
                     return(
                         <>
-                            <Container className='profile-container shadow-lg mt-3 mb-5 p-4' style={element.userColor !== undefined ? { 'backgroundColor': element.userColor} : {'backgroundColor': {colorCard}}}>
+                            <Container className='profile-container shadow-lg rounded-4 mt-3 mb-5 p-4' style={element.userColor !== undefined ? { 'backgroundColor': element.userColor} : {'backgroundColor': {colorCard}}}>
                                 <Row className='mt-3 mb-3'>
                                     <Col lg={4} >
                                         <Card className='perfil shadow mb-4' key={key}>

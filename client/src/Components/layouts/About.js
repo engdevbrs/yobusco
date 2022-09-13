@@ -12,9 +12,9 @@ const About = () => {
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-xxl-6">
                     <div class="text-center my-5">
-                        <h1 class="fw-bolder mb-3">Nuestra misión es brindar la posibilidad de encontrar y buscar trabajos de oficios.</h1>
-                        <p class="fw-normal text-muted mb-4">Crear una comunidad de trabajos cotidianos que ayuden a las personas a solucionar sus problemas con agilidad,
-                         proporcionando un valor añadido a través de altos conocimientos técnicos ofrecidos por nuestros colaboradores."</p>
+                        <h1 class="fw-bolder mb-3">Nuestra misión es brindar la posibilidad de encontrar y buscar trabajos de oficios</h1>
+                        <p class="fw-normal text-muted mb-4">"Crear una comunidad de trabajos cotidianos que ayuden a las personas a solucionar sus problemas con agilidad,
+                         proporcionando un valor añadido a través de altos conocimientos técnicos ofrecidos por nuestros colaboradores"</p>
                         <a class="btn btn-primary btn-lg" href="#scroll-target">Leer nuestra historia</a>
                     </div>
                 </div>

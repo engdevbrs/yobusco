@@ -8,10 +8,13 @@ import { Link } from 'react-router-dom'
 import accesDenied from '../assets/access-denied.png'
 import loadingprofilegf from '../assets/loading-profile-projects.gif'
 import loadingprofileprojects from '../assets/loading-projects.gif'
+import emptywork from '../assets/emptywork.png'
+
 
 
 const UserProjects = () => {
 
+    const MySwal = withReactContent(Swal)
     const [ response, setResponse ] = useState([])
     const [ projectsData, setProjectsData ] = useState([])
     const [ loading, setLoading ] = useState(true)
@@ -22,9 +25,36 @@ const UserProjects = () => {
     const [ shortResume, setShortResume ] = useState(true)
     const [ incorrectTypeImage, setIncorrectTypeImage ] = useState(true)
 
+    const deleteUserProject = (e) =>{
+        const token = localStorage.getItem('accessToken');
+        MySwal.fire({
+            title: 'Estás seguro de eliminar éste proyecto?',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: `Eliminar`,
+            denyButtonText: `Cancelar`,
+            }).then((result) => {
+                if(result.isConfirmed){
+                    Axios.delete("http://52.91.196.215:3001/api/image/delete-project" + parseInt(e[1].value,10), 
+                    {
+                        headers: {
+                        'authorization': `${token}`
+                        }
+                    }
+                    ).then((result) => {
+                        if(result.status === 200){
+                            getProjects(token)
+                            Swal.fire('Su proyecto ha sido eliminado con éxito!', '', 'success')
+                        }
+                    }).catch(error => {
+                        Swal.fire('No pudimos eliminar éste proyecto', '', 'warning')
+                    });
+                }
+            })
+    }
+
     const uploadProject = () => {
 
-        const MySwal = withReactContent(Swal)
         const token = localStorage.getItem('accessToken');
         const clientname = document.getElementById('clientname').value
         const workdate = document.getElementById('workdate').value
@@ -51,7 +81,7 @@ const UserProjects = () => {
                     .then((result) => {
                         if(result.status === 200){
                             setResponse(result.status)
-                            getProjects()
+                            getProjects(token)
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
                         }
                     }).catch(error => {
@@ -188,14 +218,14 @@ const UserProjects = () => {
                     </div>
                 </div>
                 <section className='p-3'>
-                    <Container className='shadow-lg rounded-3 mt-3 mb-5 p-4' fluid>
-                        <Row xs={1} md={1} className='mt-3 mb-3'>
+                    <Container className='shadow-lg rounded-4 mt-3 mb-5 p-4'>
+                        <Row xs={1} md={1}>
                             <Col md={5} lg={4} >
                                 <h5><strong>Evidencia de servicios</strong></h5>
-                                <Card className='projects-user shadow mb-4 mb-lg-0 p-2'>
+                                <Card className='projects-user shadow d-flex justify-content-center mb-4 mb-lg-0 p-2'>
                                 <Form.Group className="mb-3">
                                     <Form.Label>Trabajo realizado a: </Form.Label>
-                                    <Form.Control id='clientname' name='clientname' size="md" type="text" placeholder="Ingrese nombre y apellido del cliente" onChange={e => onchangeName(e.target.value)}
+                                    <Form.Control id='clientname' name='clientname' size="md" type="text" placeholder="Ej: Antonio Pérez Jara" onChange={e => onchangeName(e.target.value)}
                                     disabled={projectsData.length >= 8 ? true : false}/>
                                     { emptyName === true ? <Form.Text style={{color:'red'}}>Éste campo es obligatorio</Form.Text> : '' }
                                 </Form.Group>
@@ -207,7 +237,7 @@ const UserProjects = () => {
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <Form.Label>Breve descripción de éste trabajo</Form.Label>
-                                    <Form.Control id='workresume' name='workresume' as="textarea" rows={3} placeholder="Escriba aquí" onChange={e => onchangeWorkResume(e.target.value)}
+                                    <Form.Control id='workresume' name='workresume' as="textarea" rows={3} placeholder="Escriba aquí.." onChange={e => onchangeWorkResume(e.target.value)}
                                     disabled={projectsData.length >= 8 ? true : false}/>
                                     {emptyWorkResume === true ? <Form.Text style={{color:'red'}}>Éste campo es obligatorio</Form.Text> 
                                     : shortResume === true ? <Form.Text style={{color:'red'}}>Necesita un mínimo de 50 caráctares.</Form.Text> : ''}
@@ -242,12 +272,21 @@ const UserProjects = () => {
                                         </div>
                                     </div>
                                 </div>
-                                {
-                                    projectsData.length > 0 ? <h5><strong>Tus trabajos</strong></h5> :
-                                    <h5><strong>Actualmente no haz subido ningún trabajo</strong></h5>
-                                }
-                                <Container className='projects-container' fluid>
-                                    <Row xs={1} md={1} lg={2} className='projectsphoto'>
+                                <Container className='projects-container'>
+                                    {
+                                    projectsData.length > 0 ? <h5><strong>Tus trabajos subidos</strong></h5> : 
+                                    <>
+                                    <h5><strong>No haz subido ningún trabajo</strong></h5>
+                                    <Card className='noprojectsphoto shadow d-flex align-items-center justify-content-center'>
+                                        <div className="mt-2">
+                                        <img variant="top" src={emptywork} 
+                                            alt={'project'} style={{height: '250px', width: 'auto'}}/>
+                                        </div> 
+                                    </Card>
+                                    </>
+                                    }
+                                    
+                                    <Row xs={1} md={1} lg={2} className='projectsphoto rounded-4 shadow p-2' hidden={projectsData.length > 0 ? false : true}>
                                     {
                                      projectsData.length > 0 ? projectsData.map(value =>{
                                             let dateFormatted = null
@@ -257,19 +296,20 @@ const UserProjects = () => {
                                             return(
                                                 <>
                                                 <Col>
-                                                    <Card className='projects-user shadow mt-2 mb-4'>
-                                                        <div className="d-flex align-items-center justify-content-center mt-2">
+                                                    <Card className='cardproject shadow mb-4 mt-2'>
+                                                        <div className="d-flex align-items-center justify-content-center">
                                                             <Card.Img variant="top" src={'http://52.91.196.215:3001/' + value.imageName} 
-                                                            alt={'project'} style={{height: '300px', width: 'auto'}}/>
+                                                            alt={'project'} style={{height: '200px'}}/>
                                                         </div>
+                                                        <i className='deletephoto fas fa-trash' value={value.id_img} key={value.id_img} onClick={e => deleteUserProject(e.target.attributes)}></i>
                                                         <Card.Body>
                                                             <Card.Title>Descripción del trabajo</Card.Title>
                                                             <Card.Text>{value.workResume}</Card.Text>
                                                         </Card.Body>
                                                         <Card.Footer>
                                                         <Row>
-                                                            <Col className='col-8 text-start'><small className="text-muted">Realizado a {value.clientName}</small></Col>
-                                                            <Col className='col-4 text-end'><small className="text-muted">{"El dia " + dateFormatted.toLocaleDateString()}</small></Col>
+                                                            <Col className='col-6 text-start'><small className="text-muted">Realizado a {value.clientName}</small></Col>
+                                                            <Col className='col-6 text-end'><small className="text-muted">{"El dia " + dateFormatted.toLocaleDateString()}</small></Col>
                                                         </Row>
                                                         </Card.Footer>
                                                     </Card>
@@ -282,7 +322,7 @@ const UserProjects = () => {
                                 </Container>
                             </Col>
                         </Row>
-                </Container>
+                    </Container>
                 </section>
             </>
         )

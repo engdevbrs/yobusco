@@ -24,10 +24,6 @@
     filter: brightness(50%);
     height: 190px;
 }
-.profile-container{
-    border-color: #fff0 !important;
-    border-radius: 10px !important;
-}
 
 .left-content{
     display: flex;
