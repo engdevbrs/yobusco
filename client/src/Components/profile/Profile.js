@@ -254,7 +254,7 @@ const Profile = () => {
                                             {element.workareaUser}
                                             </h6>
                                             <div className="mb-2" hidden={hiddenProgress}>
-                                                <ProgressBar className='profprogress' now={60} label={`${updateProgress}%`}/>
+                                                <ProgressBar className='profprogress' now={updateProgress} label={`${updateProgress}%`}/>
                                             </div>
                                             <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
                                                 {
