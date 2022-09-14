@@ -44,7 +44,7 @@ const ViewClientProjects = ({id}) => {
           return(
               <>
               <Col>
-                <Card className='mt-2'>
+                <Card className='mt-3 mb-3'>
                   <div className="d-flex align-items-center justify-content-center">
                       <Card.Img variant="top" src={'http://52.91.196.215:3001/' + value.imageName} 
                       alt={'project'} style={{height: '200px'}}/>

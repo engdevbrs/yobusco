@@ -1,12 +1,9 @@
 .projects-user{
-    border-color: rgba(184, 60, 60, 0) !important;
-    border-radius: 15px !important;
-    height: 65vh;
+    border-color: rgba(0, 0, 0, 0) !important;
 }
 
 .cardproject{
-    border-color: rgba(184, 60, 60, 0) !important;
-    border-radius: 15px !important;
+    border-color: rgba(121, 121, 121, 0.208) !important;
 }
 .info-client{
     display: flex;
@@ -26,20 +23,21 @@
 }
 
 .projectsphoto {
-    height:65vh;
-    overflow-y: scroll;
+    height:63vh;
     overflow-x: hidden;
+    overflow-y: visible;
 }
 
 .noprojectsphoto {
-    border-color: rgba(184, 60, 60, 0) !important;
-    border-radius: 15px !important;
-    height: 65vh;
+    border-color: rgba(0, 0, 0, 0) !important;
+    height: 63vh;
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 .deletephoto{
     color: #c33b3b;
-    background-color: rgb(236, 236, 236);
+    background-color: rgb(255, 255, 255);
     margin: 3px;
     border: 2px solid rgba(0, 0, 0, 0.566);
     border-radius: 50px;
@@ -54,4 +52,9 @@
     background-color: rgb(232, 232, 232);
     border: 2px solid rgb(143, 143, 143);
     cursor: pointer;
+}
+
+.progress-bar{
+    color: aliceblue !important;
+    background-color: #259944 !important;
 }

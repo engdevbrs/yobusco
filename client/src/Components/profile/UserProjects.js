@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Card,  Col, Container, Form, Nav, Row } from 'react-bootstrap'
+import { Button, Card,  Col, Container, Form, Nav, ProgressBar, Row } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Axios  from 'axios'
@@ -24,6 +24,8 @@ const UserProjects = () => {
     const [ emptyWorkResume, setEmptyWorkResume ] = useState(true)
     const [ shortResume, setShortResume ] = useState(true)
     const [ incorrectTypeImage, setIncorrectTypeImage ] = useState(true)
+    const [ updateProgress, setUpdateProgress ] = useState(0)
+    const [ hiddenProgress, showProgress ] = useState(true)
 
     const deleteUserProject = (e) =>{
         const token = localStorage.getItem('accessToken');
@@ -77,20 +79,28 @@ const UserProjects = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.post("http://52.91.196.215:3001/api/image/upload-project",formFile)
+                    showProgress(false)
+                    Axios.post("http://52.91.196.215:3001/api/image/upload-project",formFile,config)
                     .then((result) => {
                         if(result.status === 200){
                             setResponse(result.status)
                             getProjects(token)
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
+                            showProgress(true)
                         }
                     }).catch(error => {
-                        setResponse(error.response.status)
                         Swal.fire('No pudimos subir éste proyecto', '', 'warning')
                     });
                 }
             })
     }
+
+    var config = {
+        onUploadProgress: function(progressEvent) {
+          var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+          setUpdateProgress(percentCompleted)
+        }
+      };
 
     const getProjects = () => {
         const token = localStorage.getItem('accessToken');
@@ -106,7 +116,6 @@ const UserProjects = () => {
           }).catch(error => {
                 setProjectsData(error.response.status)
           });
-
     }
 
     const getAccess = async (token) =>{
@@ -218,11 +227,11 @@ const UserProjects = () => {
                     </div>
                 </div>
                 <section className='p-3'>
-                    <Container className='shadow-lg rounded-4 mt-3 mb-5 p-4'>
+                    <Container className='shadow-lg rounded-3 mt-3 mb-5 p-2' fluid>
                         <Row xs={1} md={1}>
-                            <Col md={5} lg={4} >
-                                <h5><strong>Evidencia de servicios</strong></h5>
-                                <Card className='projects-user shadow d-flex justify-content-center mb-4 mb-lg-0 p-2'>
+                            <Col md={5} lg={4} className='mb-2' >
+                                <Card className='projects-user shadow rounded-3 p-2'>
+                                <h5><strong>Subir trabajos realizados</strong></h5>
                                 <Form.Group className="mb-3">
                                     <Form.Label>Trabajo realizado a: </Form.Label>
                                     <Form.Control id='clientname' name='clientname' size="md" type="text" placeholder="Ej: Antonio Pérez Jara" onChange={e => onchangeName(e.target.value)}
@@ -251,7 +260,10 @@ const UserProjects = () => {
 
                                 </Form.Group>
                                 {projectsData.length >= 8 ? <Form.Text style={{color:'red'}}><strong>Llegaste a tu límite de proyectos subidos</strong></Form.Text> : <></> }
-                                <div className="d-grid gap-2">
+                                <div className="mb-2" hidden={hiddenProgress}>
+                                    <ProgressBar now={updateProgress} label={`${updateProgress}%`}/>
+                                </div>
+                                <div className="d-grid gap-2 mb-1">
                                     <Button className='buttonproject' 
                                         disabled={(emptyName || emptyDate || emptyImage || emptyWorkResume || shortResume || incorrectTypeImage || projectsData.length >= 8) === true ? true : false}
                                         onClick={e => uploadProject(e)}
@@ -261,7 +273,7 @@ const UserProjects = () => {
                                 </div>
                                 </Card>
                             </Col>
-                            <Col md={7} lg={8} >
+                            <Col md={7} lg={8} className='mb-2'>
                                 <div id='loadingprojects' className="container mt-5 mb-5" hidden={!loading}>
                                     <div className="loadingprojects" style={{height: '60vh'}}>
                                         <div className="wrapper text-center">
@@ -272,21 +284,10 @@ const UserProjects = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <Container className='projects-container'>
+                                <Card className='projects-user shadow rounded-3 p-2'>
                                     {
-                                    projectsData.length > 0 ? <h5><strong>Tus trabajos subidos</strong></h5> : 
-                                    <>
-                                    <h5><strong>No haz subido ningún trabajo</strong></h5>
-                                    <Card className='noprojectsphoto shadow d-flex align-items-center justify-content-center'>
-                                        <div className="mt-2">
-                                        <img variant="top" src={emptywork} 
-                                            alt={'project'} style={{height: '250px', width: 'auto'}}/>
-                                        </div> 
-                                    </Card>
-                                    </>
-                                    }
-                                    
-                                    <Row xs={1} md={1} lg={2} className='projectsphoto rounded-4 shadow p-2' hidden={projectsData.length > 0 ? false : true}>
+                                    projectsData.length > 0 ? <><h5 className='mx-1'><strong>Trabajos subidos</strong></h5> 
+                                    <Row xs={1} md={1} lg={2} xl={3} className='projectsphoto mx-1'>
                                     {
                                      projectsData.length > 0 ? projectsData.map(value =>{
                                             let dateFormatted = null
@@ -295,8 +296,8 @@ const UserProjects = () => {
                                             }
                                             return(
                                                 <>
-                                                <Col>
-                                                    <Card className='cardproject shadow mb-4 mt-2'>
+                                                <Col className='mb-2'>
+                                                    <Card className='cardproject rounded-3'>
                                                         <div className="d-flex align-items-center justify-content-center">
                                                             <Card.Img variant="top" src={'http://52.91.196.215:3001/' + value.imageName} 
                                                             alt={'project'} style={{height: '200px'}}/>
@@ -319,7 +320,20 @@ const UserProjects = () => {
                                         }) : <></>
                                     }
                                     </Row>
-                                </Container>
+                                    </>
+                                    : 
+                                    <>
+                                    <h5><strong>No haz subido ningún proyecto</strong></h5>
+                                    <Card className='noprojectsphoto d-flex align-items-center justify-content-center'>
+                                            <div className="mt-2">
+                                            <img variant="top" src={emptywork} 
+                                                alt={'project'} style={{height: '250px', width: 'auto'}}/>
+                                            </div> 
+                                        </Card>
+                                    </>
+                                    }
+                                    
+                                </Card>
                             </Col>
                         </Row>
                     </Container>
