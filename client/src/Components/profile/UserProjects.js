@@ -95,9 +95,9 @@ const UserProjects = () => {
             })
     }
 
-    var config = {
+    let config = {
         onUploadProgress: function(progressEvent) {
-          var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+          let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
           setUpdateProgress(percentCompleted)
         }
       };
@@ -261,7 +261,7 @@ const UserProjects = () => {
                                 </Form.Group>
                                 {projectsData.length >= 8 ? <Form.Text style={{color:'red'}}><strong>Llegaste a tu límite de proyectos subidos</strong></Form.Text> : <></> }
                                 <div className="mb-2" hidden={hiddenProgress}>
-                                    <ProgressBar now={updateProgress} label={`${updateProgress}%`}/>
+                                    <ProgressBar className='profprogress' now={60} label={`${updateProgress}%`}/>
                                 </div>
                                 <div className="d-grid gap-2 mb-1">
                                     <Button className='buttonproject' 

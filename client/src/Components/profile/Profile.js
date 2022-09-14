@@ -6,7 +6,7 @@ import Axios  from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import '../css/Profile.css'
-import { Button, Card, Container, Form, ListGroup, Nav, Tab, Tabs } from 'react-bootstrap'
+import { Button, Card, Container, Form, ListGroup, Nav, ProgressBar, Tab, Tabs } from 'react-bootstrap'
 import web from '../assets/web.png'
 import instagram from '../assets/instagram.png'
 import facebook from '../assets/facebook.png'
@@ -34,6 +34,8 @@ const Profile = () => {
     const [ savePhoto, setSavePhoto ] = useState(false)
     const [ getPhoto, setGetPhoto ] = useState(false)
     const [ enableSave, setEnableSave ] = useState(false)
+    const [ updateProgress, setUpdateProgress ] = useState(0)
+    const [ hiddenProgress, showProgress ] = useState(true)
     
     const handleChangePhoto = () =>{
         const token = localStorage.getItem('accessToken');
@@ -48,19 +50,26 @@ const Profile = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
+                    showProgress(false)
                     Axios.put("http://52.91.196.215:3001/api/images",
                     formData,
                     {
                         headers: {
                             'Content-Type': 'multipart/form-data;',
                             'Authorization': `${token}`
-                            }
+                        },
+                        onUploadProgress: function(progressEvent) {
+                            let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                            setUpdateProgress(percentCompleted)
+                        }
                     }).then((result) => {
                         if(result.status === 200){
                             const token = localStorage.getItem('accessToken');
                             setCancelButton(false);
+                            setSavePhoto(false)
                             deletePrevUserPhoto()
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
+                            showProgress(true)
                             getAccess(token)
                             document.getElementById('photoUser').src = "http://52.91.196.215:3001" + result.data.imagePath
                         }
@@ -139,6 +148,7 @@ const Profile = () => {
                         Swal.fire('Los cambios no fueron guardados', '', 'danger')
                     });
                 }
+                setCancelButton()
               })
         }else if(e.textContent === "Cancelar"){
             setCancelButton(false)
@@ -243,6 +253,9 @@ const Profile = () => {
                                             <h6 style={{color: 'grey'}}>
                                             {element.workareaUser}
                                             </h6>
+                                            <div className="mb-2" hidden={hiddenProgress}>
+                                                <ProgressBar className='profprogress' now={60} label={`${updateProgress}%`}/>
+                                            </div>
                                             <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
                                                 {
                                                     savePhoto !== true ? <><Button variant={inputs === true ? 'success' : 'primary'} onClick={(e) => {handleButton(e.target); setInputs(true)}} 

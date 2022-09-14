@@ -158,8 +158,8 @@ const Workers = () => {
                 <label htmlFor="area" className="form-label">Especialidad</label>
               </div>
               <div className="d-grid gap-2 d-sm-flex justify-content-sm-center justify-content-md-end justify-content-xl-end mb-3">
-                  <Button variant="outline-primary" className="btn btn-outline-primary btn-lg px-4 me-sm-3" size="sm">Comenzar</Button>
-                  <Button variant="outline-danger" className="btn btn-outline-danger btn-lg px-4" size="sm">Aprender Más</Button>
+                  <Button variant="outline-primary" className="btn btn-outline-primary btn-lg px-4 me-sm-3" size="sm">Filtrar</Button>
+                  <Button variant="outline-danger" className="btn btn-outline-danger btn-lg px-4" size="sm">Limpiar</Button>
               </div>
           </Row> : <></>
           }

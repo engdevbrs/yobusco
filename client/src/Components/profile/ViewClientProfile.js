@@ -48,7 +48,7 @@ const ViewClientProfile = () => {
                     todayDate.setFullYear( todayDate.getFullYear() - dateFormatted.getFullYear())
                     return(
                         <>
-                            <Container className='profile-container shadow-lg rounded-4 mt-3 mb-5 p-4'>
+                            <Container className='profile-container shadow-lg rounded-3 mt-3 mb-5 p-4'>
                             {
                                 show === true ? <Row className='mt-3 mb-3'><Alert onClose={() => setShow(false)} style={{backgroundColor: '#202A34', color: 'white'}} closeVariant='white' dismissible>
                                 <Alert.Heading style={{color: '#aebbdc'}}>Para su seguridad, le sugerimos lo siguiente:</Alert.Heading>
