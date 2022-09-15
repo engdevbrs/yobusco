@@ -180,6 +180,7 @@ app.put('/api/update-user', validateToken,(req,res)=>{
     const userLogged = JSON.parse(Buffer.from(req.body.authorization.split('.')[1], 'base64').toString());
 
     const dataToUpdate  = req.body.newArrayValues
+    let projectsbyuser = null;
 
     website = (dataToUpdate[0].value === undefined || dataToUpdate[0].value === null) ? "" : dataToUpdate[0].value;
     instagram = (dataToUpdate[1].value === undefined || dataToUpdate[1].value === null) ? "" : dataToUpdate[1].value;
@@ -190,21 +191,43 @@ app.put('/api/update-user', validateToken,(req,res)=>{
     cell = dataToUpdate[6].value;
     colorInput = (dataToUpdate[7].value === undefined || dataToUpdate[7].value === null) ? "" : dataToUpdate[7].value;
 
-    const sqlInsert1 = "UPDATE user_info SET cellphone="+mysql.escape(cell)+ ",email="+mysql.escape(email) +",webSite="+mysql.escape(website)
+    const sqlUpdate1 = "UPDATE user_info SET cellphone="+mysql.escape(cell)+ ",email="+mysql.escape(email) +",webSite="+mysql.escape(website)
     +",instagramSite="+mysql.escape(instagram)+",facebookSite="+mysql.escape(facebook)+",twitterSite="+mysql.escape(twitter)+",whatsappSite="+mysql.escape(whatsapp)
     +",userColor="+mysql.escape(colorInput)+"WHERE user_info.email="+mysql.escape(userLogged.userName);
 
-    const sqlInsert2 = "UPDATE user_credentials SET userName="+mysql.escape(email)+"WHERE user_credentials.userName="+mysql.escape(userLogged.userName);
+    const sqlUpdate2 = "UPDATE user_credentials SET userName="+mysql.escape(email)+"WHERE user_credentials.userName="+mysql.escape(userLogged.userName);
 
-    db.query(sqlInsert1,(err,result) =>{
+    const sqlGetProjects = "SELECT * FROM projects_user WHERE projects_user.userName="+mysql.escape(userLogged.userName);
+    db.query(sqlGetProjects,(err,result)=>{
+        if(err){
+            res.status(500).send({ error: 'Falló la respuesta del servidor' });
+        }else{
+            projectsbyuser = result.length
+        }
+    })
+
+    const sqlUpdate3 = "UPDATE projects_user SET userName="+mysql.escape(email)+"WHERE projects_user.userName="+mysql.escape(userLogged.userName);
+
+    db.query(sqlUpdate1,(err,result) =>{
         if(err){
             res.status(500).send('Problema actualizando datos')
         }else{
-            db.query(sqlInsert2,(err,result)=>{
+            db.query(sqlUpdate2,(err,result)=>{
                 if(err){
-                    res.status(500).send({ error: 'Falló la actualización' });
+                    res.status(500).send({ error: 'Falló la actualización de credenciales' });
                 }else{
-                    res.send(result);
+                    if(projectsbyuser > 0){
+                        db.query(sqlUpdate3,(err,result)=>{
+                            if(err){
+                                res.status(500).send({ error: 'Falló la actualización del proyecto' });
+                            }else{
+                                res.send(result);
+                            }
+                        })
+                    }
+                    else{
+                        res.send(result);
+                    }
                 }
             })
         }

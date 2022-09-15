@@ -189,7 +189,7 @@ const Workers = () => {
                           : <></>
                         }
                         {
-                          (element.cellphone !== "" && element.cellphone !== null && element.cellphone !== undefined ) ? <a href={element.cellphone}><i className="fas fa-phone"></i></a>
+                          (element.cellphone !== "" && element.cellphone !== null && element.cellphone !== undefined ) ? <a href={`tel:${element.cellphone}`}><i className="fas fa-phone"></i></a>
                           : <></>
                         }
                       </div>
@@ -198,7 +198,7 @@ const Workers = () => {
                       <h6>{element.nameUser + " " + element.lastnamesUser}</h6>
                       <p className="designation">{element.chargeUser}</p>
                       <p className="designation">{element.workResume}</p>
-                      <Link to={`/trabajadores/perfil/vista/${element.id}`} target="_blank" className="btn btn-danger mt-2">Ver Perfil</Link>
+                      <Link to={`/trabajadores/perfil/vista/${element.id}`} className="btn btn-danger mt-2">Ver Perfil</Link>
                     </div>
                   </div>
                 </div>

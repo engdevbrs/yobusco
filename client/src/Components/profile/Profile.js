@@ -65,7 +65,7 @@ const Profile = () => {
                     }).then((result) => {
                         if(result.status === 200){
                             const token = localStorage.getItem('accessToken');
-                            setCancelButton(false);
+                            setCancelButton(true);
                             setSavePhoto(false)
                             deletePrevUserPhoto()
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
@@ -77,6 +77,8 @@ const Profile = () => {
                         Swal.fire('No pudimos cambiar tu foto de perfil', '', 'warning')
                     });
                 }
+                setCancelButton(true)
+                setSavePhoto(true)
             })
     }
     
@@ -115,7 +117,6 @@ const Profile = () => {
                     }
                 }
             })
-            newArrayValues.shift()
             MySwal.fire({
                 title: msgTitle,
                 showDenyButton: true,
@@ -148,10 +149,12 @@ const Profile = () => {
                         Swal.fire('Los cambios no fueron guardados', '', 'danger')
                     });
                 }
-                setCancelButton()
+                setCancelButton(true)
               })
         }else if(e.textContent === "Cancelar"){
             setCancelButton(false)
+            setValidationEmail(false);
+            setValidationCell(false)
         }
     }
 
@@ -246,7 +249,7 @@ const Profile = () => {
                                     <Col lg={4} >
                                         <Card className='perfil shadow mb-4' key={key}>
                                         <input className="form-control" type="file" id="formFile" name='formFile' accept="image/*" onChange={(e) => setEnableSave(!enableSave)} hidden/>
-                                        <img id='upload' className='upload mt-2' src={uploadPhoto} style={{ width: '5rem' }} alt="" onClick={open_file}/>
+                                        <img id='upload' className='upload mt-2' src={uploadPhoto} style={{ width: '5rem' }} alt="" hidden={inputs} onClick={open_file} />
                                         <img id='userPhoto' className='userphoto mt-2' variant="top" src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://52.91.196.215:3001/api/images/' + element.userPhoto : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
                                         <Card.Body>
                                             <Card.Title><strong>{element.nameUser + " " + element.lastnamesUser}</strong></Card.Title>
@@ -264,7 +267,7 @@ const Profile = () => {
                                                     </Button>
                                                     {
                                                         cancelButton === true ? <Button variant="danger" onClick={(e) => {handleButton(e.target); setInputs(false)}} >Cancelar</Button> : <></>
-                                                    }</> : <><Button variant={inputs === true ? 'success' : 'primary'} onClick={() => {handleChangePhoto(); setSavePhoto(false)}} 
+                                                    }</> : <><Button variant={inputs === true ? 'success' : 'primary'} onClick={() => {handleChangePhoto()}} 
                                                     disabled={enableSave}>
                                                         { savePhoto === true ? 'Guardar Foto' : 'Editar Perfil' }
                                                     </Button>
