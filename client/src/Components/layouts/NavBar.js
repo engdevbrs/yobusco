@@ -2,7 +2,7 @@ import Axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link, Outlet } from 'react-router-dom';
-
+import perfil from '../assets/perfil.png'
 import { useLoginContext } from "../contexts/AuthContext";
 import '../css/NavBar.css'
 import Footer from "./Footer";
@@ -69,7 +69,7 @@ const Menu = () =>{
                     <li className="nav-item me-0 me-lg-0 dropdown">
                       <div className="nav-link dropdown-toggle" id="navbarDropdown1" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false" style={{color: 'grey'}}>
-                        <img id="photoUser" src={localStorage.getItem('userPhoto') === null ? 'http://52.91.196.215:3001/api/images/'+ userPhoto : localStorage.getItem('userPhoto')} className="rounded-circle" height="35" width="35"
+                        <img id="photoUser" src={(userPhoto !== null && userPhoto !== undefined && userPhoto !== "")  ? 'http://52.91.196.215:3001/api/images/'+ userPhoto : perfil} className="rounded-circle" height="35" width="35"
                           alt="" loading="lazy" />
                       </div>
                       <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
