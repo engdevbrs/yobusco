@@ -25,7 +25,7 @@ const upload = multer({ dest: './images' })
 const diskstorage = multer.diskStorage({
     destination: path.join(__dirname, './projects/uploads'),
     filename: (req, file, cb) =>{
-        cb(null, Date.now() + file.originalname)
+        cb(null, Date.now() + file.originalname, {resize: { width: 500, height: 500 }})
     }
 })
 
@@ -251,7 +251,6 @@ app.put('/api/images',upload.single('formFile'),async (req,res)=>{
 });
 
 app.get('/api/images/:key', (req, res) => {
-    console.log(req.params)
     if(req.params.key !== 'null'){
         const key = req.params.key
         const readStream = getFileStream(key)

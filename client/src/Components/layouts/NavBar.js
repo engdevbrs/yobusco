@@ -26,6 +26,7 @@ const Menu = () =>{
 
   const logOut = () =>{
     localStorage.removeItem('accessToken')
+    localStorage.removeItem('userPhoto')
     setLoggedIn(false)
   }
 

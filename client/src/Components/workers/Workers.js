@@ -105,7 +105,7 @@ const Workers = () => {
               <div className='form-floating col-md-4 mb-3'>
                   <select id='city' className='form-select' name='city' 
                    defaultValue={''} onChange={handleCityChange}>
-                  <option disabled selected="" value="">Seleccionar provincia</option>
+                  <option selected="" value="">Seleccionar provincia</option>
                   <Form.Control.Feedback type="invalid">
                   Por favor, seleccione una provincia.
                   </Form.Control.Feedback>
@@ -123,8 +123,8 @@ const Workers = () => {
               </div>
               <div className='form-floating col-md-4 mb-3'>
                   <select id='comunne' className='form-select' name='comunne'
-                  defaultValue={''} >
-                  <option disabled selected="" value="">Seleccionar comuna</option>
+                  defaultValue={''} onChange={e => e.target.value}>
+                  <option selected="" value="">Seleccionar comuna</option>
                   <Form.Control.Feedback type="invalid">
                       Por favor, seleccione una comuna.
                   </Form.Control.Feedback>
