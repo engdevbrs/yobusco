@@ -39,8 +39,14 @@ const Menu = () =>{
               if(result.status === 200){
                 setLoggedIn(true)
                 setUserPhoto(result.data[0].userPhoto)
+              }else{
+                localStorage.removeItem('accessToken')
+                setLoggedIn(false)
+                setUserPhoto("")
               }
           }).catch(error => {
+            localStorage.removeItem('accessToken')
+            setUserPhoto("")
             setLoggedIn(false)
           });
     }

@@ -161,6 +161,9 @@ const ViewClientProfile = () => {
                                                     <div className="progress-bar" role="progressbar" style={{width:'66%'}} aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
                                                 </Card.Body>
+                                                <Card.Footer>
+                                                    Calificación total: 4.5
+                                                </Card.Footer>
                                             </Card>
                                         </Tab> 
                                         <Tab eventKey="proyects" title="Proyectos">
