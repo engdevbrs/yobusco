@@ -76,7 +76,7 @@ const Menu = () =>{
                       <div className="nav-link dropdown-toggle" id="navbarDropdown1" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false" style={{color: 'grey'}}>
                         <img id="photoUser" src={(userPhoto !== null && userPhoto !== undefined && userPhoto !== "")  ? 'http://52.91.196.215:3001/api/images/'+ userPhoto : perfil} className="rounded-circle" height="35" width="35"
-                          alt="" loading="lazy" />
+                          alt=""/>
                       </div>
                       <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
                         <li><Link to={'/perfil'} className="dropdown-item" >Mi Perfil</Link></li>
