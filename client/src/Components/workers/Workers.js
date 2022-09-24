@@ -9,8 +9,9 @@ import { Link } from 'react-router-dom';
 const Workers = () => {
 
   const [show, setShow] = useState(false);
+  const [filtered, setFiltered] = useState(false);
   const [usuarios, setUsuarios ] = useState([]);
-  const [profileData, setProfileData ] = useState([]);
+  const [usuariosFiltered, setUsuariosFiltered ] = useState([]);
   const [localidades, setLocalidades] = useState([]);
   const [ciudades, setCiudades] = useState([]);
   const [comunas, setComunas] = useState([]);
@@ -20,7 +21,47 @@ const Workers = () => {
   "Obrero/a","Panadero/a","Locutor/ra","Barbero/a","Soldador/ra","Escritor/ra","Leñador/ra",
   "Pintor/ra","Vendedor/ra","Peletero/a","Sastrero/ra","Repartidor/ra","Impresor/ra","Pastor/ra ganadero/ra",
   "Cajero/a","Agricultor/ra","Vigilante","Exterminador/ra","Carnicero/a","Animador/ra","Peluquero/a",
-  "Mecánico/a","Niñero/a","Conductor/ra","Soldador/ra"].sort();
+  "Mecánico/a","Niñero/a","Conductor/ra","Soldador"].sort();
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const  filterWorkers = (e) => {
+    let region = document.getElementById('region').value
+    let city = document.getElementById('city').value
+    let comunne = document.getElementById('comunne').value
+    let area = document.getElementById('area').value
+    let filterer = usuarios.filter(function(params) {
+      if(region === "" && area !== ""){
+        return params.workareaUser === area
+      }else if(region !== "" && city !== "" && comunne !== "" && area === ""){
+        return params.regionUser === region && params.cityUser === city &&  params.communeUser === comunne
+      }else if(region !== "" && city !== "" && area === ""){
+        return params.regionUser === region && params.cityUser === city
+      }else if(region !== "" && area === ""){
+        return params.regionUser === region
+      }else if(region !== "" && city !== "" && comunne !== "" && area !== ""){
+        return params.regionUser === region && params.cityUser === city &&  params.communeUser === comunne && params.workareaUser === area
+      }else if(region !== "" && city !== "" && area !== ""){
+        return params.regionUser === region && params.cityUser === city && params.workareaUser === area
+      }else if(region !== "" && area !== ""){
+        return params.regionUser === region && params.workareaUser === area
+      }
+    })
+    handleClose()
+    setFiltered(true)
+    setUsuariosFiltered(filterer)
+  }
+
+  const  clearFilters = (e) => {
+    document.getElementById('region').value = ""
+    document.getElementById('city').value = ""
+    document.getElementById('comunne').value = ""
+    document.getElementById('area').value = ""
+    handleClose()
+    setFiltered(false)
+  };
+
 
   const handleRegionChange = (e) => {
     const ciudadIndex = document.getElementById('region').value;
@@ -30,7 +71,7 @@ const Workers = () => {
     });
     setCiudades(ciudadesIndex.ciudad);
     setComunas([]);
-  };
+  }
 
   const handleCityChange = (e) => {
       const cityName = document.getElementById('city').value;
@@ -39,7 +80,7 @@ const Workers = () => {
           return element[0] === cityName;
       });
       setComunas(comunasData[1].comunas);
-  };
+  }
   
   useEffect(() => {
       Axios.get("http://52.91.196.215:3001/api/usuarios").then((res)=>{
@@ -48,7 +89,7 @@ const Workers = () => {
       Axios.get("http://52.91.196.215:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         });        
-  },[]);
+  },[])
 
   return (
     <>
@@ -63,7 +104,7 @@ const Workers = () => {
               </Nav>
           </Col>
       </div>
-      <Container className='mt-4'>
+      <Container className='mt-4 mb-4'>
         <Row lg={1} md={1} sm={1} xs={1} className='worker-view'>                
         <div className="container">
           <div className="row justify-content-center">
@@ -76,14 +117,17 @@ const Workers = () => {
           </div>
         </div>
         <Col className='d-flex justify-content-end mt-3 mb-3'>
-          <p onClick={e => setShow(!show)} className="me-2" style={{color:'#202a34'}}>
+          <p onClick={handleShow} className="me-2" style={{color:'#202a34'}}>
             <FaFilter cursor={'pointer'} size={26} />
           </p>
         </Col>
-        {
-            show === true ? <Row className='shadow mb-3'>
-              <h5 className='mb-2 mt-2'>Filtrar por residencia</h5>
-              <div className='form-floating col-md-4 mb-3' >
+        <Offcanvas show={show} onHide={handleClose} placement={'end'}>
+        <Offcanvas.Header closeButton closeVariant='white'>
+          <Offcanvas.Title>Filtrar Trabajadores</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+              <h5 className='mb-2 mt-2'>Residencia</h5>
+              <div className='form-floating mb-3' >
                   <select id='region' className='form-select' name='region'  defaultValue={''}
                   onChange={handleRegionChange}>
                   <option disabled selected="" value="">Seleccionar región</option>
@@ -102,7 +146,7 @@ const Workers = () => {
                       Por favor, seleccione una región.
                   </Form.Control.Feedback>
               </div>
-              <div className='form-floating col-md-4 mb-3'>
+              <div className='form-floating mb-3'>
                   <select id='city' className='form-select' name='city' 
                    defaultValue={''} onChange={handleCityChange}>
                   <option selected="" value="">Seleccionar provincia</option>
@@ -121,7 +165,7 @@ const Workers = () => {
                   </select>
                   <label htmlFor='city' className='form-label'>Provincia</label>
               </div>
-              <div className='form-floating col-md-4 mb-3'>
+              <div className='form-floating mb-3'>
                   <select id='comunne' className='form-select' name='comunne'
                   defaultValue={''} onChange={e => e.target.value}>
                   <option selected="" value="">Seleccionar comuna</option>
@@ -140,7 +184,7 @@ const Workers = () => {
                   </select>
                   <label htmlFor='comunne' className='form-label'>Comuna</label>
               </div>
-              <h5 className='mb-2 mt-1'>Filtrar por especialidad</h5>
+              <h5 className='mb-2 mt-1'>Especialidad</h5>
               <div className='form-floating mb-3'>
               <select id='area' className="form-select" name='area'
                   defaultValue={""}>
@@ -157,15 +201,15 @@ const Workers = () => {
                 </select>
                 <label htmlFor="area" className="form-label">Especialidad</label>
               </div>
-              <div className="d-grid gap-2 d-sm-flex justify-content-sm-center justify-content-md-end justify-content-xl-end mb-3">
-                  <Button variant="outline-primary" className="btn btn-outline-primary btn-lg px-4 me-sm-3" size="sm">Filtrar</Button>
-                  <Button variant="outline-danger" className="btn btn-outline-danger btn-lg px-4" size="sm">Limpiar</Button>
+              <div className="d-grid gap-2">
+                  <Button className="btn-filtrar px-4" size="sm" onClick={filterWorkers} >Filtrar</Button>
+                  <Button className="btn-clear px-4" size="sm" onClick={e => clearFilters()} >Limpiar</Button>
               </div>
-          </Row> : <></>
-          }
-        <div className="row shadow">
+        </Offcanvas.Body>
+      </Offcanvas>
+        <div className="row shadow-lg rounded-3">
         {
-          usuarios.map((element,key) =>{
+          (filtered ? usuariosFiltered : usuarios).map((element,key) =>{
             return(
               <>
                 <div className="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 mt-2">

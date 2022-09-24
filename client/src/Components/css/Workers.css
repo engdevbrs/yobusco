@@ -4,14 +4,14 @@
     -webkit-transition-duration: 500ms;
     transition-duration: 500ms;
     z-index: 1;
-    border-radius: 15px;
+    border-radius: 10px;
     -webkit-box-shadow: 0 0.25rem 1rem 0 rgba(47, 91, 234, 0.125);
     box-shadow: 0 0.25rem 1rem 0 rgba(47, 91, 234, 0.125);
 }
 .single_advisor_profile .advisor_thumb {
     position: relative;
     z-index: 1;
-    border-radius: 15px 15px 0 0;
+    border-radius: 10px 10px 0 0;
     margin: 0 auto;
     padding: 30px 30px 0 30px;
     overflow: hidden;
@@ -69,7 +69,7 @@
     text-align: right;
     -webkit-transition-duration: 500ms;
     transition-duration: 500ms;
-    border-radius: 0 0 15px 15px;
+    border-radius: 0 0 10px 10px;
     background-color: #ffffff;
 }
 .single_advisor_profile .single_advisor_details_info::after {
@@ -134,4 +134,32 @@
 .single_advisor_profile:hover .single_advisor_details_info p,
 .single_advisor_profile:focus .single_advisor_details_info p {
     color: #ffffff;
+}
+
+.offcanvas{
+    color: #eaeaea !important;
+    background-color: #202A34 !important;
+}
+
+.offcanvas-body label{
+    color: #202A34 !important;
+}
+
+.btn-filtrar{
+    border: 2px solid #5f738f !important;
+    background-color: #384451 !important;
+}
+
+.btn-filtrar:hover{
+    border: 2px solid #384451 !important;
+    background-color: #5f738f !important;
+}
+.btn-clear{
+    border: 2px solid #5f738f !important;
+    background-color: #DC3545 !important;
+}
+
+.btn-clear:hover{
+    border: 2px solid #384451 !important;
+    background-color: #f14f5f !important;
 }
