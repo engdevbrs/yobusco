@@ -13,7 +13,7 @@ const Confirm = () => {
 
   //3.92.68.154 AWS LOCAL
   const handleCreate =  async () => {
-    Axios.post("http://52.91.196.215:3001/api/create-user", userData)
+    Axios.post("http://54.159.206.22:3001/api/create-user", userData)
       .then((result) => {
           if(result.status === 200){
               setResult(result.status);

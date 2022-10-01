@@ -9,7 +9,7 @@ const Projects = () => {
 
   const getProjects = () => {
     const token = localStorage.getItem('accessToken');
-    Axios.get("http://52.91.196.215:3001/api/image/user-projects",{
+    Axios.get("http://54.159.206.22:3001/api/image/user-projects",{
         headers: {
             'authorization': `${token}`
             }
@@ -51,7 +51,7 @@ const Projects = () => {
               <Col>
                 <Card className='mt-2'>
                   <div className="d-flex align-items-center justify-content-center">
-                      <Card.Img variant="top" src={'http://52.91.196.215:3001/' + value.imageName} 
+                      <Card.Img variant="top" src={'http://54.159.206.22:3001/' + value.imageName} 
                       alt={'project'} style={{height: '200px'}}/>
                   </div>
                   <Card.Body>

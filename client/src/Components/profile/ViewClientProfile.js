@@ -4,7 +4,7 @@ import Axios  from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import '../css/Profile.css'
-import { Alert, Card, Container, Nav, Tab, Tabs } from 'react-bootstrap'
+import { Alert, Button, Card, Container, Form, Modal, Nav, Tab, Tabs } from 'react-bootstrap'
 import Comments from './Comments'
 import ViewClientProjects from './ViewClientProjects'
 
@@ -15,9 +15,577 @@ const ViewClientProfile = () => {
     const [ dataUser, setDataUser ] = useState([])
     const [ response, setResponse ] = useState([])
     const [show, setShow] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+
+    const [localidades, setLocalidades] = useState([]);
+    const [ciudades, setCiudades] = useState([]);
+    const [comunas, setComunas] = useState([]);
+
+    const [nombreValid, setNombreValid] = useState(false);
+    const [apellidosValid, setApellidosValid] = useState(false);
+    const [rutValid, setRutValid] = useState(false);
+    const [cellphoneValid, setCellphoneValid] = useState(false);
+    const [emailValid, setEmailValid] = useState(false);
+    const [streetValid, setStreetValid] = useState(false);
+    const [psjeValid, setPsjeValid] = useState(false);
+    const [houseNumberValid, setHouseNumberValid] = useState(false);
+    const [dptoDirValid, setDptoDirValid] = useState(false);
+    const [dptoFloorValid, setDptoFloorValid] = useState(false);
+    const [dptoNumberValid, setDptoNumberValid] = useState(false);
+    const [regionValid, setRegionValid] = useState(false);
+    const [cityValid, setCityValid] = useState(false);
+    const [comunneValid, setComunneValid] = useState(false);
+    const [descriptWorkValid, setDescriptWorkValid] = useState(false);
+
+    const [nombreValidMsge, setNombreValidMsge] = useState([]);
+    const [apellidosValidMsge, setApellidosValidMsge] = useState([]);
+    const [cellphoneValidMsge, setCellphoneValidMsge] = useState([]);
+    const [emailValidMsge, setEmailValidMsge] = useState([]);
+    const [streetValidMsge, setStreetValidMsge] = useState([]);
+    const [psjeValidMsge, setPsjeValidMsge] = useState([]);
+    const [houseNumberValidMsge, setHouseNumberValidMsge] = useState([]);
+    const [dptoDirValidMsge, setDptoDirValidMsge] = useState([]);
+    const [dptoFloorValidMsge, setDptoFloorValidMsge] = useState([]);
+    const [dptoNumberValidMsge, setDptoNumberValidMsge] = useState([]);
+    const [customValidity, setCustomValidity] = useState([]);
+    const [descriptWorkValidMsge, setDescriptWorkValidMsge] = useState([]);
+    const [switchCharge, setSwitchCharge] = useState(false)
+    const [showAlert, setShowAlert] = useState(false)
+    const [alertVariant, setAlertVariant] = useState([])
+    const [ responseRequest, setResponseRequest ] = useState([])
+
+    const handleClose = () => {
+
+        setShowModal(false)
+        setShowAlert(false)
+        setAlertVariant('')
+        clearForm()
+    }
+
+    const clearForm = () => {
+
+        document.getElementById('requestForm').reset()
+
+        setNombreValid(false)
+        setNombreValidMsge('')
+
+        setApellidosValid(false)
+        setApellidosValidMsge('')
+
+        setRutValid(false)
+        setCustomValidity('')
+
+        setCellphoneValid(false)
+        setCellphoneValidMsge('')
+
+        setEmailValid(false)
+        setEmailValidMsge('')
+
+        setStreetValid(false)
+        setStreetValidMsge('')
+
+        setPsjeValid(false)
+        setPsjeValidMsge('')
+
+        setHouseNumberValid(false)
+        setHouseNumberValidMsge('')
+
+        setDptoDirValid(false)
+        setDptoDirValidMsge('')
+
+        setDptoFloorValid(false)
+        setDptoFloorValidMsge('')
+
+        setDptoNumberValid(false)
+        setDptoNumberValidMsge('')
+
+        setDescriptWorkValid(false)
+        setDescriptWorkValidMsge('')
+
+        setRegionValid(false)
+
+        setCityValid(false)
+
+        setComunneValid(false)
+
+    }
+
+    const handleShow = () => setShowModal(true);
+
+    const handleChange = (e) => {
+        if(e.target.name === 'clientName'){
+            checkName(e.target.value)
+        }else if(e.target.name === 'clientLastname'){
+            checkLastName(e.target.value)
+        }else if(e.target.name === 'clientRut'){
+            checkRut(e.target)
+        }else if(e.target.name === 'clientPhone'){
+            checkCellphone(e.target.value)
+        }else if(e.target.name === 'clientEmail'){
+            checkEmail(e.target.value)
+        }else if(e.target.name === 'deptoClient'){
+            checkDeptoClient(e.target.value)
+        }else if(e.target.name === 'floorNumber'){
+            checkFloorNumber(e.target.value)
+        }else if(e.target.name === 'deptoNumber'){
+            checkDeptoClientNumber(e.target.value)
+        }else if(e.target.name === 'streetClient'){
+            checkStreet(e.target.value)
+        }else if(e.target.name === 'pasajeClient'){
+            checkPasajeClient(e.target.value)
+        }else if(e.target.name === 'houseNumber'){
+            checkHouseNumber(e.target.value)
+        }else if(e.target.name === 'descriptWork'){
+            checkDescriptWork(e.target.value)
+        }else if(e.target.name === 'comunne'){
+            if(e.target.value !== ''){
+                setComunneValid(false)
+            }else{
+                setComunneValid(true)
+            }
+        }
+    }
+
+    const handleRegionChange = (e) => {
+        const ciudadIndex = document.getElementById('region').value;
+        ciudadIndex !== '' ? setRegionValid(false) : setRegionValid(true)
+        if(ciudadIndex === ''){
+            setCiudades([]);
+            setComunas([]);
+            return false
+        }
+        const ciudadesIndex = localidades.find(element => {
+            return element.region === ciudadIndex;
+        });
+        setCiudades(ciudadesIndex.ciudad);
+        setComunas([]);
+    }
+
+    const handleCityChange = (e) => {
+        const cityName = document.getElementById('city').value;
+        cityName !== '' ? setCityValid(false) : setCityValid(true)
+        if(cityName === ''){
+            setComunas([]);
+            return false
+        }
+        const comunasData = ciudades.find(element => {
+            return element[0] === cityName;
+        });
+        setComunas(comunasData[1].comunas);
+    }
+
+    const clearSwitchValues = (e) =>{
+
+        if(switchCharge === false){
+
+            setStreetValid(false)
+            setStreetValidMsge('')
+    
+            setPsjeValid(false)
+            setPsjeValidMsge('')
+    
+            setHouseNumberValid(false)
+            setHouseNumberValidMsge('')
+
+            document.getElementById('streetClient').value = ''
+            document.getElementById('pasajeClient').value = ''
+            document.getElementById('houseNumber').value = ''
+
+        }else{
+            
+            setDptoDirValid(false)
+            setDptoDirValidMsge('')
+    
+            setDptoFloorValid(false)
+            setDptoFloorValidMsge('')
+    
+            setDptoNumberValid(false)
+            setDptoNumberValidMsge('')
+
+            document.getElementById('deptoClient').value = ''
+            document.getElementById('floorNumber').value = ''
+            document.getElementById('deptoNumber').value = ''
+        }
+    }
+
+    const handleSubmit = () =>{
+
+        let validation = null
+        let arrayValues = [];
+        const formValues = document.getElementsByClassName('requestForm')[0].elements;
+
+        let checkNameValue = checkName(document.getElementById('clientName').value);
+        let checkLastNameValue = checkLastName(document.getElementById('clientLastname').value);
+        let checkRutValue = checkRut(document.getElementById('clientRut'));
+        let checkCellphoneValue = checkCellphone(document.getElementById('clientPhone').value);
+        let checkEmailValue = checkEmail(document.getElementById('clientEmail').value);
+
+        let checkRegionValue = checkRegion(document.getElementById('region').value);
+        let checkCityValue = checkCity(document.getElementById('city').value);
+        let checkComunneValue = checkComunne(document.getElementById('comunne').value);
+        let checkDescriptWorkValue = checkDescriptWork(document.getElementById('descriptWork').value);
+
+        if(switchCharge){
+            
+            let checkDeptoClientValue = checkDeptoClient(document.getElementById('deptoClient').value)
+            let checkFloorNumberValue = checkFloorNumber(document.getElementById('floorNumber').value)
+            let checkDeptoClientNumberValue = checkDeptoClientNumber(document.getElementById('deptoNumber').value)
+
+            validation = (checkNameValue === false && checkLastNameValue === false && checkRutValue === false
+                && checkCellphoneValue === false && checkEmailValue === false && checkRegionValue === false && checkCityValue === false 
+                && checkComunneValue === false && checkDeptoClientValue === false && checkFloorNumberValue === false && checkDeptoClientNumberValue === false
+                && checkDescriptWorkValue === false)
+        }else{
+
+            let checkStreetValue = checkStreet(document.getElementById('streetClient').value)
+            let checkPasajeClientValue = checkPasajeClient(document.getElementById('pasajeClient').value)
+            let checkHouseNumberValue = checkHouseNumber(document.getElementById('houseNumber').value)
+
+            validation = (checkNameValue === false && checkLastNameValue === false && checkRutValue === false
+                && checkCellphoneValue === false && checkEmailValue === false && checkRegionValue === false && checkCityValue === false 
+                && checkComunneValue === false && checkStreetValue === false && checkPasajeClientValue === false && checkHouseNumberValue === false && checkDescriptWorkValue === false);
+        }
+ 
+        if(validation){
+
+            [...formValues].forEach((elements) =>{
+                if(switchCharge){
+                    if(elements.name !== 'streetClient' && elements.name !== 'pasajeClient' && elements.name !== 'houseNumber' ){
+                        arrayValues.push(elements.name === 'switch' ? elements.checked : elements.value);
+                    }
+                }else{
+                    if(elements.name !== 'deptoClient' && elements.name !== 'floorNumber' && elements.name !== 'deptoNumber' ){
+                        arrayValues.push(elements.name === 'switch' ? elements.checked : elements.value);
+                    }
+                }
+                
+            })
+
+            arrayValues.push(dataUser[0].email,dataUser[0].rutUser)
+
+            Axios.post('http://54.159.206.22:3001/api/request-work',arrayValues)
+            .then((result) => {
+                if(result.status === 200){
+                    setResponseRequest(result.status)
+                    setShowAlert(true)
+                    setAlertVariant('success')
+                    clearForm()
+                }
+            }).catch(error => {
+                setResponseRequest(error.response.status)
+                setAlertVariant('danger')
+                setShowAlert(true)
+            });
+        }
+    }
+
+    const checkName = (name) =>{
+        const regName = new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/g);
+        if(name.length > 0){
+            if(!regName.test(name)){
+                setNombreValidMsge('Por favor, sólo ingrese letras.')
+                setNombreValid(true)
+                return true
+            }else{
+                setNombreValidMsge('')
+                setNombreValid(false)
+                return false
+            }
+        }else{
+            setNombreValidMsge('Por favor, ingrese su nombre.')
+            setNombreValid(true)
+            return true
+        }
+    }
+
+    const checkLastName = (lastname) =>{
+        const regLastname = new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/g);
+        if(lastname.length > 0){
+            if(!regLastname.test(lastname)){
+                setApellidosValidMsge('Por favor, sólo ingrese letras.')
+                setApellidosValid(true)
+                return true
+            }else{
+                setApellidosValidMsge('')
+                setApellidosValid(false)
+                return false
+            }
+        }else{
+            setApellidosValidMsge('Por favor, ingrese sus apellidos.')
+            setApellidosValid(true)
+            return true
+        }
+    }
+
+    const checkRut = (rut) => {
+        // Despejar Puntos
+        var valor = rut.value.replace('.','');
+        // Despejar Guión
+        valor = valor.replace('-','');
+        
+        // Aislar Cuerpo y Dígito Verificador
+        let cuerpo = valor.slice(0,-1);
+        let dv = valor.slice(-1).toUpperCase();
+        
+        // Si no cumple con el mínimo ej. (n.nnn.nnn)
+        if(cuerpo.length < 7 && valor.length !== 0){ 
+            setRutValid(true)
+            setCustomValidity("RUT Incompleto"); 
+            return true
+        }else if(valor.length === 0){
+            setRutValid(true)
+            setCustomValidity("Por favor, ingrese su RUT"); 
+            return true
+        }
+        
+        // Calcular Dígito Verificador
+        let suma = 0;
+        let multiplo = 2;
+        
+        // Para cada dígito del Cuerpo
+        for(let i=1;i<=cuerpo.length;i++){
+        
+            // Obtener su Producto con el Múltiplo Correspondiente
+            let index = multiplo * valor.charAt(cuerpo.length - i);
+            
+            // Sumar al Contador General
+            suma = suma + index;
+            
+            // Consolidar Múltiplo dentro del rango [2,7]
+            if(multiplo < 7){ 
+                multiplo = multiplo + 1; 
+            }else{ 
+                multiplo = 2; 
+            }
+        }
+        
+        // Calcular Dígito Verificador en base al Módulo 11
+        let dvEsperado = 11 - (suma % 11);
+        
+        // Casos Especiales (0 y K)
+        dv = (dv === 'K') ? 10 : dv;
+        dv = (parseInt(dv,10) === 0) ? 11 : dv;
+        
+        // Validar que el Cuerpo coincide con su Dígito Verificador
+        if(dvEsperado !== dv){ 
+            setRutValid(true)
+            setCustomValidity("RUT Inválido"); 
+            return true; 
+        }
+        
+        // Si todo sale bien, eliminar errores (decretar que es válido)
+        setRutValid(false)
+        setCustomValidity("RUT válido");
+        return false
+    }
+
+    const checkCellphone = (cell) =>{
+        const regCell = new RegExp('^[0-9]+$');
+        if(cell.length === 8 && regCell.test(cell)){
+            setCellphoneValidMsge('')
+            setCellphoneValid(false)
+            return false
+        }else if(cell.length < 8 && regCell.test(cell)){
+            setCellphoneValidMsge('Ingrese los 8 números de su número de celular.')
+            setCellphoneValid(true)
+            return true
+        }else if(cell.length < 8 && !regCell.test(cell)){
+            setCellphoneValidMsge('Número de celular no válido.')
+            setCellphoneValid(true)
+            return true
+        }
+    }
+
+    const checkDeptoClient = (dptoClient) =>{
+        const regdptoClient = new RegExp(/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~´]/);
+        if(dptoClient !== '' && dptoClient !== null && dptoClient !== undefined){
+            if(!regdptoClient.test(dptoClient)){
+                setDptoDirValid(false)
+                setDptoDirValidMsge('')
+                return false
+            }else{
+                setDptoDirValid(true)
+                setDptoDirValidMsge('Por favor, ingrese sólo letras y números.')
+                return true
+            }
+        }else{
+            setDptoDirValid(true)
+            setDptoDirValidMsge('Por favor, ingrese la dirección de su departamento.')
+            return true
+        }
+
+    }
+
+    const checkFloorNumber = (floor) =>{
+        const regfloor = new RegExp('^[0-9]+$')
+        if(floor !== '' && floor !== null && floor !== undefined){
+            if(regfloor.test(floor)){
+                setDptoFloorValid(false)
+                setDptoFloorValidMsge('')
+                return false
+            }else{
+                setDptoFloorValid(true)
+                setDptoFloorValidMsge('Por favor, ingrese sólo números.')
+                return true
+            }
+        }else{
+            setDptoFloorValid(true)
+            setDptoFloorValidMsge('Por favor, ingrese el número de su piso.')
+            return true
+        }
+
+    }
+
+    const checkDeptoClientNumber = (dptoClientNumber) =>{
+        const regdptoClientNumber = new RegExp('^[0-9]+$');
+        if(dptoClientNumber !== '' && dptoClientNumber !== null && dptoClientNumber !== undefined){
+            if(regdptoClientNumber.test(dptoClientNumber)){
+                setDptoNumberValid(false)
+                setDptoNumberValidMsge('')
+                return false
+            }else{
+                setDptoNumberValid(true)
+                setDptoNumberValidMsge('Por favor, ingrese sólo números.')
+                return true
+            }
+        }else{
+            setDptoNumberValid(true)
+            setDptoNumberValidMsge('Por favor, ingrese el número de departamento.')
+            return true
+        }
+    }
+
+    const checkStreet = (street) =>{
+        const regStreet = new RegExp(/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~´]/);
+        if(street !== '' && street !== null && street !== undefined){
+            if(!regStreet.test(street)){
+                setStreetValid(false)
+                setStreetValidMsge('')
+                return false
+            }else{
+                setStreetValid(true)
+                setStreetValidMsge('Por favor, ingrese sólo letras.')
+                return true
+            }
+        }else{
+            setStreetValid(true)
+            setStreetValidMsge('Por favor, ingrese el nombre de su calle.')
+            return true
+        }
+        
+    }
+
+    const checkPasajeClient = (psjeClient) =>{
+        const regpsjeClient = new RegExp('^[0-9]+$');
+        if(psjeClient !== '' && psjeClient !== null && psjeClient !== undefined){
+            if(regpsjeClient.test(psjeClient)){
+                setPsjeValid(false)
+                setPsjeValidMsge('')
+                return false
+            }else{
+                setPsjeValid(true)
+                setPsjeValidMsge('Por favor, ingrese sólo números.')
+                return true
+            }
+        }else{
+            setPsjeValid(false)
+            setPsjeValidMsge('')
+            return false
+        }
+    }
+
+    const checkHouseNumber = (houseNumber) =>{
+        const reghouseNumber = new RegExp('^[0-9]+$');
+        if(houseNumber !== '' && houseNumber !== null && houseNumber !== undefined){
+            if(reghouseNumber.test(houseNumber)){
+                setHouseNumberValid(false)
+                setHouseNumberValidMsge('')
+                return false
+            }else{
+                setHouseNumberValid(true)
+                setHouseNumberValidMsge('Por favor, ingrese sólo números.')
+                return true
+            }
+        }else{
+            setHouseNumberValid(true)
+            setHouseNumberValidMsge('Por favor, ingrese su número de casa.')
+            return true
+        }
+    }
+
+    const checkDescriptWork = (descriptWork) =>{
+        const regdescriptWork = new RegExp(/[`!@#$%^&*()_+\-=\[\]{};':"\\|<>\/?~´]/);
+        if(descriptWork !== '' && descriptWork !== null && descriptWork !== undefined){
+            if(!regdescriptWork.test(descriptWork)){
+                setDescriptWorkValid(false)
+                setDescriptWorkValidMsge('')
+                return false
+            }else{
+                setDescriptWorkValid(true)
+                setDescriptWorkValidMsge('Por favor, ingrese sólo letras y números.')
+                return true
+            }
+        }else{
+            setDescriptWorkValid(true)
+            setDescriptWorkValidMsge('Por favor, ingrese una breve descripción del trabajo.')
+            return true
+        }
+    }
+
+    const checkEmail = (email) =>{
+        const regEmail = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+        if(email.length > 0){
+            if(!regEmail.test(email)){
+                setEmailValidMsge('Correo electrónico no válido.')
+                setEmailValid(true)
+                return true
+            }else{
+                setEmailValidMsge('')
+                setEmailValid(false)
+                return false
+            }
+        }else{
+            setEmailValidMsge('Por favor, ingrese su correo electrónico.')
+            setEmailValid(true)
+            return true
+        }
+    }
+
+    const checkRegion = (region) =>{
+        if(region !== ''){
+            setRegionValid(false)
+            return false
+        }else{
+            setRegionValid(true)
+            return true
+        }
+    }
+
+    const checkCity = (city) =>{
+        if(city !== ''){
+            setCityValid(false)
+            return false
+        }else{
+            setCityValid(true)
+            return true
+        }
+    }
+
+    const checkComunne = (comunne) =>{
+        if(comunne !== ''){
+            setComunneValid(false)
+            return false
+        }else{
+            setComunneValid(true)
+            return true
+        }
+    }
     
     useEffect(() =>{
-        Axios.get("http://52.91.196.215:3001/api/view/profile/" + id)
+        Axios.get("http://54.159.206.22:3001/api/localidades").then((res)=>{
+            setLocalidades(res.data);
+        }); 
+        Axios.get("http://54.159.206.22:3001/api/view/profile/" + id)
           .then((result) => {
               if(result.status === 200){
                     setDataUser(result.data)
@@ -25,7 +593,7 @@ const ViewClientProfile = () => {
           }).catch(error => {
                 setResponse(error.response.status)
           });
-    },[])
+    },[switchCharge])
 
     return(
         <>
@@ -59,7 +627,7 @@ const ViewClientProfile = () => {
                                 </p>
                                 </Alert></Row> : <></>
                             }
-                            <Row className='mt-3 mb-3'>
+                            <Row>
                                 <Col lg={12} className='shadow-lg rounded-1 p-2'>
                                     <h5>Información Personal</h5>
                                     <Row md={1} lg={1} className='rounded-4 mt-3 mb-3'>
@@ -177,8 +745,239 @@ const ViewClientProfile = () => {
                                         </Col>
                                         </Tab> 
                                     </Tabs>
+                                    <div className="d-grid gap-2 mt-3">
+                                        <Button variant='success' className="btn btn-success" onClick={handleShow}>Solicitar Trabajo</Button>
+                                    </div>
                                 </Col>
                             </Row>
+                            <Modal show={showModal} onHide={handleClose} size="lg" centered style={{padding: '0px'}}>
+                                <Modal.Header closeButton>
+                                <Modal.Title>Solicitud de Trabajo</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                <Form id='requestForm' className='requestForm'>
+                                    <Row>
+                                        <Form.Text className='mb-2'><span className='mb-1' style={{color: 'red'}}><strong>Algunos campos son obligatorios</strong></span></Form.Text>
+                                        <div className='form-floating col-md-4 mb-3'>
+                                            <input type='text' className='form-control' id='clientName' name='clientName' placeholder='Nombre' 
+                                            onChange={handleChange}/>
+                                            <label htmlFor='clientName'>Nombre</label>
+                                            {
+                                                nombreValid === true ? <Form.Text className='mb-1'>
+                                                    <span className='mb-1' style={{color: 'red'}}>{nombreValidMsge}</span></Form.Text> : nombreValidMsge
+                                            }
+                                        </div>
+                                        <div className='form-floating col-md-8 mb-3'>
+                                            <input type='text' className='form-control' id='clientLastname' name='clientLastname' placeholder='Apellido1 Apellido2'
+                                            onChange={handleChange}/>
+                                            <label htmlFor='clientLastname'>Apellidos</label>
+                                            {
+                                                apellidosValid === true ? <Form.Text className='mb-1'>
+                                                    <span className='mb-1' style={{color: 'red'}}>{apellidosValidMsge}</span></Form.Text> : apellidosValidMsge
+                                            }
+                                        </div>
+                                    </Row>
+                                    <Row>
+                                        <div className='form-floating col-md-4 mb-3'>
+                                            <input type='text' className='form-control' id='clientRut' name='clientRut' placeholder='Ej: 123456789'
+                                            onChange={handleChange} maxLength='9'/>
+                                            <label htmlFor='clientRut'>Rut</label>
+                                            {
+                                                rutValid === false ? <Form.Text className='mb-1'><span className='mb-1' style={{color: '#5f738f'}}>
+                                                    {customValidity === 'RUT válido' ? '' : 'Sin puntos ni guión'}</span></Form.Text> : 
+                                                    <Form.Text className='mb-1'>
+                                                    <span className='mb-1' style={{color: 'red'}}>{customValidity}</span></Form.Text>
+                                            }
+                                        </div>
+                                        <div className='form-floating col-md-8 mb-3'>
+                                            <input type='email' className='form-control' id='clientEmail' name='clientEmail' placeholder='correo@gmail.com'
+                                            onChange={handleChange}/>
+                                            <label htmlFor='clientEmail'>Correo electrónico</label>
+                                            {
+                                                emailValid === true ? <Form.Text className='mb-1'>
+                                                <span className='mb-1' style={{color: 'red'}}>{emailValidMsge}</span></Form.Text> : emailValidMsge
+                                            }
+                                        </div>
+                                    </Row>
+                                    <Row>
+                                        <div className='form-floating col-lg-4 col-md-4 col-md-4 mb-3'>
+                                            <input type='text' className='form-control' id='clientPhone' name='clientPhone' placeholder='12345678'
+                                            onChange={handleChange} maxLength='8'/>
+                                            <label htmlFor='clientPhone'>Número de Whatsapp</label>
+                                            {
+                                                cellphoneValid === true ? <Form.Text className='mb-1'>
+                                                <span className='mb-1' style={{color: 'red'}}>{cellphoneValidMsge}</span></Form.Text> : cellphoneValidMsge
+                                            }
+                                        </div>
+                                    </Row>
+                                    <Row className="row m-1">
+                                        <Col className="form-check form-switch mb-3">
+                                            <input className="form-check-input" type="checkbox" id='switch' name='switch'  
+                                            onClick={(e) => {setSwitchCharge(!switchCharge); clearSwitchValues(e)}} />
+                                            <label className="form-check-label">¿Vives en Departamento?</label>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        {
+                                            switchCharge === true ? 
+                                            <>
+                                                <div className='form-floating col-md-8 mb-3'>
+                                                    <input type='text' className='form-control' id='deptoClient' name='deptoClient' placeholder='Manuel Rodriguez'
+                                                    onChange={handleChange}/>
+                                                    <label htmlFor='deptoClient'>Dirección del Departamento</label>
+                                                    {
+                                                        dptoDirValid === true ? <Form.Text className='mb-1'>
+                                                        <span className='mb-1' style={{color: 'red'}}>{dptoDirValidMsge}</span></Form.Text> : dptoDirValidMsge
+                                                    }
+                                                </div>
+                                                <div className='form-floating col-lg-6 col-md-6 col-md-6 mb-3'>
+                                                    <input type='number' className='form-control' id='floorNumber' name='floorNumber' placeholder='7'
+                                                    onChange={handleChange}/>
+                                                    <label htmlFor='floorNumber'>Número de piso</label>
+                                                    {
+                                                        dptoFloorValid === true ? <Form.Text className='mb-1'>
+                                                        <span className='mb-1' style={{color: 'red'}}>{dptoFloorValidMsge}</span></Form.Text> : dptoFloorValidMsge
+                                                    }
+                                                </div>
+                                                <div className='form-floating col-lg-6 col-md-6 col-md-6 mb-3'>
+                                                    <input type='text' className='form-control' id='deptoNumber' name='deptoNumber' placeholder='45'
+                                                    onChange={handleChange}/>
+                                                    <label htmlFor='deptoNumber'>Número de Departamento</label>
+                                                    {
+                                                        dptoNumberValid === true ? <Form.Text className='mb-1'>
+                                                        <span className='mb-1' style={{color: 'red'}}>{dptoNumberValidMsge}</span></Form.Text> : dptoNumberValidMsge
+                                                    }
+                                                </div>
+                                            </> 
+                                            :
+                                            <>
+                                                <div className='form-floating col-md-8 mb-3'>
+                                                    <input type='text' className='form-control' id='streetClient' name='streetClient' placeholder='calle 1, Florida'
+                                                    onChange={handleChange}/>
+                                                    <label htmlFor='streetClient'>Calle</label>
+                                                    {
+                                                        streetValid === true ? <Form.Text className='mb-1'>
+                                                        <span className='mb-1' style={{color: 'red'}}>{streetValidMsge}</span></Form.Text> : streetValidMsge
+                                                    }
+                                                </div>
+                                                <div className='form-floating col-lg-6 col-md-6 col-md-6 mb-3'>
+                                                    <input type='text' className='form-control' id='pasajeClient' name='pasajeClient' placeholder='pasaje 3'
+                                                    onChange={handleChange}/>
+                                                    <label htmlFor='pasajeClient'>Pasaje</label>
+                                                    {
+                                                        psjeValid === false ? <Form.Text style={{color: '#5f738f'}}>Éste campo es opcional</Form.Text> : <Form.Text className='mb-1'>
+                                                        <span className='mb-1' style={{color: 'red'}}>{psjeValidMsge}</span></Form.Text>
+                                                    }
+                                                </div>
+                                                <div className='form-floating col-lg-6 col-md-6 col-md-6 mb-3'>
+                                                    <input type='text' className='form-control' id='houseNumber' name='houseNumber' placeholder='23'
+                                                    onChange={handleChange}/>
+                                                    <label htmlFor='houseNumber'>Número de casa</label>
+                                                    {
+                                                        houseNumberValid === true ? <Form.Text className='mb-1'>
+                                                        <span className='mb-1' style={{color: 'red'}}>{houseNumberValidMsge}</span></Form.Text> : houseNumberValidMsge
+                                                    }
+                                                </div>
+                                            </>
+                                        }
+                                    </Row>
+                                    <Row>
+                                        <div className='form-floating col-md-4 mb-3'>
+                                            <select id='region' className='form-select' name='region' 
+                                            onChange={handleRegionChange}>
+                                            <option selected="" value="">Seleccionar región</option>
+                                            {
+                                                localidades.map((locations,key) => {
+                                                    return(
+                                                        <>
+                                                        <option key={key} value={locations.region}>{locations.region}</option>
+                                                        </>
+                                                    )
+                                                })
+                                            }
+                                            </select>
+                                            <label htmlFor='region' className='form-label'>Región</label>
+                                            {
+                                                regionValid === true ? <Form.Text className='mb-1'>
+                                                <span className='mb-1' style={{color: 'red'}}>Por favor, seleccione una región.</span></Form.Text> : ''
+                                            }
+                                        </div>
+                                        <div className='form-floating col-md-4 mb-3'>
+                                            <select id='city' className='form-select' name='city' 
+                                            onChange={handleCityChange}>
+                                            <option selected="" value="">Seleccionar provincia</option>
+                                            {
+                                                ciudades.map((cities,key) => {
+                                                    return(
+                                                        <>
+                                                        <option key={key} value={cities[0]}>{cities[0]}</option>
+                                                        </>
+                                                    )
+                                                })
+                                            }
+                                            </select>
+                                            <label htmlFor='city' className='form-label'>Provincia</label>
+                                            {
+                                                cityValid === true ? <Form.Text className='mb-1'>
+                                                <span className='mb-1' style={{color: 'red'}}>Por favor, seleccione una provincia.</span></Form.Text> : ''
+                                            }
+                                        </div>
+                                        <div className='form-floating col-md-4 mb-3'>
+                                            <select id='comunne' className='form-select' name='comunne' 
+                                            onChange={handleChange}>
+                                            <option selected="" value="">Seleccionar comuna</option>
+                                            {
+                                                comunas.map((comunnes,key) => {
+                                                    return(
+                                                        <>
+                                                        <option key={key} value={comunnes}>{comunnes}</option>
+                                                        </>
+                                                    )
+                                                })
+                                            }
+                                            </select>
+                                            <label htmlFor='comunne' className='form-label'>Comuna</label>
+                                            {
+                                                comunneValid === true ? <Form.Text className='mb-1'>
+                                                <span className='mb-1' style={{color: 'red'}}>Por favor, seleccione una comuna.</span></Form.Text> : ''
+                                            }
+                                        </div>
+                                        <div className='form-floating mb-3'>
+                                            <textarea className='form-control' id='descriptWork' name='descriptWork' style={{ height: '100px' }}
+                                            placeholder='Descripción del trabajo' onChange={handleChange}></textarea>
+                                            <label htmlFor='descriptWork'>Descripción del Trabajo</label>
+                                            {
+                                                descriptWorkValid === true ? <Form.Text className='mb-1'>
+                                                <span className='mb-1' style={{color: 'red'}}>{descriptWorkValidMsge}</span></Form.Text> : descriptWorkValidMsge
+                                            }
+                                        </div>
+                                        {
+                                            showAlert === true ? <div className='form-floating mb-3'><Alert key={responseRequest === 200 ? 'success' : 'danger'} variant={responseRequest === 200 ? 'success' : 'danger'}>
+                                            {responseRequest === 200 ? 
+                                            <>
+                                                <i class="far fa-check-circle" style={{fontSize:'24px'}}></i>
+                                                <span>{' '}Su solicitud fue enviada con éxito, le recomendamos estar atento/a a su Correo electrónico o Whatsapp.
+                                                </span>
+                                            </>
+                                            : 
+                                            <>
+                                            <i class="far fa-times-circle" style={{fontSize:'24px'}}></i>
+                                            <span>{' '}Lo sentimos, su solicitud no pudo ser procesada, pruebe nuevamente o intentelo mas tarde.</span>
+                                            </>}
+                                        </Alert></div> : ''
+                                        }
+                                    </Row>
+                                </Form>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                <Button variant="success" onClick={handleSubmit} >
+                                    Enviar Solicitud
+                                </Button>
+                                <Button variant="danger" onClick={handleClose}>
+                                    Cerrar
+                                </Button>
+                                </Modal.Footer>
+                            </Modal>
                             </Container>
                         </>
                     )

@@ -4,6 +4,7 @@ import Axios from 'axios'
 import { FaFilter } from "react-icons/fa";
 import '../css/Workers.css';
 import perfil from '../assets/perfil.png'
+import noworkersfounded from '../assets/search-empty.png'
 import { Link } from 'react-router-dom';
 
 const Workers = () => {
@@ -15,6 +16,11 @@ const Workers = () => {
   const [localidades, setLocalidades] = useState([]);
   const [ciudades, setCiudades] = useState([]);
   const [comunas, setComunas] = useState([]);
+
+  const [regionValue, setRegionValue] = useState([]);
+  const [cityValue, setCityValue] = useState([]);
+  const [comunneValue, setComunneValue] = useState([]);
+  const [areaValue, setAreaValue] = useState([]);
 
   const jobs = ["Carpintero/a","Lechero/a","Frutero/a","Cerrajero/a","Cocinero/a","Deshollinador/ora","Lavandero/a","Artesano/a",
   "Pescador/ra","Escultor/ra","Tornero/a","Albañil","Editor/ra","Barrendero/a","Fontanero/a o plomero/a",
@@ -54,10 +60,10 @@ const Workers = () => {
   }
 
   const  clearFilters = (e) => {
-    document.getElementById('region').value = ""
-    document.getElementById('city').value = ""
-    document.getElementById('comunne').value = ""
-    document.getElementById('area').value = ""
+    setRegionValue('')
+    setCityValue('')
+    setComunneValue('')
+    setAreaValue('')
     handleClose()
     setFiltered(false)
   };
@@ -83,10 +89,10 @@ const Workers = () => {
   }
   
   useEffect(() => {
-      Axios.get("http://52.91.196.215:3001/api/usuarios").then((res)=>{
+      Axios.get("http://54.159.206.22:3001/api/usuarios").then((res)=>{
         setUsuarios(res.data);
       });
-      Axios.get("http://52.91.196.215:3001/api/localidades").then((res)=>{
+      Axios.get("http://54.159.206.22:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         });        
   },[])
@@ -117,8 +123,9 @@ const Workers = () => {
           </div>
         </div>
         <Col className='d-flex justify-content-end mt-3 mb-3'>
-          <p onClick={handleShow} className="me-2" style={{color:'#202a34'}}>
-            <FaFilter cursor={'pointer'} size={26} />
+        <strong style={{fontSize:'16px', color: '#384451'}}>Filtrar{' '}</strong>
+          <p onClick={handleShow} className="me-2" style={{color:'#5f738f'}}>
+          <FaFilter cursor={'pointer'} size={26} />
           </p>
         </Col>
         <Offcanvas show={show} onHide={handleClose} placement={'end'}>
@@ -126,10 +133,10 @@ const Workers = () => {
           <Offcanvas.Title>Filtrar Trabajadores</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-              <h5 className='mb-2 mt-2'>Residencia</h5>
-              <div className='form-floating mb-3' >
-                  <select id='region' className='form-select' name='region'  defaultValue={''}
-                  onChange={handleRegionChange}>
+              <h6 className='mb-2 mt-2'>Localidad del trabajador</h6>
+              <div>
+                  <Form.Select id='region' name='region'  defaultValue={'' || regionValue}
+                  onChange={(e) => {handleRegionChange(e); setRegionValue(e.target.value)}}>
                   <option disabled selected="" value="">Seleccionar región</option>
                   {
                       localidades.map((locations,key) => {
@@ -140,19 +147,13 @@ const Workers = () => {
                           )
                       })
                   }
-                  </select>
+                  </Form.Select>
                   <label htmlFor='region' className='form-label'>Región</label>
-                  <Form.Control.Feedback type="invalid">
-                      Por favor, seleccione una región.
-                  </Form.Control.Feedback>
               </div>
-              <div className='form-floating mb-3'>
-                  <select id='city' className='form-select' name='city' 
-                   defaultValue={''} onChange={handleCityChange}>
+              <div>
+                  <Form.Select id='city'name='city' 
+                   defaultValue={'' || cityValue} onChange={(e) => {handleCityChange(e); setCityValue(e.target.value)}}>
                   <option selected="" value="">Seleccionar provincia</option>
-                  <Form.Control.Feedback type="invalid">
-                  Por favor, seleccione una provincia.
-                  </Form.Control.Feedback>
                   {
                       ciudades.map((cities,key) => {
                           return(
@@ -162,16 +163,13 @@ const Workers = () => {
                           )
                       })
                   }
-                  </select>
+                  </Form.Select>
                   <label htmlFor='city' className='form-label'>Provincia</label>
               </div>
-              <div className='form-floating mb-3'>
-                  <select id='comunne' className='form-select' name='comunne'
-                  defaultValue={''} onChange={e => e.target.value}>
+              <div>
+                  <Form.Select id='comunne' name='comunne'
+                  defaultValue={'' || comunneValue} onChange={(e) => setComunneValue(e.target.value)}>
                   <option selected="" value="">Seleccionar comuna</option>
-                  <Form.Control.Feedback type="invalid">
-                      Por favor, seleccione una comuna.
-                  </Form.Control.Feedback>
                   {
                       comunas.map((comunnes,key) => {
                           return(
@@ -181,13 +179,12 @@ const Workers = () => {
                           )
                       })
                   }
-                  </select>
+                  </Form.Select>
                   <label htmlFor='comunne' className='form-label'>Comuna</label>
               </div>
-              <h5 className='mb-2 mt-1'>Especialidad</h5>
-              <div className='form-floating mb-3'>
-              <select id='area' className="form-select" name='area'
-                  defaultValue={""}>
+              <h6 className='mb-2'>Especialidad del trabajador</h6>
+              <div>
+              <Form.Select id='area' name='area' defaultValue={'' || areaValue} onChange={(e) => setAreaValue(e.target.value)}>
                   <option disabled selected value="">Seleccionar especialidad</option>
                   {
                       jobs.map((jobs,key) =>{
@@ -198,16 +195,26 @@ const Workers = () => {
                           )
                       })
                   }
-                </select>
-                <label htmlFor="area" className="form-label">Especialidad</label>
+                </Form.Select>
               </div>
-              <div className="d-grid gap-2">
-                  <Button className="btn-filtrar px-4" size="sm" onClick={filterWorkers} >Filtrar</Button>
-                  <Button className="btn-clear px-4" size="sm" onClick={e => clearFilters()} >Limpiar</Button>
+              <div className="d-grid gap-2 mt-3">
+                  <Button className="btn-filtrar px-4" size="sm" onClick={filterWorkers} >Buscar trabajador</Button>
+                  <Button className="btn-clear px-4" size="sm" onClick={e => clearFilters()} >Limpiar búsuqeda</Button>
               </div>
         </Offcanvas.Body>
       </Offcanvas>
         <div className="row shadow-lg rounded-3">
+        {
+          filtered === true && usuariosFiltered.length === 0 ? 
+          <div id='denied' className="container mt-5 mb-5 text-center" hidden={usuariosFiltered.length > 1 ? true : false}>
+            <div className="denied" style={{height: '60vh'}}>
+            <h6>Lo sentimos, No encontramos ningún trabajador con sus requerimientos.</h6>
+                <div className="wrapper text-center">
+                    <img src={noworkersfounded} alt="imagen de confirmación" style={{width: '15rem'}}/>
+                </div>
+            </div>
+          </div> : ''
+        }
         {
           (filtered ? usuariosFiltered : usuarios).map((element,key) =>{
             return(
@@ -217,7 +224,7 @@ const Workers = () => {
                     <div className="advisor_thumb" style={{'backgroundColor': (element.userColor !== undefined && element.userColor !== null && element.userColor !== "") ? element.userColor : '#3f43fd'}}>
                     <h6>{element.workareaUser}</h6>
                     <p className="designation"><i className="fa fa-clock-o"></i>{" "+element.experienceYears+" años de experiencia"}</p>
-                      <img src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://52.91.196.215:3001/api/images/' + element.userPhoto : perfil} 
+                      <img src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://54.159.206.22:3001/api/images/' + element.userPhoto : perfil} 
                       style={{height: '15rem'}} alt={'imagen de perfil'} />
                       <div className="social-info">
                         {

@@ -51,7 +51,7 @@ const Profile = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgress(false)
-                    Axios.put("http://52.91.196.215:3001/api/images",
+                    Axios.put("http://54.159.206.22:3001/api/images",
                     formData,
                     {
                         headers: {
@@ -71,7 +71,7 @@ const Profile = () => {
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
                             showProgress(true)
                             getAccess(token)
-                            document.getElementById('photoUser').src = "http://52.91.196.215:3001" + result.data.imagePath
+                            document.getElementById('photoUser').src = "http://54.159.206.22:3001" + result.data.imagePath
                         }
                     }).catch(error => {
                         Swal.fire('No pudimos cambiar tu foto de perfil', '', 'warning')
@@ -84,7 +84,7 @@ const Profile = () => {
     
 
     const deletePrevUserPhoto = () =>{
-        Axios.delete('http://52.91.196.215:3001/api/images/delete/' + getPhoto)
+        Axios.delete('http://54.159.206.22:3001/api/images/delete/' + getPhoto)
           .then((result) => {
               if(result.status === 200){
                 console.log(result);
@@ -125,7 +125,7 @@ const Profile = () => {
                 denyButtonText: `Cancelar`,
               }).then((result) => {
                 if (result.isConfirmed) {
-                    Axios.put("http://52.91.196.215:3001/api/update-user", {newArrayValues ,'authorization' : `${token}`})
+                    Axios.put("http://54.159.206.22:3001/api/update-user", {newArrayValues ,'authorization' : `${token}`})
                     .then((result) => {
                         if(result.status === 200){
                             Swal.fire('Actualización exitosa!', '', 'success')
@@ -159,7 +159,7 @@ const Profile = () => {
     }
 
     const getAccess = (token) =>{
-        Axios.post("http://52.91.196.215:3001/api/user-info", {
+        Axios.post("http://54.159.206.22:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -167,7 +167,7 @@ const Profile = () => {
                     setResponse(result.status)
                     setLoading(false)
                     setDataUser(result.data)
-                    localStorage.setItem('userPhoto', "http://52.91.196.215:3001/api/images/" + result.data[0].userPhoto)
+                    localStorage.setItem('userPhoto', "http://54.159.206.22:3001/api/images/" + result.data[0].userPhoto)
                     setGetPhoto(result.data[0].userPhoto)
               }
           }).catch(error => {
@@ -234,7 +234,7 @@ const Profile = () => {
                     <Nav aria-label="breadcrumb" className="bg-light rounded-3 p-3 mb-4">
                         <ol className="breadcrumb mb-0">
                             <li className="breadcrumb-item"><Link to={'/'} >Inicio</Link></li>
-                            <li className="breadcrumb-item active" aria-current="page">Perfil de usuario</li>
+                            <li className="breadcrumb-item active" aria-current="page">Mi Perfil</li>
                             <li className="breadcrumb-item"><Link to={'/mis-proyectos'} >Mis Proyectos</Link></li>
                         </ol>
                     </Nav>

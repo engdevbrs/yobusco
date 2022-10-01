@@ -113,7 +113,7 @@ const PersonalInformation = () => {
     }
 
     const checkName = (name) =>{
-        const regName = new RegExp(/^[A-Za-z\s]+$/g);
+        const regName = new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/g);
         if(name.length > 0){
             if(!regName.test(name)){
                 setNombreValidMsge('Por favor, sólo ingrese letras.')
@@ -132,7 +132,7 @@ const PersonalInformation = () => {
     }
 
     const checkLastName = (lastname) =>{
-        const regLastname = new RegExp(/^[A-Za-z\s]+$/g);
+        const regLastname = new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/g);
         if(lastname.length > 0){
             if(!regLastname.test(lastname)){
                 setApellidosValidMsge('Por favor, sólo ingrese letras.')
@@ -298,7 +298,7 @@ const PersonalInformation = () => {
     }
 
     useEffect(() => {
-        Axios.get("http://52.91.196.215:3001/api/localidades").then((res)=>{
+        Axios.get("http://54.159.206.22:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         });        
         document.addEventListener('handleEvent', handleSubmit);

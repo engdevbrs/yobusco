@@ -69,7 +69,6 @@
     display:block;
     padding:18px;
     padding-left:32px;
-    font-weight:bold;
     color:#eaeaea;
   }
   a.nav-menu-item i{
@@ -113,7 +112,8 @@
   }
 
   .menu-pages{
-    height: 70vh;
+    font-size: 15px;
+    font-weight: 500;
   }
 
   .searcher{

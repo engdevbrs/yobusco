@@ -59,14 +59,14 @@ const About = () => {
                     <div class="text-center">
                         <img class="img-fluid rounded-circle mb-4 px-4" src={fabianProfile} alt="..."/>
                         <h5 class="fw-bolder">Fabián Rioseco E</h5>
-                        <div class="fst-italic text-muted">Fundador &amp; CEO</div>
+                        <div class="fst-italic text-muted">Fundador</div>
                     </div>
                 </div>
                 <div class="col mb-5 mb-5 mb-xl-0">
                     <div class="text-center">
                         <img class="img-fluid rounded-circle mb-4 px-4" src={borisProfile} alt="..."/>
                         <h5 class="fw-bolder">Boris Rioseco E</h5>
-                        <div class="fst-italic text-muted">CFO &amp; Desarrollador de la aplicación.</div>
+                        <div class="fst-italic text-muted">Desarrollador de la aplicación.</div>
                     </div>
                 </div>
             </div>

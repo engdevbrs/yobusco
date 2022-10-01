@@ -206,7 +206,17 @@ app.put('/api/update-user', validateToken,(req,res)=>{
         }
     })
 
+    const sqlGetWorkRequests = "SELECT * FROM work_requests WHERE work_requests.emailWorker="+mysql.escape(userLogged.userName);
+    db.query(sqlGetWorkRequests,(err,result)=>{
+        if(err){
+            res.status(500).send({ error: 'Falló la respuesta del servidor' });
+        }else{
+            workRequestsbyuser = result.length
+        }
+    })
+
     const sqlUpdate3 = "UPDATE projects_user SET userName="+mysql.escape(email)+"WHERE projects_user.userName="+mysql.escape(userLogged.userName);
+    const sqlUpdate4 = "UPDATE work_requests SET emailWorker="+mysql.escape(email)+"WHERE work_requests.emailWorker="+mysql.escape(userLogged.userName);
 
     db.query(sqlUpdate1,(err,result) =>{
         if(err){
@@ -219,15 +229,21 @@ app.put('/api/update-user', validateToken,(req,res)=>{
                     if(projectsbyuser > 0){
                         db.query(sqlUpdate3,(err,result)=>{
                             if(err){
-                                res.status(500).send({ error: 'Falló la actualización del proyecto' });
+                                res.status(500).send({ error: 'Falló la actualización del email' });
+                            }else{
+                                res.send(result);
+                            }
+                        })
+                    }if(workRequestsbyuser > 0){
+                        db.query(sqlUpdate4,(err,result)=>{
+                            if(err){
+                                res.status(500).send({ error: 'Falló la actualización del email' });
                             }else{
                                 res.send(result);
                             }
                         })
                     }
-                    else{
-                        res.send(result);
-                    }
+                    res.send(result);
                 }
             })
         }
@@ -345,6 +361,61 @@ app.get('/api/image/view-projects/:id', (req, res) => {
         }
     })
 })
+
+app.post('/api/request-work',(req,res)=>{
+
+    let calle = '';
+    let pasaje = '';
+    let NumeroCasa = '';
+
+    let dptoDirec = '';
+    let NumeroPiso = '';
+    let NumeroDepto = '';
+
+    const nombre = req.body[0];
+    const apellidos = req.body[1];
+    const rut = req.body[2];
+    const email = req.body[3];
+    const celular = '569'+req.body[4];
+    if(req.body[5] === false){
+        calle = req.body[6];
+        pasaje = req.body[7];
+        NumeroCasa = req.body[8];
+    }else{
+        dptoDirec = req.body[6];
+        NumeroPiso = req.body[7];
+        NumeroDepto = req.body[8];
+    }
+
+    const comuna = req.body[11];
+    const descripcionTrabajo = req.body[12];
+    const emailWorker = req.body[13];
+    const rutWorker = req.body[14];
+    const estado = 'acordar'
+
+    const sqlInsertRequest = "INSERT INTO work_requests(nombre,apellidos,rut,email,celular,calle,pasaje,NumeroCasa,dptoDirec,NumeroPiso,NumeroDepto,comuna,descripcionTrabajo,emailWorker,rutWorker,estado)" + 
+    "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+    db.query(sqlInsertRequest,[nombre,apellidos,rut,email,celular,calle,pasaje,NumeroCasa,dptoDirec,NumeroPiso,NumeroDepto,comuna,descripcionTrabajo,emailWorker,rutWorker,estado],(err,result)=>{
+        if(err){
+            res.status(500).send({ error: 'No se pudo enviar la solicitud!' });
+        }else{
+            res.send(result);
+        }
+    })
+});
+
+app.get('/api/user/user-requests',(req,res)=>{
+    const userLogged = JSON.parse(Buffer.from(req.headers.authorization.split('.')[1], 'base64').toString());
+    const sqlGetRequests = "SELECT * FROM work_requests WHERE work_requests.emailWorker="+mysql.escape(userLogged.userName);
+    db.query(sqlGetRequests,(err,result) =>{
+        if(err){
+            res.status(500).send(err);
+        }else{
+            res.send(result);
+        }
+    })
+});
 
 function generateAccessToken(data){
     return jwt.sign(data,process.env.SECRET, {expiresIn: '60m'});
