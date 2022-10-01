@@ -89,10 +89,10 @@ const Workers = () => {
   }
   
   useEffect(() => {
-      Axios.get("http://54.159.206.22:3001/api/usuarios").then((res)=>{
+      Axios.get("http://3.89.109.142:3001/api/usuarios").then((res)=>{
         setUsuarios(res.data);
       });
-      Axios.get("http://54.159.206.22:3001/api/localidades").then((res)=>{
+      Axios.get("http://3.89.109.142:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         });        
   },[])
@@ -224,7 +224,7 @@ const Workers = () => {
                     <div className="advisor_thumb" style={{'backgroundColor': (element.userColor !== undefined && element.userColor !== null && element.userColor !== "") ? element.userColor : '#3f43fd'}}>
                     <h6>{element.workareaUser}</h6>
                     <p className="designation"><i className="fa fa-clock-o"></i>{" "+element.experienceYears+" años de experiencia"}</p>
-                      <img src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://54.159.206.22:3001/api/images/' + element.userPhoto : perfil} 
+                      <img src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://3.89.109.142:3001/api/images/' + element.userPhoto : perfil} 
                       style={{height: '15rem'}} alt={'imagen de perfil'} />
                       <div className="social-info">
                         {

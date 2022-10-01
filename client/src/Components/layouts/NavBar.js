@@ -36,7 +36,7 @@ const Menu = () =>{
   useEffect(() =>{
     if(userData.token !== undefined || localStorage.getItem('accessToken')){
         const token = localStorage.getItem('accessToken');
-        Axios.post("http://54.159.206.22:3001/api/user-info", {
+        Axios.post("http://3.89.109.142:3001/api/user-info", {
             'authorization' : `${userData.token || token}`
         })
           .then((result) => {
@@ -44,7 +44,7 @@ const Menu = () =>{
                 setLoggedIn(true)
                 setUserPhoto(result.data[0].userPhoto)
                 setUserName(result.data[0].nameUser)
-                Axios.get("http://54.159.206.22:3001/api/user/user-requests",{
+                Axios.get("http://3.89.109.142:3001/api/user/user-requests",{
                   headers: {
                       'authorization': `${token}`
                       }
@@ -91,7 +91,7 @@ const Menu = () =>{
                     <li className="nav-item me-0 me-lg-0 dropdown">
                       <div className="nav-link dropdown-toggle" id="navbarDropdown1" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false" style={{color: 'grey'}}>
-                        <img id="photoUser" src={(userPhoto !== null && userPhoto !== undefined && userPhoto !== "")  ? 'http://54.159.206.22:3001/api/images/'+ userPhoto : perfil} className="rounded-circle" height="35" width="35"
+                        <img id="photoUser" src={(userPhoto !== null && userPhoto !== undefined && userPhoto !== "")  ? 'http://3.89.109.142:3001/api/images/'+ userPhoto : perfil} className="rounded-circle" height="35" width="35"
                           alt=""/>
                       </div>
                       <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">

@@ -22,7 +22,7 @@ const Login = () =>  {
     const submitForm = (e) =>{
         //3.92.68.154 AWS LOCAL
         e.preventDefault();
-        Axios.post("http://54.159.206.22:3001/api/login", {userName,userPass})
+        Axios.post("http://3.89.109.142:3001/api/login", {userName,userPass})
           .then((result) => {
               if(result.status === 200){
                   localStorage.setItem("accessToken", result.data.accessToken);
