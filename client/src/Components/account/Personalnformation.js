@@ -298,7 +298,7 @@ const PersonalInformation = () => {
     }
 
     useEffect(() => {
-        Axios.get("http://3.89.109.142:3001/api/localidades").then((res)=>{
+        Axios.get("http://34.238.84.6:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         });        
         document.addEventListener('handleEvent', handleSubmit);

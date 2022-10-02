@@ -11,7 +11,7 @@ const ViewClientProjects = ({id}) => {
   const [ loading, setLoading ] = useState(true)
 
   const getProjects = () => {
-    Axios.get("http://3.89.109.142:3001/api/image/view-projects/" + id)
+    Axios.get("http://34.238.84.6:3001/api/image/view-projects/" + id)
       .then((result) => {
           if(result.status === 200){
             setResponse(result.status)
@@ -59,7 +59,7 @@ const ViewClientProjects = ({id}) => {
                 <Col>
                   <Card className='mt-3 mb-3'>
                     <div className="d-flex align-items-center justify-content-center">
-                        <Card.Img variant="top" src={'http://3.89.109.142:3001/' + value.imageName} 
+                        <Card.Img variant="top" src={'http://34.238.84.6:3001/' + value.imageName} 
                         alt={'project'} style={{height: '200px'}}/>
                     </div>
                     <Card.Body>

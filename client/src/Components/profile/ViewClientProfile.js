@@ -263,7 +263,7 @@ const ViewClientProfile = () => {
 
             arrayValues.push(dataUser[0].email,dataUser[0].rutUser)
 
-            Axios.post('http://3.89.109.142:3001/api/request-work',arrayValues)
+            Axios.post('http://34.238.84.6:3001/api/request-work',arrayValues)
             .then((result) => {
                 if(result.status === 200){
                     setResponseRequest(result.status)
@@ -582,10 +582,10 @@ const ViewClientProfile = () => {
     }
     
     useEffect(() =>{
-        Axios.get("http://3.89.109.142:3001/api/localidades").then((res)=>{
+        Axios.get("http://34.238.84.6:3001/api/localidades").then((res)=>{
             setLocalidades(res.data);
         }); 
-        Axios.get("http://3.89.109.142:3001/api/view/profile/" + id)
+        Axios.get("http://34.238.84.6:3001/api/view/profile/" + id)
           .then((result) => {
               if(result.status === 200){
                     setDataUser(result.data)

@@ -37,7 +37,7 @@ const UserProjects = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.delete("http://3.89.109.142:3001/api/image/delete-project" + parseInt(e[1].value,10), 
+                    Axios.delete("http://34.238.84.6:3001/api/image/delete-project" + parseInt(e[1].value,10), 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -80,7 +80,7 @@ const UserProjects = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgress(false)
-                    Axios.post("http://3.89.109.142:3001/api/image/upload-project",formFile,config)
+                    Axios.post("http://34.238.84.6:3001/api/image/upload-project",formFile,config)
                     .then((result) => {
                         if(result.status === 200){
                             setResponse(result.status)
@@ -104,7 +104,7 @@ const UserProjects = () => {
 
     const getProjects = () => {
         const token = localStorage.getItem('accessToken');
-        Axios.get("http://3.89.109.142:3001/api/image/user-projects",{
+        Axios.get("http://34.238.84.6:3001/api/image/user-projects",{
             headers: {
                 'authorization': `${token}`
                 }
@@ -119,7 +119,7 @@ const UserProjects = () => {
     }
 
     const getAccess = async (token) =>{
-        await Axios.post("http://3.89.109.142:3001/api/user-info", {
+        await Axios.post("http://34.238.84.6:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -299,7 +299,7 @@ const UserProjects = () => {
                                                 <Col className='mb-2'>
                                                     <Card className='cardproject rounded-3'>
                                                         <div className="d-flex align-items-center justify-content-center">
-                                                            <Card.Img variant="top" src={'http://3.89.109.142:3001/' + value.imageName} 
+                                                            <Card.Img variant="top" src={'http://34.238.84.6:3001/' + value.imageName} 
                                                             alt={'project'} style={{height: '200px'}}/>
                                                         </div>
                                                         <i className='deletephoto fas fa-trash' value={value.id_img} key={value.id_img} onClick={e => deleteUserProject(e.target.attributes)}></i>

@@ -42,7 +42,7 @@ const ToDoList = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("http://3.89.109.142:3001/api/user/request-confirm" + parseInt(e[1].value,10), 
+                    Axios.put("http://34.238.84.6:3001/api/user/request-confirm" + parseInt(e[1].value,10), 
                     {
                         headers: {
                         'authorization': `${token}`
@@ -69,7 +69,7 @@ const ToDoList = () => {
 
     const getProjects = () => {
         const token = localStorage.getItem('accessToken');
-        Axios.get("http://3.89.109.142:3001/api/user/user-requests",{
+        Axios.get("http://34.238.84.6:3001/api/user/user-requests",{
             headers: {
                 'authorization': `${token}`
                 }
@@ -182,7 +182,7 @@ const ToDoList = () => {
     }
 
     const getAccess = async (token) =>{
-        await Axios.post("http://3.89.109.142:3001/api/user-info", {
+        await Axios.post("http://34.238.84.6:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
