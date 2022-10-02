@@ -337,6 +337,7 @@ app.get('/api/image/user-projects',validateToken, (req, res) => {
     const sqlInsert1 = "SELECT * FROM projects_user WHERE projects_user.userName="+mysql.escape(userLogged.userName);
     db.query(sqlInsert1,(err,result) =>{
         if(err){
+            console.log(err);
             res.status(500).send('Problema obteniendo tus proyectos')
         }else{
             result.map(image => {
