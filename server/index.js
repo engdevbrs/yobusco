@@ -25,7 +25,7 @@ const upload = multer({ dest: './images' })
 const diskstorage = multer.diskStorage({
     destination: path.join(__dirname, './projects/uploads'),
     filename: (req, file, cb) =>{
-        cb(null, Date.now() + file.originalname, {resize: { width: 500, height: 500 }})
+        cb(null, Date.now() + file.originalname)
     }
 })
 
