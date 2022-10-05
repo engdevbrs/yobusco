@@ -8,6 +8,9 @@ import FAQ from './Components/layouts/FAQ';
 import Menu from './Components/layouts/NavBar';
 import Login from './Components/login/Login';
 import Profile from './Components/profile/Profile';
+import ToDoList from './Components/profile/ToDoList';
+import UserProjects from './Components/profile/UserProjects';
+import ViewClientProfile from './Components/profile/ViewClientProfile';
 import Workers from './Components/workers/Workers';
 
 
@@ -21,9 +24,12 @@ const App = () => {
                     <Route path='crear-cuenta' element= { <CreateAccount />  } />
                     <Route path='trabajadores' element= { <Workers /> } />
                     <Route path='perfil' element= { <Profile /> } />
+                    <Route path='/trabajadores/perfil/vista/:id' element= { <ViewClientProfile /> } />
                     <Route path='login' element= { <Login /> } />
                     <Route path='preguntas-frecuentes' element= { <FAQ /> } />
                     <Route path='sobre-nosotros' element= { <About /> } />
+                    <Route path='mis-proyectos' element= { <UserProjects /> } />
+                    <Route path='mis-solicitudes' element= { <ToDoList /> } />
                     <Route path='*' element={ <Navigate replace to = "/"/> } />
                 </Route>
             </Routes>
