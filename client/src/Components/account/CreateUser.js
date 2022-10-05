@@ -9,6 +9,10 @@ const CreateNewUser = () => {
 
     const { userData, setUserData } = useStepperContext();
     const [disabledButton, setDisabledButton] = useState(true);
+
+    const [emailValid, setEmailValid] = useState(false);
+    const [emailValidMsge, setEmailValidMsge] = useState([]);
+
     const TermsConditions = document.getElementById('nextButton');
     TermsConditions.disabled = disabledButton;
 
@@ -18,7 +22,30 @@ const CreateNewUser = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setUserData({ ...userData, [name]: value });
+
+        if(e.target.name === 'email'){
+            checkEmail(e.target.value)
+        }
     };
+
+    const checkEmail = (email) =>{
+        const regEmail = new RegExp(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+        if(email.length > 0){
+            if(!regEmail.test(email)){
+                setEmailValidMsge('Correo electrónico no válido.')
+                setEmailValid(true)
+                return true
+            }else{
+                setEmailValidMsge('')
+                setEmailValid(false)
+                return false
+            }
+        }else{
+            setEmailValidMsge('Por favor, ingrese su correo electrónico.')
+            setEmailValid(true)
+            return true
+        }
+    }
 
     const handleChange1=(event)=>{
         setValue1(event.target.value);
@@ -29,16 +56,19 @@ const CreateNewUser = () => {
     }
    
     const handleSubmit = (event) =>{
-        Object.defineProperty(event, 'continue', {
-            value: true,
-            writable: true
-        });
+        if(value1.length >= "8" && value1.match(/[A-Z]/) && value1.match(/[0-9]/) &&
+        value1.match(/[a-z]/) && value1.match(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/) && ((value1 === value2) && (value1 !=="")) && emailValid === false){     
+
+            Object.defineProperty(event, 'continue', {
+                value: true,
+                writable: true
+            });
+        }
     }
 
     useEffect(() =>{
-        if(value1.length >= "8" && value1.match(/[A-Z]/) && 
-        value1.match(/[a-z]/) && value1.match(/[\d`~!@#$%\^&*()+=|;:'",.<>\/?\\\-]/)
-        && ((value1 === value2) && (value1 !==""))){
+        if(value1.length >= "8" && value1.match(/[A-Z]/) && value1.match(/[0-9]/) &&
+        value1.match(/[a-z]/) && value1.match(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/) && ((value1 === value2) && (value1 !=="")) && emailValid === false){
             setDisabledButton(false);
         }else{
             setDisabledButton(true);
@@ -47,7 +77,7 @@ const CreateNewUser = () => {
         return () => {
             document.removeEventListener('handleEvent', handleSubmit);
         }
-    },[value1,value2,disabledButton]);
+    },[value1,value2,emailValid,disabledButton]);
 
     return (
         <>
@@ -60,6 +90,10 @@ const CreateNewUser = () => {
                             <input type='email' className='form-control' id='email' name='email' placeholder='correo@gmail.com'
                             value={userData['email'] || ''} onChange={handleChange} required/>
                             <label htmlFor='email'>Correo electrónico</label>
+                            {
+                                emailValid === true ? <Form.Text className='mb-1'>
+                                <span className='mb-1' style={{color: 'red'}}>{emailValidMsge}</span></Form.Text> : emailValidMsge
+                            }
                         </Col>
                     </Row>
                     <h3 className='mb-2 mt-1'>Contraseña</h3>

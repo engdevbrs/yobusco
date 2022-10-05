@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Axios  from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import '../css/Profile.css'
-import { Button, Card, Container, Form, ListGroup, Nav, Tab, Tabs } from 'react-bootstrap'
+import { Button, Card, Container, Form, ListGroup, Nav, ProgressBar, Tab, Tabs } from 'react-bootstrap'
 import web from '../assets/web.png'
 import instagram from '../assets/instagram.png'
 import facebook from '../assets/facebook.png'
@@ -27,13 +27,14 @@ const Profile = () => {
     const [ response, setResponse ] = useState([])
     const [ loading, setLoading ] = useState(true)
     const [ inputs , setInputs ] = useState(false)
-    const [ validationEmail, setValidationEmail ] = useState(false)
     const [ validationCell, setValidationCell ] = useState(false)
     const [ cancelButton, setCancelButton ] = useState(false)
     const [ colorCard, setColorCard ] = useState("#ffffff")
     const [ savePhoto, setSavePhoto ] = useState(false)
     const [ getPhoto, setGetPhoto ] = useState(false)
     const [ enableSave, setEnableSave ] = useState(false)
+    const [ updateProgress, setUpdateProgress ] = useState(0)
+    const [ hiddenProgress, showProgress ] = useState(true)
     
     const handleChangePhoto = () =>{
         const token = localStorage.getItem('accessToken');
@@ -48,32 +49,41 @@ const Profile = () => {
             denyButtonText: `Cancelar`,
             }).then((result) => {
                 if(result.isConfirmed){
-                    Axios.put("http://52.91.196.215:3001/api/images",
+                    showProgress(false)
+                    Axios.put("http://34.238.84.6:3001/api/images",
                     formData,
                     {
                         headers: {
                             'Content-Type': 'multipart/form-data;',
                             'Authorization': `${token}`
-                            }
+                        },
+                        onUploadProgress: function(progressEvent) {
+                            let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                            setUpdateProgress(percentCompleted)
+                        }
                     }).then((result) => {
                         if(result.status === 200){
                             const token = localStorage.getItem('accessToken');
-                            setCancelButton(false);
+                            setCancelButton(true);
+                            setSavePhoto(false)
                             deletePrevUserPhoto()
                             Swal.fire('Su foto ha sido actualizada con éxito!', '', 'success')
+                            showProgress(true)
                             getAccess(token)
-                            document.getElementById('photoUser').src = "http://52.91.196.215:3001" + result.data.imagePath
+                            document.getElementById('photoUser').src = "http://34.238.84.6:3001" + result.data.imagePath
                         }
                     }).catch(error => {
                         Swal.fire('No pudimos cambiar tu foto de perfil', '', 'warning')
                     });
                 }
+                setCancelButton(true)
+                setSavePhoto(true)
             })
     }
     
 
     const deletePrevUserPhoto = () =>{
-        Axios.delete('http://52.91.196.215:3001/api/images/delete/' + getPhoto)
+        Axios.delete('http://34.238.84.6:3001/api/images/delete/' + getPhoto)
           .then((result) => {
               if(result.status === 200){
                 console.log(result);
@@ -91,62 +101,45 @@ const Profile = () => {
             let inputValues = document.querySelectorAll('input');
             let inputsArray =Array.from(inputValues);
             let newArrayValues = []
-            let msgTitle = ""
             inputsArray.forEach(elements => { 
                 if(elements.name !== 'formFile'){
                     newArrayValues.push({name: elements.name, value: elements.value});
                 }
             });
-            newArrayValues.forEach(element => { 
-                if(element.name === "email"){
-                    if(dataUser[0].email !== element.value){
-                        msgTitle = 'Luego de actualizar tu email, serás redirigido a la página inicio de sesión'
-                    }else{
-                        msgTitle = 'Estás seguro de actualizar tus datos?'
-                    }
-                }
-            })
-            newArrayValues.shift()
+
             MySwal.fire({
-                title: msgTitle,
+                title: '¿Estás seguro de actualizar tus datos?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Actualizar`,
                 denyButtonText: `Cancelar`,
               }).then((result) => {
                 if (result.isConfirmed) {
-                    Axios.put("http://52.91.196.215:3001/api/update-user", {newArrayValues ,'authorization' : `${token}`})
+                    Axios.put("http://34.238.84.6:3001/api/update-user", {newArrayValues ,'authorization' : `${token}`})
                     .then((result) => {
                         if(result.status === 200){
                             Swal.fire('Actualización exitosa!', '', 'success')
-                            newArrayValues.forEach(element => { 
-                                if(element.name === "email"){
-                                    if(dataUser[0].email !== element.value){
-                                        localStorage.removeItem("accessToken");
-                                        setTimeout(() => {
-                                            return document.location.href="/login";
-                                        }, 1000);
-                                    }else{
-                                        setInputs(false)
-                                        setCancelButton(false);
-                                        getAccess(token)
-                                    }
-                                }
-                            });
+                            setInputs(false)
+                            setCancelButton(false)
+                            getAccess(token)
                             
                         }
                     }).catch(error => {
                         Swal.fire('Los cambios no fueron guardados', '', 'danger')
+                        setInputs(false)
+                        setCancelButton(false)
                     });
                 }
+                setCancelButton(true)
               })
         }else if(e.textContent === "Cancelar"){
             setCancelButton(false)
+            setValidationCell(false)
         }
     }
 
     const getAccess = (token) =>{
-        Axios.post("http://52.91.196.215:3001/api/user-info", {
+        Axios.post("http://34.238.84.6:3001/api/user-info", {
             'authorization' : `${token}`
         })
           .then((result) => {
@@ -154,6 +147,7 @@ const Profile = () => {
                     setResponse(result.status)
                     setLoading(false)
                     setDataUser(result.data)
+                    localStorage.setItem('userPhoto', "http://34.238.84.6:3001/api/images/" + result.data[0].userPhoto)
                     setGetPhoto(result.data[0].userPhoto)
               }
           }).catch(error => {
@@ -161,15 +155,6 @@ const Profile = () => {
                 setLoading(false)
                 clearTimeout()
           });
-    }
-
-    const onchangeEmail = (e) =>{
-        const pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-        if (!pattern.test(e.value)) {
-            setValidationEmail(true);
-        }else{
-            setValidationEmail(false)
-        }
     }
 
     const onchangeCell = (e) =>{
@@ -219,8 +204,9 @@ const Profile = () => {
                 <Col>
                     <Nav aria-label="breadcrumb" className="bg-light rounded-3 p-3 mb-4">
                         <ol className="breadcrumb mb-0">
-                            <li className="breadcrumb-item"><a href="/">Inicio</a></li>
-                            <li className="breadcrumb-item active" aria-current="page">Perfil de usuario</li>
+                            <li className="breadcrumb-item"><Link to={'/'} >Inicio</Link></li>
+                            <li className="breadcrumb-item active" aria-current="page">Mi Perfil</li>
+                            <li className="breadcrumb-item"><Link to={'/mis-proyectos'} >Mis Proyectos</Link></li>
                         </ol>
                     </Nav>
                 </Col>
@@ -229,27 +215,30 @@ const Profile = () => {
                 dataUser.map((element,key) =>{
                     return(
                         <>
-                            <Container className='profile-container shadow-lg mt-3 mb-5 p-4' style={element.userColor !== undefined ? { 'backgroundColor': element.userColor} : {'backgroundColor': {colorCard}}}>
+                            <Container className='profile-container shadow-lg rounded-4 mt-3 mb-5 p-4' style={element.userColor !== undefined ? { 'backgroundColor': element.userColor} : {'backgroundColor': {colorCard}}}>
                                 <Row className='mt-3 mb-3'>
                                     <Col lg={4} >
-                                        <Card className='perfil shadow mb-4 text-center' key={key}>
-                                        <input className="form-control" type="file" id="formFile" name='formFile' accept="image/jpeg;image/png;image/jpg" onChange={(e) => setEnableSave(!enableSave)} hidden/>
-                                        <img id='upload' className='upload mt-2' src={uploadPhoto} style={{ width: '5rem' }} alt="" onClick={open_file}/>
-                                        <img id='userPhoto' className='userphoto mt-2' variant="top" src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? 'http://52.91.196.215:3001/api/images/' + element.userPhoto : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
+                                        <Card className='perfil shadow mb-4' key={key}>
+                                        <input className="form-control" type="file" id="formFile" name='formFile' accept="image/*" onChange={(e) => setEnableSave(!enableSave)} hidden/>
+                                        <img id='upload' className='upload mt-2' src={uploadPhoto} style={{ width: '5rem' }} alt="" hidden={inputs} onClick={open_file} />
+                                        <img id='userPhoto' className='userphoto mt-2' variant="top" src={(element.userPhoto !== undefined && element.userPhoto !== null && element.userPhoto !== "") ? localStorage.getItem('userPhoto') : perfil} alt={'foto perfil'} style={{ width: '12rem'}} />
                                         <Card.Body>
                                             <Card.Title><strong>{element.nameUser + " " + element.lastnamesUser}</strong></Card.Title>
                                             <h6 style={{color: 'grey'}}>
                                             {element.workareaUser}
                                             </h6>
+                                            <div className="mb-2" hidden={hiddenProgress}>
+                                                <ProgressBar className='profprogress' now={updateProgress} label={`${updateProgress}%`}/>
+                                            </div>
                                             <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
                                                 {
                                                     savePhoto !== true ? <><Button variant={inputs === true ? 'success' : 'primary'} onClick={(e) => {handleButton(e.target); setInputs(true)}} 
-                                                    disabled={(validationEmail || validationCell) !== true ? false : true}>
+                                                    disabled={validationCell !== true ? false : true}>
                                                         { inputs === true ? 'Actualizar Datos' : 'Editar Perfil' }
                                                     </Button>
                                                     {
                                                         cancelButton === true ? <Button variant="danger" onClick={(e) => {handleButton(e.target); setInputs(false)}} >Cancelar</Button> : <></>
-                                                    }</> : <><Button variant={inputs === true ? 'success' : 'primary'} onClick={() => {handleChangePhoto(); setSavePhoto(false)}} 
+                                                    }</> : <><Button variant={inputs === true ? 'success' : 'primary'} onClick={() => {handleChangePhoto()}} 
                                                     disabled={enableSave}>
                                                         { savePhoto === true ? 'Guardar Foto' : 'Editar Perfil' }
                                                     </Button>
@@ -321,15 +310,7 @@ const Profile = () => {
                                                 <p className="mb-0">Email</p>
                                                 </Col>
                                                 <Col sm={9}>
-                                                {inputs === true ? <div className='form-floating col-12'>
-                                                    <input type='text' className='form-control' defaultValue={element.email} onChange={(e) => onchangeEmail(e.target)} 
-                                                    id='floatingCell' name='email' placeholder='floatingEmail' required/>
-                                                    <label htmlFor='email'>Actualizar Correo</label>
-                                                    {
-                                                        validationEmail !== true ? '' : 
-                                                        <Form.Text style={{color: 'red'}}>Ingrese un email válido</Form.Text>
-                                                    }
-                                                </div> : <p className="text-muted mb-0">{element.email}</p>}
+                                                    <p className="text-muted mb-0">{element.email}</p>
                                                 </Col>
                                             </Row>
                                             <hr/>
@@ -441,7 +422,7 @@ const Profile = () => {
                     <img src={loadingprofilegf} alt="imagen de confirmación" style={{width: '15rem'}}/>
                 </div>
                     <div className="success-account mb-3">
-                    Obteniendo datos...
+                    Obteniendo información de su perfil...
                 </div>
             </div>
         </div>

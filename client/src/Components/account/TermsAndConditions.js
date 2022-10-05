@@ -45,7 +45,7 @@ const TermsConditions = () => {
                 <Alert show={show} variant='warning' onClose={() => setShow(false)} dismissible>
                     <Alert.Heading>Hola, estamos agradecidos de que hayas llegado a este punto.</Alert.Heading>
                     <p>
-                        Como <strong>YoBusco.cl</strong>, te deseamos lo mejor en este desafío y la mayor de las suertes,
+                        Como <strong>Irodum.com</strong>, te deseamos lo mejor en este desafío y la mayor de las suertes,
                         esperamos poder ayudarte al menos una vez en encontrar trabajo, ya sea temporal o permanente.
                         Nuestro objetivo es que así sea :).
                     </p>
@@ -61,8 +61,8 @@ const TermsConditions = () => {
                         <Row>
                             <h4><strong>1. ACEPTACIÓN</strong></h4>
                             <p>
-                            En el presente documento se establecen los términos y condiciones de <strong>YoBusco</strong>, 
-                            que serán de aplicación al acceso y uso por parte del Usuario de esta página web (www.yobusco.cl). 
+                            En el presente documento se establecen los términos y condiciones de <strong>Irodum</strong>, 
+                            que serán de aplicación al acceso y uso por parte del Usuario de esta página web (www.Irodum.com). 
                             Les rogamos lean atentamente el presente Contrato.<br/> 
                             Al acceder, consultar o utilizar el Sitio Web, los Usuarios (“Vd.”, “usted”, “Usuario”, o “usuario”) 
                             aceptan cumplir los términos y condiciones establecidos en este Contrato. 
@@ -87,7 +87,7 @@ const TermsConditions = () => {
                             <p>Todo el material mostrado u ofrecido en el Sitio Web, entre otros ejemplos, 
                                 el material gráfico, los documentos, textos, imágenes, sonido, video, audio, las ilustraciones, 
                                 el software y el código HTML (en conjunto, el “Contenido”), 
-                                es de  exclusiva propiedad de <strong>Yobusco.cl</strong> o de las empresas que facilitan dicho material.<br/>
+                                es de  exclusiva propiedad de <strong>Irodum.com</strong> o de las empresas que facilitan dicho material.<br/>
                                 El Contenido está protegido por las leyes de copyright chilenas, así como por las demás leyes, 
                                 reglamentos y normas aplicables a los derechos de propiedad intelectual. 
                                 Salvo disposición expresa en contrario en el presente contrato, 
@@ -101,11 +101,11 @@ const TermsConditions = () => {
                                     </li>
                                     <li>
                                     Utilizar el Contenido en otras páginas web o en cualquier medio de comunicación como, 
-                                    por ejemplo, en un entorno de red, sin la previa autorización por escrito de <strong>yobusco.cl</strong>.
+                                    por ejemplo, en un entorno de red, sin la previa autorización por escrito de <strong>Irodum.com</strong>.
                                     </li>
                                 </ul>
                                 Todas las marcas comerciales, las marcas de servicio y los logos 
-                                mostrados en el Sitio Web son propiedad exclusiva de <strong>yobusco.cl</strong> y de sus respectivos propietarios. 
+                                mostrados en el Sitio Web son propiedad exclusiva de <strong>Irodum.com</strong> y de sus respectivos propietarios. 
                             </p>
                         </Row>
                         <Row>
@@ -113,14 +113,14 @@ const TermsConditions = () => {
                             <p>
                             Este Sitio Web ofrece al Usuario un foro de obtención de empleo y/o contactos de trabajo. 
                             Al facilitar o introducir la información en el Sitio Web (“Información del Usuario”), 
-                            el Usuario otorga a <strong>yobusco.cl</strong> licencia y derecho permanente, no exclusivo, irrevocable, libre de royalties, 
+                            el Usuario otorga a <strong>Irodum.com</strong> licencia y derecho permanente, no exclusivo, irrevocable, libre de royalties, 
                             durante el tiempo máximo permitido por la legislación aplicable, pero no le impone obligación de, utilizar, 
                             copiar, modificar, mostrar, distribuir, descargar, almacenar, reproducir, transmitir, publicar, vender, 
                             revender, adaptar ni crear productos derivados  en todo o en parte a partir de, la Información del Usuario, 
                             en ningún modo o manera. 
-                            El Usuario reconoce y acepta que <strong>yobusco.cl</strong> es solamente un foro pasivo a través del cual los usuarios pueden 
-                            conseguir empleo. <strong>Yobusco.cl</strong> no comprueba ni controla la Información del Usuario. 
-                            En consecuencia, <strong>yobusco.cl</strong> no asume garantía alguna en cuanto a la fiabilidad, precisión, integridad, validez o 
+                            El Usuario reconoce y acepta que <strong>Irodum.com</strong> es solamente un foro pasivo a través del cual los usuarios pueden 
+                            conseguir empleo. <strong>Irodum.com</strong> no comprueba ni controla la Información del Usuario. 
+                            En consecuencia, <strong>Irodum.com</strong> no asume garantía alguna en cuanto a la fiabilidad, precisión, integridad, validez o 
                             veracidad de la Información remitida por los usuarios.
                             </p>
                         </Row>
