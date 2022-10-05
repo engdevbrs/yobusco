@@ -10,9 +10,11 @@ const Footer = () => {
             <div className="container-fluid py-4">
                 <div className="row gy-4 gx-4">
                     <div className="col-lg-4 col-md-6">
-                    <img src={Logo} alt="" style={{ width: '80px' }}/>
+                    <img src={Logo} alt="" style={{ width: '70px' }}/>
+                    <div className='mt-2'>
                         <p className="small text-muted">Una página web creada para los emprendedores/as de Chile.</p>
-                        <p className="small text-muted mb-0">&copy; Todos los derechos reservados.</p>
+                        <p className="small text-muted mb-0">Copyright &copy; Todos los derechos reservados.</p>
+                    </div>
                     </div>
                     <div className="col-lg-2 col-md-6">
                         <h5 className="text-white mb-3">Enlaces rápidos</h5>

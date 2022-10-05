@@ -17,16 +17,12 @@
 .upload:hover {
     transform: scale(1.1); 
     cursor: pointer;/* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
-  }
+}
 .userphoto {
     border: 6px solid rgb(255, 255, 255);
     border-radius: 100px 100px;
     filter: brightness(50%);
     height: 190px;
-}
-.profile-container{
-    border-color: #fff0 !important;
-    border-radius: 10px !important;
 }
 
 .left-content{
@@ -91,5 +87,18 @@
 
 .nav-tabs{
     background-color: #F8F9FA;
-    border-radius: 10px 10px 0px 0px;
+    border: 1px solid #00000027;
+}
+
+.tab-content{
+    border: 1px solid #00000027;
+}
+
+.wsp-input{
+    font-size: 1rem !important;
+    height: calc(3.5rem + 2px) !important;
+}
+
+.wsp-input::placeholder{
+    font-size: 1rem !important;
 }
