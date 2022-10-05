@@ -4,7 +4,7 @@ import Axios  from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import '../css/Profile.css'
-import { Alert, Button, Card, Container, Form, Modal, Nav, Tab, Tabs } from 'react-bootstrap'
+import { Alert, Button, Card, Container, Form, InputGroup, Modal, Nav, Tab, Tabs } from 'react-bootstrap'
 import Comments from './Comments'
 import ViewClientProjects from './ViewClientProjects'
 
@@ -261,7 +261,7 @@ const ViewClientProfile = () => {
                 
             })
 
-            arrayValues.push(dataUser[0].email,dataUser[0].rutUser)
+            arrayValues.push(dataUser[0].email,dataUser[0].rutUser,dataUser[0].nameUser)
 
             Axios.post('http://34.238.84.6:3001/api/request-work',arrayValues)
             .then((result) => {
@@ -270,6 +270,14 @@ const ViewClientProfile = () => {
                     setShowAlert(true)
                     setAlertVariant('success')
                     clearForm()
+                    Axios.post('http://34.238.84.6:3001/api/requestEmail',arrayValues)
+                    .then((result) => {
+                        if(result.status === 200){
+                            console.log(result);
+                        }
+                    }).catch(error => {
+                        console.log(error);
+                    });
                 }
             }).catch(error => {
                 setResponseRequest(error.response.status)
@@ -367,7 +375,7 @@ const ViewClientProfile = () => {
         dv = (parseInt(dv,10) === 0) ? 11 : dv;
         
         // Validar que el Cuerpo coincide con su Dígito Verificador
-        if(dvEsperado !== dv){ 
+        if(dvEsperado !== parseInt(dv,10)){ 
             setRutValid(true)
             setCustomValidity("RUT Inválido"); 
             return true; 
@@ -389,7 +397,7 @@ const ViewClientProfile = () => {
             setCellphoneValidMsge('Ingrese los 8 números de su número de celular.')
             setCellphoneValid(true)
             return true
-        }else if(cell.length < 8 && !regCell.test(cell)){
+        }else if(cell.length <= 8 && !regCell.test(cell)){
             setCellphoneValidMsge('Número de celular no válido.')
             setCellphoneValid(true)
             return true
@@ -405,7 +413,7 @@ const ViewClientProfile = () => {
                 return false
             }else{
                 setDptoDirValid(true)
-                setDptoDirValidMsge('Por favor, ingrese sólo letras y números.')
+                setDptoDirValidMsge('Por favor, ingrese sólo letras o números.')
                 return true
             }
         }else{
@@ -476,15 +484,15 @@ const ViewClientProfile = () => {
     }
 
     const checkPasajeClient = (psjeClient) =>{
-        const regpsjeClient = new RegExp('^[0-9]+$');
+        const regpsjeClient = new RegExp(/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~´]/);
         if(psjeClient !== '' && psjeClient !== null && psjeClient !== undefined){
-            if(regpsjeClient.test(psjeClient)){
+            if(!regpsjeClient.test(psjeClient)){
                 setPsjeValid(false)
                 setPsjeValidMsge('')
                 return false
             }else{
                 setPsjeValid(true)
-                setPsjeValidMsge('Por favor, ingrese sólo números.')
+                setPsjeValidMsge('Por favor, ingrese sólo números o letras.')
                 return true
             }
         }else{
@@ -522,7 +530,7 @@ const ViewClientProfile = () => {
                 return false
             }else{
                 setDescriptWorkValid(true)
-                setDescriptWorkValidMsge('Por favor, ingrese sólo letras y números.')
+                setDescriptWorkValidMsge('Por favor, ingrese sólo letras o números.')
                 return true
             }
         }else{
@@ -695,7 +703,7 @@ const ViewClientProfile = () => {
                                         <hr/>
                                         <Row >
                                             <Col sm={3}>
-                                            <p className="mb-0">Especialidad</p>
+                                            <p className="mb-0">Oficio</p>
                                             </Col>
                                             <Col sm={9}><p className="text-muted mb-0">{element.workareaUser}</p>
                                             </Col>
@@ -756,12 +764,14 @@ const ViewClientProfile = () => {
                                 </Modal.Header>
                                 <Modal.Body>
                                 <Form id='requestForm' className='requestForm'>
+                                    <div className='form-floating'>
+                                        <p>Ingrese sus datos personales para que <strong>{element.nameUser}</strong> pueda tomar contacto con usted.</p>
+                                    </div>
                                     <Row>
-                                        <Form.Text className='mb-2'><span className='mb-1' style={{color: 'red'}}><strong>Algunos campos son obligatorios</strong></span></Form.Text>
                                         <div className='form-floating col-md-4 mb-3'>
                                             <input type='text' className='form-control' id='clientName' name='clientName' placeholder='Nombre' 
-                                            onChange={handleChange}/>
-                                            <label htmlFor='clientName'>Nombre</label>
+                                            onChange={handleChange} />
+                                            <label htmlFor='clientName'>Nombre<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                             {
                                                 nombreValid === true ? <Form.Text className='mb-1'>
                                                     <span className='mb-1' style={{color: 'red'}}>{nombreValidMsge}</span></Form.Text> : nombreValidMsge
@@ -770,7 +780,7 @@ const ViewClientProfile = () => {
                                         <div className='form-floating col-md-8 mb-3'>
                                             <input type='text' className='form-control' id='clientLastname' name='clientLastname' placeholder='Apellido1 Apellido2'
                                             onChange={handleChange}/>
-                                            <label htmlFor='clientLastname'>Apellidos</label>
+                                            <label htmlFor='clientLastname'>Apellidos<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                             {
                                                 apellidosValid === true ? <Form.Text className='mb-1'>
                                                     <span className='mb-1' style={{color: 'red'}}>{apellidosValidMsge}</span></Form.Text> : apellidosValidMsge
@@ -781,7 +791,7 @@ const ViewClientProfile = () => {
                                         <div className='form-floating col-md-4 mb-3'>
                                             <input type='text' className='form-control' id='clientRut' name='clientRut' placeholder='Ej: 123456789'
                                             onChange={handleChange} maxLength='9'/>
-                                            <label htmlFor='clientRut'>Rut</label>
+                                            <label htmlFor='clientRut'>Rut<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                             {
                                                 rutValid === false ? <Form.Text className='mb-1'><span className='mb-1' style={{color: '#5f738f'}}>
                                                     {customValidity === 'RUT válido' ? '' : 'Sin puntos ni guión'}</span></Form.Text> : 
@@ -792,23 +802,26 @@ const ViewClientProfile = () => {
                                         <div className='form-floating col-md-8 mb-3'>
                                             <input type='email' className='form-control' id='clientEmail' name='clientEmail' placeholder='correo@gmail.com'
                                             onChange={handleChange}/>
-                                            <label htmlFor='clientEmail'>Correo electrónico</label>
+                                            <label htmlFor='clientEmail'>Correo electrónico<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                             {
                                                 emailValid === true ? <Form.Text className='mb-1'>
                                                 <span className='mb-1' style={{color: 'red'}}>{emailValidMsge}</span></Form.Text> : emailValidMsge
                                             }
                                         </div>
                                     </Row>
-                                    <Row>
-                                        <div className='form-floating col-lg-4 col-md-4 col-md-4 mb-3'>
-                                            <input type='text' className='form-control' id='clientPhone' name='clientPhone' placeholder='12345678'
-                                            onChange={handleChange} maxLength='8'/>
-                                            <label htmlFor='clientPhone'>Número de Whatsapp</label>
-                                            {
-                                                cellphoneValid === true ? <Form.Text className='mb-1'>
-                                                <span className='mb-1' style={{color: 'red'}}>{cellphoneValidMsge}</span></Form.Text> : cellphoneValidMsge
-                                            }
-                                        </div>
+                                    <Row className='mb-3'>
+                                    <Col className='col-md-6'>
+                                        <label>Número de Whatsapp<span className='mb-1' style={{color: 'red'}}>*</span></label>
+                                        <InputGroup >
+                                            <InputGroup.Text style={{backgroundColor: '#202A34', color: '#eaeaea'}}>+569 </InputGroup.Text>
+                                            <input type='text' className='wsp-input form-control form-control-lg' id='clientPhone' name='clientPhone' placeholder='Ej: 12345678'
+                                                onChange={handleChange} maxLength='8'/>
+                                        </InputGroup>
+                                        {
+                                            cellphoneValid === true ? <Form.Text className='mb-1'>
+                                            <span className='mb-1' style={{color: 'red'}}>{cellphoneValidMsge}</span></Form.Text> : cellphoneValidMsge
+                                        }
+                                    </Col>
                                     </Row>
                                     <Row className="row m-1">
                                         <Col className="form-check form-switch mb-3">
@@ -824,7 +837,7 @@ const ViewClientProfile = () => {
                                                 <div className='form-floating col-md-8 mb-3'>
                                                     <input type='text' className='form-control' id='deptoClient' name='deptoClient' placeholder='Manuel Rodriguez'
                                                     onChange={handleChange}/>
-                                                    <label htmlFor='deptoClient'>Dirección del Departamento</label>
+                                                    <label htmlFor='deptoClient'>Dirección del Departamento<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                                     {
                                                         dptoDirValid === true ? <Form.Text className='mb-1'>
                                                         <span className='mb-1' style={{color: 'red'}}>{dptoDirValidMsge}</span></Form.Text> : dptoDirValidMsge
@@ -833,7 +846,7 @@ const ViewClientProfile = () => {
                                                 <div className='form-floating col-lg-6 col-md-6 col-md-6 mb-3'>
                                                     <input type='number' className='form-control' id='floorNumber' name='floorNumber' placeholder='7'
                                                     onChange={handleChange}/>
-                                                    <label htmlFor='floorNumber'>Número de piso</label>
+                                                    <label htmlFor='floorNumber'>Número de piso<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                                     {
                                                         dptoFloorValid === true ? <Form.Text className='mb-1'>
                                                         <span className='mb-1' style={{color: 'red'}}>{dptoFloorValidMsge}</span></Form.Text> : dptoFloorValidMsge
@@ -842,7 +855,7 @@ const ViewClientProfile = () => {
                                                 <div className='form-floating col-lg-6 col-md-6 col-md-6 mb-3'>
                                                     <input type='text' className='form-control' id='deptoNumber' name='deptoNumber' placeholder='45'
                                                     onChange={handleChange}/>
-                                                    <label htmlFor='deptoNumber'>Número de Departamento</label>
+                                                    <label htmlFor='deptoNumber'>Número de Departamento<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                                     {
                                                         dptoNumberValid === true ? <Form.Text className='mb-1'>
                                                         <span className='mb-1' style={{color: 'red'}}>{dptoNumberValidMsge}</span></Form.Text> : dptoNumberValidMsge
@@ -854,7 +867,7 @@ const ViewClientProfile = () => {
                                                 <div className='form-floating col-md-8 mb-3'>
                                                     <input type='text' className='form-control' id='streetClient' name='streetClient' placeholder='calle 1, Florida'
                                                     onChange={handleChange}/>
-                                                    <label htmlFor='streetClient'>Calle</label>
+                                                    <label htmlFor='streetClient'>Calle<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                                     {
                                                         streetValid === true ? <Form.Text className='mb-1'>
                                                         <span className='mb-1' style={{color: 'red'}}>{streetValidMsge}</span></Form.Text> : streetValidMsge
@@ -872,7 +885,7 @@ const ViewClientProfile = () => {
                                                 <div className='form-floating col-lg-6 col-md-6 col-md-6 mb-3'>
                                                     <input type='text' className='form-control' id='houseNumber' name='houseNumber' placeholder='23'
                                                     onChange={handleChange}/>
-                                                    <label htmlFor='houseNumber'>Número de casa</label>
+                                                    <label htmlFor='houseNumber'>Número de casa<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                                     {
                                                         houseNumberValid === true ? <Form.Text className='mb-1'>
                                                         <span className='mb-1' style={{color: 'red'}}>{houseNumberValidMsge}</span></Form.Text> : houseNumberValidMsge
@@ -896,7 +909,7 @@ const ViewClientProfile = () => {
                                                 })
                                             }
                                             </select>
-                                            <label htmlFor='region' className='form-label'>Región</label>
+                                            <label htmlFor='region' className='form-label'>Región<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                             {
                                                 regionValid === true ? <Form.Text className='mb-1'>
                                                 <span className='mb-1' style={{color: 'red'}}>Por favor, seleccione una región.</span></Form.Text> : ''
@@ -916,7 +929,7 @@ const ViewClientProfile = () => {
                                                 })
                                             }
                                             </select>
-                                            <label htmlFor='city' className='form-label'>Provincia</label>
+                                            <label htmlFor='city' className='form-label'>Provincia<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                             {
                                                 cityValid === true ? <Form.Text className='mb-1'>
                                                 <span className='mb-1' style={{color: 'red'}}>Por favor, seleccione una provincia.</span></Form.Text> : ''
@@ -936,7 +949,7 @@ const ViewClientProfile = () => {
                                                 })
                                             }
                                             </select>
-                                            <label htmlFor='comunne' className='form-label'>Comuna</label>
+                                            <label htmlFor='comunne' className='form-label'>Comuna<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                             {
                                                 comunneValid === true ? <Form.Text className='mb-1'>
                                                 <span className='mb-1' style={{color: 'red'}}>Por favor, seleccione una comuna.</span></Form.Text> : ''
@@ -944,8 +957,8 @@ const ViewClientProfile = () => {
                                         </div>
                                         <div className='form-floating mb-3'>
                                             <textarea className='form-control' id='descriptWork' name='descriptWork' style={{ height: '100px' }}
-                                            placeholder='Descripción del trabajo' onChange={handleChange}></textarea>
-                                            <label htmlFor='descriptWork'>Descripción del Trabajo</label>
+                                            placeholder='Descripción del trabajo' maxLength={250} onChange={handleChange}></textarea>
+                                            <label htmlFor='descriptWork'>Descripción del Trabajo<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                             {
                                                 descriptWorkValid === true ? <Form.Text className='mb-1'>
                                                 <span className='mb-1' style={{color: 'red'}}>{descriptWorkValidMsge}</span></Form.Text> : descriptWorkValidMsge
@@ -955,13 +968,14 @@ const ViewClientProfile = () => {
                                             showAlert === true ? <div className='form-floating mb-3'><Alert key={responseRequest === 200 ? 'success' : 'danger'} variant={responseRequest === 200 ? 'success' : 'danger'}>
                                             {responseRequest === 200 ? 
                                             <>
-                                                <i class="far fa-check-circle" style={{fontSize:'24px'}}></i>
-                                                <span>{' '}Su solicitud fue enviada con éxito, le recomendamos estar atento/a a su Correo electrónico o Whatsapp.
+                                                <i className="far fa-check-circle" style={{fontSize:'24px'}}></i>
+                                                <span>{' '}Su solicitud fue enviada con éxito, le recomendamos estar atento/a a su correo electrónico o whatsapp.
+                                                    <p className="mt-1">Se le ha enviado una copia del requerimiento a su email.</p>
                                                 </span>
                                             </>
                                             : 
                                             <>
-                                            <i class="far fa-times-circle" style={{fontSize:'24px'}}></i>
+                                            <i className="far fa-times-circle" style={{fontSize:'24px'}}></i>
                                             <span>{' '}Lo sentimos, su solicitud no pudo ser procesada, pruebe nuevamente o intentelo mas tarde.</span>
                                             </>}
                                         </Alert></div> : ''
@@ -970,7 +984,7 @@ const ViewClientProfile = () => {
                                 </Form>
                                 </Modal.Body>
                                 <Modal.Footer>
-                                <Button variant="success" onClick={handleSubmit} >
+                                <Button className='' variant="success" onClick={handleSubmit} >
                                     Enviar Solicitud
                                 </Button>
                                 <Button variant="danger" onClick={handleClose}>

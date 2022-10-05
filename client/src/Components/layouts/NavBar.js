@@ -136,7 +136,7 @@ const Menu = () =>{
           <Outlet></Outlet>
         </section>
         <ToastContainer position="bottom-end" className="p-3" >
-        <Toast onClose={() => setShow(false)} show={show} delay={5000} autohide style={{backgroundColor:'#384451', color: '#dfe3ec'}}>
+        <Toast onClose={() => setShow(false)} show={show} style={{backgroundColor:'#384451', color: '#dfe3ec'}}>
           <Toast.Header style={{backgroundColor:'#384451',color: '#dfe3ec'}}>
             <strong className="me-auto">Hola, {userName}</strong>
           </Toast.Header>

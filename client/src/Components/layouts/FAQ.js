@@ -96,7 +96,7 @@ const FAQ = () => {
                                             <p class="text-muted mb-4">
                                                 Contáctanos a
                                                 <br/>
-                                                <a href="#!">ayuda@yobusco.cl</a>
+                                                <a href="#!">soporte@irodum.com</a>
                                             </p>
                                             <div class="h6 fw-bolder">Síguenos</div>
                                             <a class="fs-5 px-2 link-dark" href="#!"><img src={twitter} alt='twitter' style={{'width': '22px'}}/></a>

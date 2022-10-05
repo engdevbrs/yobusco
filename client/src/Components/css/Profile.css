@@ -93,3 +93,12 @@
 .tab-content{
     border: 1px solid #00000027;
 }
+
+.wsp-input{
+    font-size: 1rem !important;
+    height: calc(3.5rem + 2px) !important;
+}
+
+.wsp-input::placeholder{
+    font-size: 1rem !important;
+}

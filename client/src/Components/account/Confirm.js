@@ -18,6 +18,14 @@ const Confirm = () => {
           if(result.status === 200){
               setResult(result.status);
               setLoadingRequest(false);
+              Axios.post("http://34.238.84.6:3001/api/welcomeMail", userData)
+              .then((response) => {
+                if(response.status === 200){
+                  console.log(response);
+                }
+              }).catch(error => {
+                  console.log(error);
+              });
               clearTimeout();
           }
       }).catch(error => {
@@ -48,7 +56,7 @@ const Confirm = () => {
     </div>
     {
       result !== 200 ? <div className="container mt-5 mb-5" hidden={loadingrequest}>
-                                  <div className="final">
+                                  <div className="final d-flex justify-content-center" style={{height: '50vh'}}>
                                     <div className="wrapper mb-4">
                                       <img src={finalerror} alt="imagen de confirmación" style={{width: '10rem'}}/>
                                     </div>

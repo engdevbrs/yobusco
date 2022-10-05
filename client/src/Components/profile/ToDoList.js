@@ -18,17 +18,11 @@ const ToDoList = () => {
     const [showModal, setShowModal] = useState(false);
     const [showModalContact, setShowModalContact] = useState(false);
     const [ response, setResponse ] = useState([])
+    const [ userInfo, setUserInfo ] = useState([])
     const [ projectsData, setProjectsData ] = useState([])
     const [ tabIndex, setTabIndex ] = useState([])
     const [ loading, setLoading ] = useState(true)
-    const [ emptyName, setEmptyName ] = useState(true)
-    const [ emptyDate, setEmptyDate ] = useState(true)
-    const [ emptyImage, setEmptyImage ] = useState(true)
-    const [ emptyWorkResume, setEmptyWorkResume ] = useState(true)
-    const [ shortResume, setShortResume ] = useState(true)
-    const [ incorrectTypeImage, setIncorrectTypeImage ] = useState(true)
-    const [ updateProgress, setUpdateProgress ] = useState(0)
-    const [ hiddenProgress, showProgress ] = useState(true)
+    const [ modalData, setModalData ] = useState([])
     const [ showFormEmail, setShowFormEmail ] = useState(false)
     const [ showWspConfirm, setShowWspConfirm ] = useState(false)
 
@@ -60,10 +54,57 @@ const ToDoList = () => {
             })
     }
 
-    let config = {
-        onUploadProgress: function(progressEvent) {
-          let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
-          setUpdateProgress(percentCompleted)
+    const agreementUserProject = (buttonName) =>{
+        const token = localStorage.getItem('accessToken');
+        if(buttonName === 'wspbutton'){
+            const wspContactObject = {
+                idRequest: modalData.idRequest,
+                estado: 'pendiente',
+                actionbutton: 'wspbutton'
+            }
+            Axios.put("http://34.238.84.6:3001/api/update/agreement", wspContactObject, 
+            {
+                headers: {
+                'authorization': `${token}`
+                }
+            }
+            ).then((result) => {
+                if(result.status === 200){
+                    setShowModalContact(false)
+                    getProjects(token)
+                    Swal.fire('La solicitud pasó a pendiente de confirmación', '', 'success')
+                }
+            }).catch(error => {
+                Swal.fire('No pudimos acordar la solicitud.', '', 'warning')
+            });
+        }else if(buttonName === 'emailbutton'){
+            const txtarea = document.getElementById('msgetextarea').value
+            const emailContactObject = {
+                idRequest: modalData.idRequest,
+                estado: 'pendiente',
+                actionbutton: 'emailbutton',
+                message: txtarea,
+                nameWorker: userInfo.nameUser,
+                emailWorker: modalData.emailWorker,
+                nameClient: modalData.nombre,
+                emailClient: modalData.email,
+                requestInfo: modalData.descripcionTrabajo
+            }
+            Axios.put("http://34.238.84.6:3001/api/update/agreement",emailContactObject, 
+            {
+                headers: {
+                'authorization': `${token}`
+                }
+            }
+            ).then((result) => {
+                if(result.status === 200){
+                    setShowModalContact(false)
+                    getProjects(token)
+                    Swal.fire('La solicitud pasó a pendiente de confirmación', '', 'success')
+                }
+            }).catch(error => {
+                Swal.fire('No pudimos acordar la solicitud.', '', 'warning')
+            });
         }
     }
 
@@ -84,6 +125,7 @@ const ToDoList = () => {
     }
 
     const MyModalContact = (props) =>{
+        setModalData(props.info[0])
         return(
             <>
             <Modal
@@ -130,7 +172,7 @@ const ToDoList = () => {
                             <strong>De:</strong> 
                             </Form.Label>
                             <Col sm="10">
-                            <Form.Control plaintext readOnly defaultValue={props.info[0].emailWorker} />
+                            <Form.Control plaintext readOnly defaultValue='soporte@irodum.com' />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-2" controlId="formPlaintextEmail">
@@ -139,6 +181,14 @@ const ToDoList = () => {
                             </Form.Label>
                             <Col sm="10">
                             <Form.Control plaintext readOnly defaultValue={props.info[0].email} />
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className="mb-2" controlId="formPlaintextEmail">
+                            <Form.Label column sm="2">
+                            <strong>CC:</strong> 
+                            </Form.Label>
+                            <Col sm="10">
+                            <Form.Control plaintext readOnly defaultValue={props.info[0].emailWorker} />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-2" controlId="formPlaintextAsunto">
@@ -151,6 +201,7 @@ const ToDoList = () => {
                         </Form.Group>
                         <FloatingLabel controlId="floatingTextarea2" label="Mensaje">
                             <Form.Control
+                            id='msgetextarea'
                             className="mb-2"
                             as="textarea"
                             placeholder="dejar un comentario aqui"
@@ -158,7 +209,7 @@ const ToDoList = () => {
                             />
                         </FloatingLabel>
                         <div className='d-grid gap-2'>
-                            <Button variant='success' className='btn btn-success' size='sm'>Enviar Correo</Button>
+                            <Button variant='success' className='btn btn-success' name='emailbutton' onClick={(e) => agreementUserProject(e.currentTarget.name)} size='sm'>Enviar Correo</Button>
                             <Button variant='danger' className='btn btn-danger' onClick={(e) => setShowFormEmail(false)} size='sm'>Cancelar</Button>
                         </div>
                         </Form>
@@ -169,7 +220,7 @@ const ToDoList = () => {
                     <>
                     <h6 className='text-center'>¿Se contactó con el cliente?</h6>
                     <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                        <Button className="btn-primary" size="sm" >Si me contacté</Button>
+                        <Button className="btn-primary" name='wspbutton' size="sm" onClick={(e) => agreementUserProject(e.currentTarget.name)}>Si me contacté</Button>
                         <Button className="btn-danger" onClick={() => {setShowWspConfirm(false); setShowModalContact(false)}} size="sm" >No me contacté</Button>
                     </div>
                     </> : 
@@ -188,6 +239,7 @@ const ToDoList = () => {
           .then((result) => {
               if(result.status === 200){
                     setResponse(result.status)
+                    setUserInfo(result.data[0])
                     setLoading(false)
               }
           }).catch(error => {

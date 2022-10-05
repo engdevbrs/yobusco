@@ -27,7 +27,6 @@ const Profile = () => {
     const [ response, setResponse ] = useState([])
     const [ loading, setLoading ] = useState(true)
     const [ inputs , setInputs ] = useState(false)
-    const [ validationEmail, setValidationEmail ] = useState(false)
     const [ validationCell, setValidationCell ] = useState(false)
     const [ cancelButton, setCancelButton ] = useState(false)
     const [ colorCard, setColorCard ] = useState("#ffffff")
@@ -102,23 +101,14 @@ const Profile = () => {
             let inputValues = document.querySelectorAll('input');
             let inputsArray =Array.from(inputValues);
             let newArrayValues = []
-            let msgTitle = ""
             inputsArray.forEach(elements => { 
                 if(elements.name !== 'formFile'){
                     newArrayValues.push({name: elements.name, value: elements.value});
                 }
             });
-            newArrayValues.forEach(element => { 
-                if(element.name === "email"){
-                    if(dataUser[0].email !== element.value){
-                        msgTitle = 'Luego de actualizar tu email, serás redirigido a la página inicio de sesión'
-                    }else{
-                        msgTitle = 'Estás seguro de actualizar tus datos?'
-                    }
-                }
-            })
+
             MySwal.fire({
-                title: msgTitle,
+                title: '¿Estás seguro de actualizar tus datos?',
                 showDenyButton: true,
                 showCancelButton: false,
                 confirmButtonText: `Actualizar`,
@@ -129,31 +119,21 @@ const Profile = () => {
                     .then((result) => {
                         if(result.status === 200){
                             Swal.fire('Actualización exitosa!', '', 'success')
-                            newArrayValues.forEach(element => { 
-                                if(element.name === "email"){
-                                    if(dataUser[0].email !== element.value){
-                                        localStorage.removeItem("accessToken");
-                                        setTimeout(() => {
-                                            return document.location.href="/login";
-                                        }, 1000);
-                                    }else{
-                                        setInputs(false)
-                                        setCancelButton(false);
-                                        getAccess(token)
-                                    }
-                                }
-                            });
+                            setInputs(false)
+                            setCancelButton(false)
+                            getAccess(token)
                             
                         }
                     }).catch(error => {
                         Swal.fire('Los cambios no fueron guardados', '', 'danger')
+                        setInputs(false)
+                        setCancelButton(false)
                     });
                 }
                 setCancelButton(true)
               })
         }else if(e.textContent === "Cancelar"){
             setCancelButton(false)
-            setValidationEmail(false);
             setValidationCell(false)
         }
     }
@@ -175,15 +155,6 @@ const Profile = () => {
                 setLoading(false)
                 clearTimeout()
           });
-    }
-
-    const onchangeEmail = (e) =>{
-        const pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-        if (!pattern.test(e.value)) {
-            setValidationEmail(true);
-        }else{
-            setValidationEmail(false)
-        }
     }
 
     const onchangeCell = (e) =>{
@@ -262,7 +233,7 @@ const Profile = () => {
                                             <div className="d-grid gap-2 d-sm-flex justify-content-sm-center">
                                                 {
                                                     savePhoto !== true ? <><Button variant={inputs === true ? 'success' : 'primary'} onClick={(e) => {handleButton(e.target); setInputs(true)}} 
-                                                    disabled={(validationEmail || validationCell) !== true ? false : true}>
+                                                    disabled={validationCell !== true ? false : true}>
                                                         { inputs === true ? 'Actualizar Datos' : 'Editar Perfil' }
                                                     </Button>
                                                     {
@@ -339,15 +310,7 @@ const Profile = () => {
                                                 <p className="mb-0">Email</p>
                                                 </Col>
                                                 <Col sm={9}>
-                                                {inputs === true ? <div className='form-floating col-12'>
-                                                    <input type='text' className='form-control' defaultValue={element.email} onChange={(e) => onchangeEmail(e.target)} 
-                                                    id='floatingCell' name='email' placeholder='floatingEmail' required/>
-                                                    <label htmlFor='email'>Actualizar Correo</label>
-                                                    {
-                                                        validationEmail !== true ? '' : 
-                                                        <Form.Text style={{color: 'red'}}>Ingrese un email válido</Form.Text>
-                                                    }
-                                                </div> : <p className="text-muted mb-0">{element.email}</p>}
+                                                    <p className="text-muted mb-0">{element.email}</p>
                                                 </Col>
                                             </Row>
                                             <hr/>

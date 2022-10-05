@@ -13,6 +13,7 @@ const dotenv = require('dotenv');
 dotenv.config({path: './env/.env'})
 const mysql = require('mysql');
 const multer = require('multer');
+const emailer = require('./mail/mailer')
 
 app.use(cors())
 app.use(express.json())
@@ -180,72 +181,24 @@ app.put('/api/update-user', validateToken,(req,res)=>{
     const userLogged = JSON.parse(Buffer.from(req.body.authorization.split('.')[1], 'base64').toString());
 
     const dataToUpdate  = req.body.newArrayValues
-    let projectsbyuser = null;
 
     website = (dataToUpdate[0].value === undefined || dataToUpdate[0].value === null) ? "" : dataToUpdate[0].value;
     instagram = (dataToUpdate[1].value === undefined || dataToUpdate[1].value === null) ? "" : dataToUpdate[1].value;
     facebook = (dataToUpdate[2].value === undefined || dataToUpdate[2].value === null) ? "" : dataToUpdate[2].value;
     twitter = (dataToUpdate[3].value === undefined || dataToUpdate[3].value === null) ? "" : dataToUpdate[3].value;
     whatsapp = (dataToUpdate[4].value === undefined || dataToUpdate[4].value === null) ? "" : dataToUpdate[4].value;
-    email = dataToUpdate[5].value;
-    cell = dataToUpdate[6].value;
-    colorInput = (dataToUpdate[7].value === undefined || dataToUpdate[7].value === null) ? "" : dataToUpdate[7].value;
+    cell = dataToUpdate[5].value;
+    colorInput = (dataToUpdate[6].value === undefined || dataToUpdate[6].value === null) ? "" : dataToUpdate[6].value;
 
-    const sqlUpdate1 = "UPDATE user_info SET cellphone="+mysql.escape(cell)+ ",email="+mysql.escape(email) +",webSite="+mysql.escape(website)
+    const sqlUpdate1 = "UPDATE user_info SET cellphone="+mysql.escape(cell)+",webSite="+mysql.escape(website)
     +",instagramSite="+mysql.escape(instagram)+",facebookSite="+mysql.escape(facebook)+",twitterSite="+mysql.escape(twitter)+",whatsappSite="+mysql.escape(whatsapp)
     +",userColor="+mysql.escape(colorInput)+"WHERE user_info.email="+mysql.escape(userLogged.userName);
-
-    const sqlUpdate2 = "UPDATE user_credentials SET userName="+mysql.escape(email)+"WHERE user_credentials.userName="+mysql.escape(userLogged.userName);
-
-    const sqlGetProjects = "SELECT * FROM projects_user WHERE projects_user.userName="+mysql.escape(userLogged.userName);
-    db.query(sqlGetProjects,(err,result)=>{
-        if(err){
-            res.status(500).send({ error: 'Falló la respuesta del servidor' });
-        }else{
-            projectsbyuser = result.length
-        }
-    })
-
-    const sqlGetWorkRequests = "SELECT * FROM work_requests WHERE work_requests.emailWorker="+mysql.escape(userLogged.userName);
-    db.query(sqlGetWorkRequests,(err,result)=>{
-        if(err){
-            res.status(500).send({ error: 'Falló la respuesta del servidor' });
-        }else{
-            workRequestsbyuser = result.length
-        }
-    })
-
-    const sqlUpdate3 = "UPDATE projects_user SET userName="+mysql.escape(email)+"WHERE projects_user.userName="+mysql.escape(userLogged.userName);
-    const sqlUpdate4 = "UPDATE work_requests SET emailWorker="+mysql.escape(email)+"WHERE work_requests.emailWorker="+mysql.escape(userLogged.userName);
 
     db.query(sqlUpdate1,(err,result) =>{
         if(err){
             res.status(500).send('Problema actualizando datos')
         }else{
-            db.query(sqlUpdate2,(err,result)=>{
-                if(err){
-                    res.status(500).send({ error: 'Falló la actualización de credenciales' });
-                }else{
-                    if(projectsbyuser > 0){
-                        db.query(sqlUpdate3,(err,result)=>{
-                            if(err){
-                                res.status(500).send({ error: 'Falló la actualización del email' });
-                            }else{
-                                res.send(result);
-                            }
-                        })
-                    }if(workRequestsbyuser > 0){
-                        db.query(sqlUpdate4,(err,result)=>{
-                            if(err){
-                                res.status(500).send({ error: 'Falló la actualización del email' });
-                            }else{
-                                res.send(result);
-                            }
-                        })
-                    }
-                    res.send(result);
-                }
-            })
+            res.send(result);
         }
     })
 });
@@ -416,6 +369,59 @@ app.get('/api/user/user-requests',(req,res)=>{
             res.send(result);
         }
     })
+});
+
+app.post('/api/welcomeMail',async (req,res)=>{
+    const userObject = {
+        name: req.body.name,
+        email: req.body.email
+    }
+    const response = await emailer.sendWelcomeEmail(userObject)
+    res.send(response)
+});
+
+app.post('/api/requestEmail',async (req,res)=>{
+    const userObjectRequest = {
+        nameClient: req.body[0],
+        emailClient: req.body[3],
+        message: req.body[12],
+        emailWorker: req.body[13],
+        nameWorker: req.body[15]
+    }
+    const response = await emailer.sendRequestEmail(userObjectRequest)
+    res.send(response)
+});
+
+app.put('/api/update/agreement/',async (req,res)=>{
+    const userLogged = JSON.parse(Buffer.from(req.headers.authorization.split('.')[1], 'base64').toString());
+    const estado = req.body.estado;
+    const idRequest = parseInt(req.body.idRequest,10);
+    const buttonactioned = req.body.actionbutton;
+
+    let userObjectRequest = null;
+    if(buttonactioned === 'emailbutton'){
+        userObjectRequest = {
+            solicitud: idRequest,
+            nameClient: req.body.nameClient,
+            emailClient: req.body.emailClient,
+            message: req.body.message,
+            emailWorker: req.body.emailWorker,
+            nameWorker: req.body.nameWorker,
+            requestInfo: req.body.requestInfo
+        }
+    }
+    const sqlUpdateRequest = "UPDATE work_requests SET estado="+mysql.escape(estado)+"WHERE work_requests.idRequest="+mysql.escape(idRequest);
+    db.query(sqlUpdateRequest,(err,result) =>{
+        if(err){
+            res.status(500).send(err);
+        }else{
+            if(buttonactioned === 'emailbutton'){
+                emailer.sendRequestResponseEmail(userObjectRequest)
+            }
+            res.send(result);
+        }
+    })
+    
 });
 
 function generateAccessToken(data){
