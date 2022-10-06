@@ -56,18 +56,18 @@ const Home = () => {
         </Row>
       </Container>
       <Container className="mt-4 px-3 my-3">
-          <Row class="gx-5">
-              <div class="col-lg-4 mb-5 mb-lg-0"><h2 class="fw-bolder mb-0" style={{color: '#5f738f'}}>Potencia tus ofertas laborales.</h2></div>
-              <div class="col-lg-8">
-                  <div class="row gx-5 row-cols-1 row-cols-md-2">
-                      <div class="col mb-4 h-100">
-                          <div class="feature bg-gradient text-white rounded-3 mb-3"><img src={ingeniero} alt="" width={64}/></div>
-                          <h2 class="h5" style={{color: '#202A34'}}>Como Trabajador</h2>
-                          <p class="fw-normal text-muted">Tendrás la posibilidad de generar nuevas opciones de trabajo.</p>
+          <Row >
+              <div className="col-lg-4 mb-5 mb-lg-0"><h2 className="fw-bolder mb-0" style={{color: '#5f738f'}}>Potencia tus ofertas laborales.</h2></div>
+              <div className="col-lg-8">
+                  <div className="row row-cols-1 row-cols-md-2">
+                      <div className="col mb-4 h-100">
+                          <div className="feature bg-gradient text-white rounded-3 mb-3"><img src={ingeniero} alt="" width={64}/></div>
+                          <h2 className="h5" style={{color: '#202A34'}}>Como Trabajador</h2>
+                          <p className="fw-normal text-muted">Tendrás la posibilidad de generar nuevas opciones de trabajo.</p>
                       </div>
-                      <div class="col mb-4 h-100">
-                          <div class="feature bg-gradient text-white rounded-3 mb-3"><img src={benefits} alt="" width={64}/></div>
-                          <h2 class="h5" style={{color: '#202A34'}}>Beneficios</h2>
+                      <div className="col mb-4 h-100">
+                          <div className="feature bg-gradient text-white rounded-3 mb-3"><img src={benefits} alt="" width={64}/></div>
+                          <h2 className="h5" style={{color: '#202A34'}}>Beneficios</h2>
                           <ul className='fw-normal text-muted'>
                             <li>Visibilidad a nivel nacional.</li>
                             <li>Aumento de tus ingresos.</li>
@@ -75,25 +75,30 @@ const Home = () => {
                             <li>Hacer crecer tu experiencia laboral.</li>
                           </ul>
                       </div>
-                      <div class="col mb-5 mb-md-0 h-100">
-                          <div class="feature bg-gradient text-white rounded-3 mb-3"><img src={vidalaboral} alt="" width={64}/></div>
-                          <h2 class="h5" style={{color: '#202A34'}}>Estabilidad</h2>
-                          <p class="fw-normal text-muted">Probabilidades de ser contactado por empresas que requieran tus servicios,
+                      <div className="col mb-5 mb-md-0 h-100">
+                          <div className="feature bg-gradient text-white rounded-3 mb-3"><img src={vidalaboral} alt="" width={64}/></div>
+                          <h2 className="h5" style={{color: '#202A34'}}>Estabilidad</h2>
+                          <p className="fw-normal text-muted">Probabilidades de ser contactado por empresas que requieran tus servicios,
                           y en lo posible ser contratado.</p>
                       </div>
-                      <div class="col h-100">
-                          <div class="feature bg-gradient text-white rounded-3 mb-3"><img src={curriculum} alt="" width={64}/></div>
-                          <h2 class="h5">Marca Personal</h2>
-                          <p class="fw-normal text-muted">Podrás crear un perfil con tu fotografía, tus datos personales y laborales, 
+                      <div className="col h-100">
+                          <div className="feature bg-gradient text-white rounded-3 mb-3"><img src={curriculum} alt="" width={64}/></div>
+                          <h2 className="h5">Marca Personal</h2>
+                          <p className="fw-normal text-muted">Podrás crear un perfil con tu fotografía, tus datos personales y laborales, 
                           así como tambien algunos proyectos realizados, los cuales podrán ser visualizados por cualquier persona que visite su perfil.</p>
                       </div>
                   </div>
               </div>
           </Row>
       </Container>
+      <Container>
+        <div className='d-flex justify-content-center'>
+          <hr style={{width: '100%', height: '2px'}} />
+        </div>
+      </Container>
       <Container className="mt-4 px-3 my-3">
-        <Row lg={3} md={2} sm={1} className='mb-5'>
-        <Col className='mt-3'>
+        <Row xs={1} className='mb-5'>
+        <Col className='col-lg-4 col-md-6 col-sm-12 mt-3'>
           <Card className="card-features shadow h-100 p-3">
           <Card.Img variant="top" src={ tools } alt="..." style={{width: '64px'}}/>
             <Card.Body>
@@ -105,7 +110,7 @@ const Home = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col className='mt-3'>
+        <Col className='col-lg-4 col-md-6 col-sm-12 mt-3'>
           <Card className="card-features shadow h-100 p-3">
             <Card.Img variant="top" src={ worker } alt="..." style={{width: '64px'}}/>
             <Card.Body>
@@ -116,7 +121,7 @@ const Home = () => {
             </Card.Body>
           </Card>
         </Col>
-        <Col className='mt-3'>
+        <Col className='col-lg-4 col-md-6 col-sm-12 mt-3'>
           <Card className="card-features shadow h-100 p-3">
             <Card.Img variant="top" src={ united } alt="..." style={{width: '64px'}}/>
             <Card.Body>

@@ -11,7 +11,7 @@ const template = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   <meta name="x-apple-disable-message-reformatting">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta content="telephone=no" name="format-detection">
-  <title>Nueva plantilla</title><!--[if (mso 16)]>
+  <title>Registro exitoso</title><!--[if (mso 16)]>
     <style type="text/css">
     a {text-decoration: none;}
     </style>
@@ -175,13 +175,13 @@ a[x-apple-data-detectors] {
             <td align="center" style="padding:0;Margin:0">
              <table bgcolor="#ffffff" class="es-footer-body" align="center" cellpadding="0" cellspacing="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;background-color:#FFFFFF;width:600px">
                <tr>
-                <td style="Margin:0;padding-top:15px;padding-bottom:15px;padding-left:20px;padding-right:20px;background-color:#ffffff;background-position:left bottom" bgcolor="#ffffff" align="left"><!--[if mso]><table style="width:560px" cellpadding="0" cellspacing="0"><tr><td style="width:180px" valign="top"><![endif]-->
+                <td style="Margin:0;padding-top:15px;padding-bottom:15px;padding-left:20px;padding-right:20px;background-color:#212529;background-position:left bottom" bgcolor="#ffffff" align="left"><!--[if mso]><table style="width:560px" cellpadding="0" cellspacing="0"><tr><td style="width:180px" valign="top"><![endif]-->
                  <table class="es-left" cellspacing="0" cellpadding="0" align="left" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left">
                    <tr>
                     <td class="es-m-p0r es-m-p20b" valign="top" align="center" style="padding:0;Margin:0;width:180px">
                      <table width="100%" cellspacing="0" cellpadding="0" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                        <tr>
-                        <td class="es-m-txt-c" align="left" style="padding:0;Margin:0;font-size:0px"><a target="_blank" href="https://www.irodum.com" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#FFFFFF;font-size:14px"><img src="https://abcifx.stripocdn.email/content/guids/CABINET_09b10bf9dbe2eec52e0b58144f74fd97/images/logoyb.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="80"></a></td>
+                        <td class="es-m-txt-c" align="left" style="padding:0;Margin:0;font-size:0px"><a target="_blank" href="https://www.irodum.com" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#FFFFFF;font-size:14px"><img src="https://abcifx.stripocdn.email/content/guids/CABINET_09b10bf9dbe2eec52e0b58144f74fd97/images/favicon.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="80"></a></td>
                        </tr>
                      </table></td>
                    </tr>
@@ -202,7 +202,8 @@ a[x-apple-data-detectors] {
                        </tr>
                      </table></td>
                    </tr>
-                 </table><!--[if mso]></td></tr></table><![endif]--></td>
+                 </table><!--[if mso]></td></tr></table><![endif]-->
+                </td>
                </tr>
              </table>
             </td>
@@ -341,7 +342,7 @@ const sendRequestEmail = async (userrequest) =>{
       <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
       <table width="100%" role="presentation" style="border-collapse: separate !important;border-spacing:0px">
       <tr>
-      <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="request.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="100"></td>
+      <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="https://abcifx.stripocdn.email/content/guids/CABINET_09b10bf9dbe2eec52e0b58144f74fd97/images/request.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="100"></td>
       </tr>
       <tr>
       <td align="center" class="es-m-txt-c" style="padding:0;Margin:0;padding-bottom:10px"><h1 style="Margin:0;line-height:46px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:46px;font-style:normal;font-weight:bold;color:#333333">Solicitud Recibida</h1></td>
@@ -399,7 +400,7 @@ const sendRequestEmail = async (userrequest) =>{
       <td class="es-m-p0r es-m-p20b" valign="top" align="center" style="padding:0;Margin:0;width:270px">
       <table width="100%" cellspacing="0" cellpadding="0" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
       <tr>
-      <td class="es-infoblock es-m-txt-c" align="left" style="padding:0;Margin:0;line-height:0px;font-size:0px;color:#CCCCCC"><img src="logo.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="60"></td>
+      <td class="es-infoblock es-m-txt-c" align="left" style="padding:0;Margin:0;line-height:0px;font-size:0px;color:#CCCCCC"><img src="https://abcifx.stripocdn.email/content/guids/CABINET_09b10bf9dbe2eec52e0b58144f74fd97/images/favicon.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="60"></td>
       </tr>
       </table></td>
       </tr>
@@ -513,7 +514,7 @@ const sendRequestResponseEmail = async (userresponse) =>{
       <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
       <table width="100%" role="presentation" style="border-collapse: separate !important;border-spacing:0px">
       <tr>
-      <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="solicitud.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="100"></td>
+      <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="https://abcifx.stripocdn.email/content/guids/CABINET_165602655b82edeb907c3b676d3f4c8e/images/solicitud.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="100"></td>
       </tr>
       <tr>
       <td align="center" class="es-m-txt-c" style="padding:0;Margin:0;padding-bottom:10px"><h1 style="Margin:0;line-height:46px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:46px;font-style:normal;font-weight:bold;color:#333333">Solicitud Respondida</h1></td>
@@ -563,7 +564,7 @@ const sendRequestResponseEmail = async (userresponse) =>{
       <td class="es-m-p0r es-m-p20b" valign="top" align="center" style="padding:0;Margin:0;width:270px">
       <table width="100%" cellspacing="0" cellpadding="0" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
       <tr>
-      <td class="es-infoblock es-m-txt-c" align="left" style="padding:0;Margin:0;line-height:0px;font-size:0px;color:#CCCCCC"><img src="logo.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="60"></td>
+      <td class="es-infoblock es-m-txt-c" align="left" style="padding:0;Margin:0;line-height:0px;font-size:0px;color:#CCCCCC"><img src="https://abcifx.stripocdn.email/content/guids/CABINET_09b10bf9dbe2eec52e0b58144f74fd97/images/favicon.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="60"></td>
       </tr>
       </table></td>
       </tr>
