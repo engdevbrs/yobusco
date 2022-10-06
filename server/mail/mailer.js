@@ -341,7 +341,7 @@ const sendRequestEmail = async (userrequest) =>{
       <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
       <table width="100%" role="presentation" style="border-collapse: separate !important;border-spacing:0px">
       <tr>
-      <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="https://abcifx.stripocdn.email/content/guids/CABINET_165602655b82edeb907c3b676d3f4c8e/images/request.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="100"></td>
+      <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="request.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="100"></td>
       </tr>
       <tr>
       <td align="center" class="es-m-txt-c" style="padding:0;Margin:0;padding-bottom:10px"><h1 style="Margin:0;line-height:46px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:46px;font-style:normal;font-weight:bold;color:#333333">Solicitud Recibida</h1></td>
@@ -399,7 +399,7 @@ const sendRequestEmail = async (userrequest) =>{
       <td class="es-m-p0r es-m-p20b" valign="top" align="center" style="padding:0;Margin:0;width:270px">
       <table width="100%" cellspacing="0" cellpadding="0" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
       <tr>
-      <td class="es-infoblock es-m-txt-c" align="left" style="padding:0;Margin:0;line-height:0px;font-size:0px;color:#CCCCCC"><img src="../../client/src/Components/assets/logo.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="60"></td>
+      <td class="es-infoblock es-m-txt-c" align="left" style="padding:0;Margin:0;line-height:0px;font-size:0px;color:#CCCCCC"><img src="logo.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="60"></td>
       </tr>
       </table></td>
       </tr>
@@ -513,7 +513,7 @@ const sendRequestResponseEmail = async (userresponse) =>{
       <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
       <table width="100%" role="presentation" style="border-collapse: separate !important;border-spacing:0px">
       <tr>
-      <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="../../client/src/Components/assets/solicitud.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="100"></td>
+      <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><img src="solicitud.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="100"></td>
       </tr>
       <tr>
       <td align="center" class="es-m-txt-c" style="padding:0;Margin:0;padding-bottom:10px"><h1 style="Margin:0;line-height:46px;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:46px;font-style:normal;font-weight:bold;color:#333333">Solicitud Respondida</h1></td>
@@ -563,7 +563,7 @@ const sendRequestResponseEmail = async (userresponse) =>{
       <td class="es-m-p0r es-m-p20b" valign="top" align="center" style="padding:0;Margin:0;width:270px">
       <table width="100%" cellspacing="0" cellpadding="0" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
       <tr>
-      <td class="es-infoblock es-m-txt-c" align="left" style="padding:0;Margin:0;line-height:0px;font-size:0px;color:#CCCCCC"><img src="../../client/src/Components/assets/logo.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="60"></td>
+      <td class="es-infoblock es-m-txt-c" align="left" style="padding:0;Margin:0;line-height:0px;font-size:0px;color:#CCCCCC"><img src="logo.png" alt style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="60"></td>
       </tr>
       </table></td>
       </tr>

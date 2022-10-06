@@ -71,7 +71,6 @@ const Workers = () => {
 
   const handleRegionChange = (e) => {
     const ciudadIndex = document.getElementById('region').value;
-    const { name, value } = e.target;
     const ciudadesIndex = localidades.find(element => {
         return element.region === ciudadIndex;
     });
@@ -81,11 +80,17 @@ const Workers = () => {
 
   const handleCityChange = (e) => {
       const cityName = document.getElementById('city').value;
-      const { name, value } = e.target;
-      const comunasData = ciudades.find(element => {
+      let comunasData = null;
+      if(cityName !== null && cityName !== undefined && cityName !== ''){
+
+        comunasData = ciudades.find(element => {
           return element[0] === cityName;
-      });
-      setComunas(comunasData[1].comunas);
+        });
+
+        setComunas(comunasData[1].comunas);
+      }else if(cityName === ''){
+        setComunas([]);
+      }
   }
   
   useEffect(() => {
@@ -153,7 +158,7 @@ const Workers = () => {
               <div>
                   <Form.Select id='city'name='city' 
                    defaultValue={'' || cityValue} onChange={(e) => {handleCityChange(e); setCityValue(e.target.value)}}>
-                  <option selected="" value="">Seleccionar provincia</option>
+                  <option disabled selected="" value="">Seleccionar provincia</option>
                   {
                       ciudades.map((cities,key) => {
                           return(
