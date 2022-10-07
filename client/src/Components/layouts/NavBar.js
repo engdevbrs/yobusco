@@ -15,7 +15,7 @@ const Menu = () =>{
   const [ userPhoto, setUserPhoto] = useState([])
   const [ userName, setUserName] = useState([])
   const [ projectsData, setProjectsData ] = useState([])
-  const [ isLoggenIn, setLoggedIn] = useState(false)
+  const [ isLoggedIn, setLoggedIn] = useState(false)
   const [show, setShow] = useState(false);
 
   const menuToggle = () => {
@@ -65,17 +65,19 @@ const Menu = () =>{
                 });
               }else{
                 localStorage.removeItem('accessToken')
+                localStorage.removeItem('userPhoto')
                 setLoggedIn(false)
                 setUserPhoto("")
               }
           }).catch(error => {
             localStorage.removeItem('accessToken')
+            localStorage.removeItem('userPhoto')
             setUserPhoto("")
             setLoggedIn(false)
           });
 
     }
-  },[userData.token])
+  },[userData.token, isLoggedIn])
 
   return (
       <>
@@ -86,7 +88,7 @@ const Menu = () =>{
                 <button className="whiteLink siteLink"  onClick={() => menuToggle()}><i className="fas fa-bars me-2"></i> MENÚ</button>
               </div>
                 {
-                  (localStorage.getItem('accessToken') || isLoggenIn) ?  <>
+                  (localStorage.getItem('accessToken') || isLoggedIn) ?  <>
                   <ul className="navbar-nav d-flex flex-row align-items-center me-3">         
                     <li className="nav-item me-3 me-md-3 me-lg-4 dropdown" onClick={() => requestNavigate()} style={{cursor: 'pointer'}}>
                       <i className='fas fa-file-alt mt-1' style={{fontSize:'24px','color': '#5f738f'}}></i>
@@ -97,7 +99,8 @@ const Menu = () =>{
                     <li className="nav-item me-0 me-lg-0 dropdown">
                       <div className="nav-link dropdown-toggle" id="navbarDropdown1" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false" style={{color: 'grey'}}>
-                        <img id="photoUser" src={(userPhoto !== null && userPhoto !== undefined && userPhoto !== "")  ? 'http://34.238.84.6:3001/api/images/'+ userPhoto : perfil} className="rounded-circle" height="35" width="35"
+                        <img id="photoUser" src={(userPhoto !== null && userPhoto !== undefined && userPhoto !== "" && userPhoto.length > 0)  ? 
+                        'http://34.238.84.6:3001/api/images/'+ userPhoto : <></>} className="rounded-circle" height="35" width="35"
                           alt=""/>
                       </div>
                       <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
@@ -142,8 +145,8 @@ const Menu = () =>{
           <Outlet></Outlet>
         </section>
         <ToastContainer className="p-3" >
-        <Toast onClose={() => setShow(false)} show={show} style={{backgroundColor:'#384451', color: '#dfe3ec'}}>
-          <Toast.Header style={{backgroundColor:'#384451',color: '#dfe3ec'}}>
+        <Toast onClose={() => setShow(false)} show={show} style={{backgroundColor:'#A53232', color: '#dfe3ec'}}>
+          <Toast.Header style={{backgroundColor:'#7A3838',color: '#dfe3ec'}}>
             <strong className="me-auto">Hola, {userName}</strong>
           </Toast.Header>
           <Toast.Body>Tienes {projectsData.length} peticiones de trabajo, revisa tu bandeja de solicitudes.</Toast.Body>

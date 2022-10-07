@@ -10,24 +10,20 @@ const ViewClientProjects = ({id}) => {
   const [ response, setResponse ] = useState([])
   const [ loading, setLoading ] = useState(true)
 
-  const getProjects = () => {
-    Axios.get("http://34.238.84.6:3001/api/image/view-projects/" + id)
-      .then((result) => {
-          if(result.status === 200){
-            setResponse(result.status)
-            setProjectsData(result.data)
-            setLoading(false)
-          }
-      }).catch(error => {
-          setLoading(false)
-          setResponse(error.response.status)
-          setProjectsData(error.response.status)
-      });
-  }
-
   useEffect(() =>{
     setTimeout(() => {
-      getProjects()
+        Axios.get("http://34.238.84.6:3001/api/image/view-projects/" + id)
+          .then((result) => {
+              if(result.status === 200){
+                setResponse(result.status)
+                setProjectsData(result.data)
+                setLoading(false)
+              }
+          }).catch(error => {
+              setLoading(false)
+              setResponse(error.response.status)
+              setProjectsData(error.response.status)
+          });
     }, 500);
   },[])
 
