@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, Button, Card,  Col, Container, FloatingLabel, Form, Modal, Nav, OverlayTrigger, Popover, ProgressBar, Row, Tab, Table, Tabs } from 'react-bootstrap'
+import { Alert, Button, Card,  Col, Container, FloatingLabel, Form, Modal, Nav, Row, Tab, Table, Tabs } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Axios  from 'axios'
 import { Link } from 'react-router-dom'
 import accesDenied from '../assets/access-denied.png'
-import loadingprofilegf from '../assets/loading-profile-projects.gif'
-import loadingprofileprojects from '../assets/loading-projects.gif'
+import loadingprofilegf from '../assets/loading-profile-requests.gif'
 import norequests from '../assets/no-requests.png'
 import norequestsconfirmeds from '../assets/no-requests-confirmeds.png'
 import whatsapp from '../assets/whatsapp.png'
@@ -305,17 +304,7 @@ const ToDoList = () => {
                             style={{fontSize:'20px',cursor:'pointer', color: '#384451'}}>
                         </i></div>
                     </div>
-                    <Container className='shadow-lg rounded-2 mt-3 mb-5 p-2' style={{height: '60vh'}} fluid>
-                        <div id='loadingprojects' className="container mt-5 mb-5" hidden={!loading} style={{height: '60vh'}}>
-                            <div className="loadingprojects">
-                                <div className="wrapper text-center">
-                                    <img src={loadingprofileprojects} alt="imagen de confirmación" style={{width: '15rem'}}/>
-                                </div>
-                                    <div className="success-account mb-3">
-                                    Obteniendo solicitudes...
-                                </div>
-                            </div>
-                        </div>
+                    <Container className='shadow-lg rounded-2 mt-3 mb-5 p-2' style={{'min-height': '60vh'}} fluid>
                         <Modal
                             size="lg"
                             aria-labelledby="contained-modal-title-vcenter"

@@ -1,14 +1,16 @@
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Form, Toast, ToastContainer } from "react-bootstrap";
+import { Toast, ToastContainer } from "react-bootstrap";
 import { Link, Outlet } from 'react-router-dom';
 import perfil from '../assets/perfil.png'
 import { useLoginContext } from "../contexts/AuthContext";
 import '../css/NavBar.css'
 import Footer from "./Footer";
+import { useNavigate } from "react-router-dom";
 
 const Menu = () =>{
 
+  const navigate = useNavigate()
   const { userData, setUserData } = useLoginContext()
   const [ userPhoto, setUserPhoto] = useState([])
   const [ userName, setUserName] = useState([])
@@ -31,6 +33,10 @@ const Menu = () =>{
     localStorage.removeItem('accessToken')
     localStorage.removeItem('userPhoto')
     setLoggedIn(false)
+  }
+
+  const requestNavigate = () =>{
+    navigate('/mis-solicitudes')
   }
 
   useEffect(() =>{
@@ -82,7 +88,7 @@ const Menu = () =>{
                 {
                   (localStorage.getItem('accessToken') || isLoggenIn) ?  <>
                   <ul className="navbar-nav d-flex flex-row align-items-center me-3">         
-                    <li className="nav-item me-3 me-md-3 me-lg-4 dropdown">
+                    <li className="nav-item me-3 me-md-3 me-lg-4 dropdown" onClick={() => requestNavigate()} style={{cursor: 'pointer'}}>
                       <i className='fas fa-file-alt mt-1' style={{fontSize:'24px','color': '#5f738f'}}></i>
                         <span className="position-absolute start-80 translate-middle badge rounded-pill bg-danger mt-1">
                         {projectsData.length}
@@ -111,7 +117,7 @@ const Menu = () =>{
                       </ul>
                     </li>
                 </ul>
-                </> : <><a href="/login" className="signin-item p-2"><i className="fas fa-sign-in me-2" style={{color: 'white'}}></i>Iniciar Sesión</a></>
+                </> : <><Link to={'/login'} className="signin-item p-2"><i className="fas fa-sign-in me-2" style={{color: 'white'}}></i>Iniciar Sesión</Link></>
                 }
             </div>
           </div>
@@ -135,7 +141,7 @@ const Menu = () =>{
         <section>
           <Outlet></Outlet>
         </section>
-        <ToastContainer position="bottom-end" className="p-3" >
+        <ToastContainer className="p-3" >
         <Toast onClose={() => setShow(false)} show={show} style={{backgroundColor:'#384451', color: '#dfe3ec'}}>
           <Toast.Header style={{backgroundColor:'#384451',color: '#dfe3ec'}}>
             <strong className="me-auto">Hola, {userName}</strong>

@@ -72,15 +72,6 @@ const Login = () =>  {
                             </Button>
                             </div>
                         </Form>
-                        <hr />
-                        <div className="or">
-                            <p>o inicia con</p>
-                        </div>
-                        <div className="boxes">
-                            <span><img src="https://imgur.com/XnY9cKl.png" alt='box1'/></span>
-                            <span><img src="https://imgur.com/ODlSChL.png" alt='box2'/></span>
-                            <span><img src="https://imgur.com/mPBRdQt.png" alt='box3'/></span>
-                        </div>
                     </Col>
                 </div>
             </Card>
