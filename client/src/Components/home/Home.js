@@ -44,7 +44,7 @@ const Home = () => {
         <Row lg={2} className='information row row-cols-1 row-cols-md-2 g-4'>
         <Col>
         <h2 className="our-fundation fw-bolder mt-2" style={{color: '#5f738f'}}>Irodum.com</h2>
-        <p class="fw-normal text-muted"><strong>E</strong>s una plataforma que tiene por objetivo crear una comunidad
+        <p className="fw-normal text-muted"><strong>E</strong>s una plataforma que tiene por objetivo crear una comunidad
               con personas que ofrezcan sus conocimientos técnicos sobre un oficio en particular, para que usuarios de cualquier parte de Chile puedan
               acceder a su perfil laboral, la cuál tendrá una serie de información útil para el futuro cliente, esta será de ayuda
               para que cuando las personas requieran de una asistencia tengan una idea de con quién está tratando y a quién le está solicitando los servicios.
