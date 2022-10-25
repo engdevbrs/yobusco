@@ -40,7 +40,7 @@ const Home = () => {
               </Row>
           </Container>
       </header>
-      <Container className="mt-4 px-3 my-3">
+      <Container className="mt-4 px-3">
         <Row lg={2} className='information row row-cols-1 row-cols-md-2 g-4'>
         <Col>
         <h2 className="our-fundation fw-bolder mt-2" style={{color: '#5f738f'}}>Irodum.com</h2>
@@ -55,9 +55,14 @@ const Home = () => {
         </Col>
         </Row>
       </Container>
-      <Container className="mt-4 px-3 my-3">
+      <Container className="mt-5 mb-5">
+        <div className='d-flex justify-content-center'>
+          <hr style={{width: '80%', height: '2px'}} />
+        </div>
+      </Container>
+      <Container className="benefits mt-4 px-3">
           <Row >
-              <div className="col-lg-4 mb-5 mb-lg-0"><h2 className="fw-bolder mb-0" style={{color: '#5f738f'}}>Potencia tus ofertas laborales.</h2></div>
+              <div className="col-lg-4 mb-5 mb-lg-0"><h2 className="fw-bolder mb-0" style={{color: '#5f738f'}}>Potencia tus ofertas laborales</h2></div>
               <div className="col-lg-8">
                   <div className="row row-cols-1 row-cols-md-2">
                       <div className="col mb-4 h-100">
@@ -91,12 +96,12 @@ const Home = () => {
               </div>
           </Row>
       </Container>
-      <Container>
+      <Container className="mt-5 mb-5">
         <div className='d-flex justify-content-center'>
-          <hr style={{width: '100%', height: '2px'}} />
+          <hr style={{width: '80%', height: '2px'}} />
         </div>
       </Container>
-      <Container className="mt-4 px-3 my-3">
+      <Container className="mt-4 px-3">
         <Row xs={1} className='mb-5'>
         <Col className='col-lg-4 col-md-6 col-sm-12 mt-3'>
           <Card className="card-features shadow h-100 p-3">
