@@ -4,9 +4,11 @@ import Axios  from 'axios'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import '../css/Profile.css'
-import { Alert, Button, Card, Container, Form, InputGroup, Modal, Nav, Tab, Tabs } from 'react-bootstrap'
+import { Alert, Button, Card, Container, Form, InputGroup, Modal, Nav, OverlayTrigger, Tab, Tabs, Tooltip } from 'react-bootstrap'
 import Comments from './Comments'
 import ViewClientProjects from './ViewClientProjects'
+import solicitudbutton from '../assets/solicitud-button.png';
+import rating from '../assets/rating.png';
 
 const ViewClientProfile = () => {
 
@@ -588,6 +590,18 @@ const ViewClientProfile = () => {
             return true
         }
     }
+
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+          Enviar solicitud
+        </Tooltip>
+      );
+
+    const renderTooltip2 = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+          Calificar Trabajador
+        </Tooltip>
+      );
     
     useEffect(() =>{
         Axios.get("http://34.238.84.6:3001/api/localidades").then((res)=>{
@@ -753,11 +767,22 @@ const ViewClientProfile = () => {
                                         </Col>
                                         </Tab> 
                                     </Tabs>
-                                    <div className="d-grid gap-2 mt-3">
-                                        <Button variant='success' className="btn btn-success" onClick={handleShow}>Solicitar Trabajo</Button>
-                                    </div>
                                 </Col>
                             </Row>
+                            <OverlayTrigger
+                            placement="left"
+                            delay={{ show: 250, hide: 400 }}
+                            overlay={renderTooltip}
+                            >
+                                <img className='solicitudbutton' src={solicitudbutton} alt="solicitud img" onClick={handleShow}/>
+                            </OverlayTrigger>
+                            <OverlayTrigger
+                            placement="left"
+                            delay={{ show: 250, hide: 400 }}
+                            overlay={renderTooltip2}
+                            >
+                                <img className='rating' src={rating} alt="rating img" />
+                            </OverlayTrigger>
                             <Modal show={showModal} onHide={handleClose} size="lg" centered style={{padding: '0px'}}>
                                 <Modal.Header closeButton>
                                 <Modal.Title>Solicitud de Trabajo</Modal.Title>
@@ -813,7 +838,7 @@ const ViewClientProfile = () => {
                                     <Col className='col-md-6'>
                                         <label>Número de Whatsapp<span className='mb-1' style={{color: 'red'}}>*</span></label>
                                         <InputGroup >
-                                            <InputGroup.Text style={{backgroundColor: '#202A34', color: '#eaeaea'}}>+569 </InputGroup.Text>
+                                            <InputGroup.Text style={{backgroundColor: '#29A71A', color: '#eaeaea'}}>+569 </InputGroup.Text>
                                             <input type='text' className='wsp-input form-control form-control-lg' id='clientPhone' name='clientPhone' placeholder='Ej: 12345678'
                                                 onChange={handleChange} maxLength='8'/>
                                         </InputGroup>
@@ -984,7 +1009,7 @@ const ViewClientProfile = () => {
                                 </Form>
                                 </Modal.Body>
                                 <Modal.Footer>
-                                <Button className='' variant="success" onClick={handleSubmit} >
+                                <Button className='btn-request' onClick={handleSubmit} >
                                     Enviar Solicitud
                                 </Button>
                                 <Button variant="danger" onClick={handleClose}>
