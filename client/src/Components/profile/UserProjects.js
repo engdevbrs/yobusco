@@ -24,6 +24,7 @@ const UserProjects = () => {
     const [ emptyWorkResume, setEmptyWorkResume ] = useState(true)
     const [ shortResume, setShortResume ] = useState(true)
     const [ incorrectTypeImage, setIncorrectTypeImage ] = useState(true)
+    const [ incorrectSizeImage, setIncorrectSizeImage ] = useState(true)
     const [ updateProgress, setUpdateProgress ] = useState(0)
     const [ hiddenProgress, showProgress ] = useState(true)
 
@@ -80,6 +81,7 @@ const UserProjects = () => {
             }).then((result) => {
                 if(result.isConfirmed){
                     showProgress(false)
+                    clearFormUpload()
                     Axios.post("http://34.238.84.6:3001/api/image/upload-project",formFile,config)
                     .then((result) => {
                         if(result.status === 200){
@@ -102,6 +104,13 @@ const UserProjects = () => {
         }
       };
 
+    const clearFormUpload = () => {
+        document.getElementById('clientname').value = "";
+        document.getElementById('workdate').value = ""
+        document.getElementById('workresume').value = ""
+        document.getElementById('photofile').value = ""
+    }
+    
     const getProjects = () => {
         const token = localStorage.getItem('accessToken');
         Axios.get("http://34.238.84.6:3001/api/image/user-projects",{
@@ -165,11 +174,18 @@ const UserProjects = () => {
     }
 
     const onchangeWorkImage = (e) =>{
+        let imgsize = e.files[0].size;
+        imgsize =  parseFloat(imgsize/1048576)
         if(e.value !== ""){
             setEmptyImage(false)
             if(e.files[0].type === "image/jpeg" || e.files[0].type === "image/jpg" || e.files[0].type === "image/png"){
                 setIncorrectTypeImage(false)
-            }  
+                if(imgsize > 1 ){
+                    setIncorrectSizeImage(true)
+                }else{
+                    setIncorrectSizeImage(false)
+                }
+            }
         }else{
             setEmptyImage(true)
             setIncorrectTypeImage(true)
@@ -256,7 +272,8 @@ const UserProjects = () => {
                                     <Form.Control id='photofile' name='photofile' type="file" size="md" accept='image/*' onChange={e => onchangeWorkImage(e.target)} 
                                     disabled={projectsData.length >= 8 ? true : false}/>
                                     {emptyImage === true ? <Form.Text style={{color:'red'}}>Éste campo es obligatorio</Form.Text> 
-                                    : incorrectTypeImage === true ? <Form.Text style={{color:'red'}}>El archivo debe ser: .JPG .JPEG .PNG</Form.Text> : ''}
+                                    : incorrectTypeImage === true ? <Form.Text style={{color:'red'}}>El archivo debe ser: .JPG .JPEG .PNG</Form.Text> : 
+                                    incorrectSizeImage === true ? <Form.Text style={{color:'red'}}>El archivo debe pesar menos de 1 Mb o 1.000 Kb.</Form.Text> : ''}
 
                                 </Form.Group>
                                 {projectsData.length >= 8 ? <Form.Text style={{color:'red'}}><strong>Llegaste a tu límite de proyectos subidos</strong></Form.Text> : <></> }
@@ -265,7 +282,7 @@ const UserProjects = () => {
                                 </div>
                                 <div className="d-grid gap-2 mb-1">
                                     <Button className='buttonproject' 
-                                        disabled={(emptyName || emptyDate || emptyImage || emptyWorkResume || shortResume || incorrectTypeImage || projectsData.length >= 8) === true ? true : false}
+                                        disabled={(emptyName || emptyDate || emptyImage || emptyWorkResume || shortResume || incorrectTypeImage || incorrectSizeImage || projectsData.length >= 8) === true ? true : false}
                                         onClick={e => uploadProject(e)}
                                         >Subir Trabajo</Button>
                                     <Button variant="danger">Cancelar
