@@ -82,7 +82,7 @@ const Menu = () =>{
   return (
       <>
         <div id="menuHolder">
-          <div role="navigation" className="sticky-top" id="mainNavigation">
+          <div role="navigation" id="mainNavigation">
             <div className="flexMain">
               <div className="flex2">
                 <button className="whiteLink siteLink"  onClick={() => menuToggle()}><i className="fas fa-bars me-2"></i> MENÚ</button>
