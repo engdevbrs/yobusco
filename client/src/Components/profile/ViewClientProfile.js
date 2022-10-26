@@ -592,13 +592,13 @@ const ViewClientProfile = () => {
     }
 
     const renderTooltip = (props) => (
-        <Tooltip id="button-tooltip" {...props}>
-          Enviar solicitud
+        <Tooltip id="button-tooltip" {...props} hidden={showModal}>
+            Enviar solicitud
         </Tooltip>
       );
 
     const renderTooltip2 = (props) => (
-        <Tooltip id="button-tooltip" {...props}>
+        <Tooltip id="button-tooltip" {...props} hidden={showModal}>
           Calificar Trabajador
         </Tooltip>
       );
@@ -783,7 +783,7 @@ const ViewClientProfile = () => {
                             >
                                 <img className='rating' src={rating} alt="rating img" />
                             </OverlayTrigger>
-                            <Modal show={showModal} onHide={handleClose} size="lg" centered style={{padding: '0px'}}>
+                            <Modal className='modalrequest' show={showModal} onHide={handleClose} size="lg" centered style={{padding: '0px'}}>
                                 <Modal.Header closeButton>
                                 <Modal.Title>Solicitud de Trabajo</Modal.Title>
                                 </Modal.Header>
@@ -1009,7 +1009,7 @@ const ViewClientProfile = () => {
                                 </Form>
                                 </Modal.Body>
                                 <Modal.Footer>
-                                <Button className='btn-request' onClick={handleSubmit} >
+                                <Button className='btn-request' onClick={handleSubmit}>
                                     Enviar Solicitud
                                 </Button>
                                 <Button variant="danger" onClick={handleClose}>
