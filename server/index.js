@@ -269,7 +269,7 @@ app.post('/api/image/upload-project',uploadproject.single('photofile'),async (re
         if(err){
             res.status(500).send('Problema subiendo Foto')
         }else{
-            if(result.length < 7){
+            if(result.length <= 8){
                 db.query(sqlInsert1,[name, originalname, username, workdate, imageClient , filetype, workresume],(err,result) =>{
                     if(err){
                         res.status(500).send('Problema subiendo Foto')
