@@ -57,16 +57,16 @@ const About = () => {
             <div class="row gx-5 row-cols-1 row-cols-sm-2 row-cols-xl-4 justify-content-center">
                 <div class="col mb-5 mb-5 mb-xl-0">
                     <div class="text-center">
-                        <img class="img-fluid rounded-circle mb-4 px-4" src={borisProfile} alt="..."/>
-                        <h5 class="fw-bolder">Boris Rioseco E</h5>
-                        <div class="fst-italic text-muted">Fundador y Desarrollador de la aplicación.</div>
+                        <img class="img-fluid rounded-circle mb-4 px-4" src={fabianProfile} alt="..."/>
+                        <h5 class="fw-bolder">Fabián Rioseco E</h5>
+                        <div class="fst-italic text-muted">Fundador</div>
                     </div>
                 </div>
                 <div class="col mb-5 mb-5 mb-xl-0">
                     <div class="text-center">
-                        <img class="img-fluid rounded-circle mb-4 px-4" src={fabianProfile} alt="..."/>
-                        <h5 class="fw-bolder">Fabián Rioseco E</h5>
-                        <div class="fst-italic text-muted">CO-Fundador</div>
+                        <img class="img-fluid rounded-circle mb-4 px-4" src={borisProfile} alt="..."/>
+                        <h5 class="fw-bolder">Boris Rioseco E</h5>
+                        <div class="fst-italic text-muted">CO-Fundador y Desarrollador de la aplicación.</div>
                     </div>
                 </div>
             </div>
