@@ -77,7 +77,7 @@ const Menu = () =>{
           });
 
     }
-  },[userData.token, isLoggedIn])
+  },[userData.token, isLoggedIn, userPhoto])
 
   return (
       <>
@@ -100,7 +100,7 @@ const Menu = () =>{
                       <div className="nav-link dropdown-toggle" id="navbarDropdown1" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false" style={{color: 'grey'}}>
                         <img id="photoUser" src={(userPhoto !== null && userPhoto !== undefined && userPhoto !== "" && userPhoto.length > 0)  ? 
-                        'http://34.238.84.6:3001/api/images/'+ userPhoto : <></>} className="rounded-circle" height="35" width="35"
+                        'http://34.238.84.6:3001/api/images/'+ userPhoto : perfil} className="rounded-circle" height="35" width="35"
                           alt=""/>
                       </div>
                       <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
