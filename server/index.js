@@ -17,14 +17,14 @@ const emailer = require('./mail/mailer')
 
 app.use(cors())
 app.use(express.json())
-app.use(express.static(path.join(__dirname,'./projects/downloads')))
+app.use(express.static((__dirname,'./projects/downloads')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 const upload = multer({ dest: './images' })
 
 const diskstorage = multer.diskStorage({
-    destination: path.join(__dirname, './projects/uploads'),
+    destination: (__dirname, './projects/uploads'),
     filename: (req, file, cb) =>{
         cb(null, Date.now() + file.originalname)
     }
