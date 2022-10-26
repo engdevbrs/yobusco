@@ -309,7 +309,7 @@ app.get('/api/image/view-projects/:id', (req, res) => {
             res.status(500).send('Problema obteniendo tus proyectos')
         }else{
             result.map(image => {
-                fs.writeFileSync(path.join(__dirname, './projects/downloads/' + image.imageName),image.imageClient)
+                fs.writeFileSync((__dirname, './projects/downloads/' + image.imageName),image.imageClient)
             })
             res.send(result)
         }
