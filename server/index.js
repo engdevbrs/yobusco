@@ -17,14 +17,14 @@ const emailer = require('./mail/mailer')
 
 app.use(cors())
 app.use(express.json())
-app.use(express.static((__dirname,'./projects/downloads')))
+app.use(express.static('/home/ubuntu/projects/yobusco/server/projects/downloads'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 const upload = multer({ dest: './images' })
 
 const diskstorage = multer.diskStorage({
-    destination: (__dirname, './projects/uploads'),
+    destination: '/home/ubuntu/projects/yobusco/server/projects/uploads',
     filename: (req, file, cb) =>{
         cb(null, Date.now() + file.originalname)
     }
@@ -261,7 +261,7 @@ app.post('/api/image/upload-project',uploadproject.single('photofile'),async (re
     const username = userLogged.userName
     const workdate = body.date
     const filetype = file.mimetype
-    const imageClient = fs.readFileSync(path.join(__dirname, './projects/uploads/' + file.filename))
+    const imageClient = fs.readFileSync('/home/ubuntu/projects/yobusco/server/projects/uploads/' + file.filename)
     await unlinkFile(file.path)
     const sqlLimit = "SELECT * FROM projects_user WHERE projects_user.userName="+mysql.escape(userLogged.userName)
     const sqlInsert1 = "INSERT INTO projects_user(clientName,imageName,userName,workDate,imageClient,imageType,workResume) VALUES(?,?,?,?,?,?,?)"
@@ -294,7 +294,7 @@ app.get('/api/image/user-projects',validateToken, (req, res) => {
             res.status(500).send('Problema obteniendo tus proyectos')
         }else{
             result.map(image => {
-                fs.writeFileSync(path.join(__dirname, './projects/downloads/' + image.imageName),image.imageClient)
+                fs.writeFileSync('/home/ubuntu/projects/yobusco/server/projects/downloads/' + image.imageName,image.imageClient)
             })
             res.send(result)
         }
@@ -309,7 +309,7 @@ app.get('/api/image/view-projects/:id', (req, res) => {
             res.status(500).send('Problema obteniendo tus proyectos')
         }else{
             result.map(image => {
-                fs.writeFileSync((__dirname, './projects/downloads/' + image.imageName),image.imageClient)
+                fs.writeFileSync('/home/ubuntu/projects/yobusco/server/projects/downloads/' + image.imageName,image.imageClient)
             })
             res.send(result)
         }
