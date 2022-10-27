@@ -131,7 +131,7 @@ const Home = () => {
             <Card.Img variant="top" src={ united } alt="..." style={{width: '64px'}}/>
             <Card.Body>
               <Card.Title style={{color: '#202A34'}}>Comunidad</Card.Title>
-              <Card.Text className='fw-normal text-muted'>Es ideal generar una comunidad entre nosotros, en la que tanto la persona que necesita de un servicio, 
+              <Card.Text className='fw-normal text-muted'>Es ideal generar una comunidad entre nosotros, en la que tanto la persona que necesita de un servicio 
               y la que ofrece el servicio, creen un ambiente seguro y de confianza, de tal modo que ésta pueda servir a distintos usuarios a elegir bien a un trabajador.
               </Card.Text>
             </Card.Body>
