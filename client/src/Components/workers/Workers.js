@@ -204,7 +204,7 @@ const Workers = () => {
               </div>
               <div className="d-grid gap-2 mt-3">
                   <Button className="btn-filtrar px-4" size="sm" onClick={filterWorkers} >Buscar trabajador</Button>
-                  <Button className="btn-clear px-4" size="sm" onClick={e => clearFilters()} >Limpiar búsqeeda</Button>
+                  <Button className="btn-clear px-4" size="sm" onClick={e => clearFilters()} >Limpiar búsqueda</Button>
               </div>
         </Offcanvas.Body>
       </Offcanvas>
