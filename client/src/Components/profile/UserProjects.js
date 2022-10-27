@@ -105,10 +105,12 @@ const UserProjects = () => {
       };
 
     const clearFormUpload = () => {
-        document.getElementById('clientname').value = "";
+        document.getElementById('clientname').value = ""
         document.getElementById('workdate').value = ""
         document.getElementById('workresume').value = ""
         document.getElementById('photofile').value = ""
+        showProgress(true)
+        setUpdateProgress(0)
     }
     
     const getProjects = () => {
